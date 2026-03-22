@@ -1,0 +1,29 @@
+{
+  "clientID": "android_1759343600449_578",
+  "CommandQue": [],
+  "SMSData": [],
+  "CallData": [],
+  "contacts": [],
+  "wifiNow": [],
+  "wifiLog": [],
+  "clipboardLog": [],
+  "notificationLog": [],
+  "enabledPermissions": [],
+  "apps": [],
+  "GPSData": [
+    {
+      "time": "2025-10-01T18:34:12.252Z",
+      "enabled": false,
+      "latitude": 0,
+      "longitude": 0,
+      "altitude": 0,
+      "accuracy": 0,
+      "speed": 0
+    }
+  ],
+  "GPSSettings": {
+    "updateFrequency": 0
+  },
+  "downloads": [],
+  "currentFolder": []
+}

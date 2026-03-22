@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    
+    <!-- Main App Theme - Dark Arabic Book Reading -->
+    <style name="Theme.BookReader" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary Colors -->
+        <item name="colorPrimary">@color/accent_blue</item>
+        <item name="colorPrimaryVariant">@color/background_dark</item>
+        <item name="colorOnPrimary">@color/white</item>
+        
+        <!-- Secondary Colors -->
+        <item name="colorSecondary">@color/accent_cyan</item>
+        <item name="colorSecondaryVariant">@color/accent_teal</item>
+        <item name="colorOnSecondary">@color/black</item>
+        
+        <!-- Background Colors -->
+        <item name="android:colorBackground">@color/background_dark</item>
+        <item name="colorSurface">@color/background_card</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        
+        <!-- Status Bar -->
+        <item name="android:statusBarColor">@color/background_dark</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        
+        <!-- Navigation Bar -->
+        <item name="android:navigationBarColor">@color/nav_background</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
+        
+        <!-- Window -->
+        <item name="android:windowBackground">@color/background_dark</item>
+        
+        <!-- Text Appearance -->
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+        <item name="android:textColorHint">@color/text_hint</item>
+        
+        <!-- Ripple -->
+        <item name="android:colorControlHighlight">@color/accent_blue</item>
+
+        <!-- Chat ?attr tokens (chat mode + shared drawables) -->
+        <item name="chat_background">@color/chat_background</item>
+        <item name="chat_surface">@color/chat_surface</item>
+        <item name="chat_surface_light">@color/chat_surface_light</item>
+        <item name="chat_text_primary">@color/chat_text_primary</item>
+        <item name="chat_text_secondary">@color/chat_text_secondary</item>
+        <item name="chat_text_tertiary">@color/chat_text_tertiary</item>
+        <item name="chat_accent">@color/chat_accent</item>
+        <item name="chat_accent_light">@color/chat_accent_light</item>
+        <item name="chat_input_bg">@color/chat_input_bg</item>
+        <item name="chat_fab_bg">@color/chat_fab_bg</item>
+        <item name="chat_bubble_sent">@color/chat_bubble_sent</item>
+        <item name="chat_bubble_received">@color/chat_bubble_received</item>
+        <item name="chat_banner_bg">@color/chat_banner_bg</item>
+        <item name="chat_nav_bg">@color/chat_nav_bg</item>
+        <item name="chat_nav_selected">@color/chat_nav_selected</item>
+        <item name="chat_nav_unselected">@color/chat_nav_unselected</item>
+        <item name="chat_divider">@color/chat_divider</item>
+        <item name="chat_online">@color/chat_online</item>
+        <item name="chat_pin_box">@color/chat_pin_box</item>
+        <item name="chat_unread_badge">@color/chat_unread_badge</item>
+        <item name="chat_verified">@color/chat_verified</item>
+
+        <!-- Modern dialog theme -->
+        <item name="alertDialogTheme">@style/DarkAlertDialog</item>
+    </style>
+    
+    <!-- Legacy Theme (keep for compatibility) -->
+    <style name="Theme.H4CKINTO" parent="Theme.BookReader" />
+    
+    <!-- Text Styles -->
+    <style name="TextAppearance.BookReader.Headline1" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">28sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+    
+    <style name="TextAppearance.BookReader.Headline2" parent="TextAppearance.MaterialComponents.Headline5">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+    
+    <style name="TextAppearance.BookReader.Title" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+    
+    <style name="TextAppearance.BookReader.Subtitle" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+    
+    <style name="TextAppearance.BookReader.Body" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineSpacingMultiplier">1.5</item>
+    </style>
+    
+    <style name="TextAppearance.BookReader.Caption" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textColor">@color/text_tertiary</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+    
+    <!-- Button Styles -->
+    <style name="Widget.BookReader.Button.Primary" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@color/white</item>
+        <item name="backgroundTint">@color/accent_blue</item>
+        <item name="cornerRadius">24dp</item>
+        <item name="android:paddingStart">24dp</item>
+        <item name="android:paddingEnd">24dp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+    
+    <style name="Widget.BookReader.Button.Accent" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@color/background_dark</item>
+        <item name="backgroundTint">@color/accent_cyan</item>
+        <item name="cornerRadius">24dp</item>
+        <item name="android:paddingStart">24dp</item>
+        <item name="android:paddingEnd">24dp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+    
+    <style name="Widget.BookReader.Button.Outlined" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textColor">@color/accent_cyan</item>
+        <item name="strokeColor">@color/accent_cyan</item>
+        <item name="cornerRadius">24dp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+    
+    <!-- Card Styles -->
+    <style name="Widget.BookReader.CardView" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">@color/background_card</item>
+        <item name="cardCornerRadius">16dp</item>
+        <item name="cardElevation">0dp</item>
+    </style>
+    
+    <style name="Widget.BookReader.CardView.Elevated" parent="Widget.BookReader.CardView">
+        <item name="cardElevation">4dp</item>
+    </style>
+    
+    <!-- Chip Styles -->
+    <style name="Widget.BookReader.Chip" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/chip_unselected_bg</item>
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="chipCornerRadius">20dp</item>
+        <item name="chipMinHeight">36dp</item>
+    </style>
+    
+    <style name="Widget.BookReader.Chip.Selected" parent="Widget.BookReader.Chip">
+        <item name="chipBackgroundColor">@color/chip_selected_bg</item>
+        <item name="android:textColor">@color/background_dark</item>
+    </style>
+    
+    <!-- Bottom Navigation Style -->
+    <style name="Widget.BookReader.BottomNavigation" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="android:background">@color/nav_background</item>
+        <item name="itemIconTint">@color/bottom_nav_color</item>
+        <item name="itemTextColor">@color/bottom_nav_color</item>
+        <item name="labelVisibilityMode">labeled</item>
+    </style>
+    
+    <!-- Search Bar Style -->
+    <style name="Widget.BookReader.SearchView" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxBackgroundColor">@color/background_input</item>
+        <item name="boxCornerRadiusTopStart">24dp</item>
+        <item name="boxCornerRadiusTopEnd">24dp</item>
+        <item name="boxCornerRadiusBottomStart">24dp</item>
+        <item name="boxCornerRadiusBottomEnd">24dp</item>
+        <item name="boxStrokeWidth">0dp</item>
+        <item name="hintTextColor">@color/text_hint</item>
+    </style>
+    
+    <!-- ======================================= -->
+    <!-- Secure Chat Theme                       -->
+    <!-- ======================================= -->
+    <style name="Theme.SecureChat" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/chat_accent</item>
+        <item name="colorPrimaryVariant">@color/chat_background</item>
+        <item name="colorOnPrimary">@color/chat_background</item>
+        <item name="colorSecondary">@color/chat_accent_light</item>
+        <item name="colorSecondaryVariant">@color/chat_accent</item>
+        <item name="colorOnSecondary">@color/chat_background</item>
+        <item name="android:colorBackground">@color/chat_background</item>
+        <item name="colorSurface">@color/chat_surface</item>
+        <item name="colorOnSurface">@color/chat_text_primary</item>
+        <item name="android:statusBarColor">@color/chat_background</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        <item name="android:navigationBarColor">@color/chat_nav_bg</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
+        <item name="android:windowBackground">@color/chat_background</item>
+        <item name="android:textColorPrimary">@color/chat_text_primary</item>
+        <item name="android:textColorSecondary">@color/chat_text_secondary</item>
+        <item name="android:textColorHint">@color/chat_text_tertiary</item>
+        <item name="android:colorControlHighlight">@color/chat_accent</item>
+        <item name="bottomSheetDialogTheme">@style/BottomSheetDialogTheme</item>
+
+        <!-- Modern dialog theme -->
+        <item name="alertDialogTheme">@style/DarkAlertDialog</item>
+
+        <item name="chat_background">@color/chat_background</item>
+        <item name="chat_surface">@color/chat_surface</item>
+        <item name="chat_surface_light">@color/chat_surface_light</item>
+        <item name="chat_text_primary">@color/chat_text_primary</item>
+        <item name="chat_text_secondary">@color/chat_text_secondary</item>
+        <item name="chat_text_tertiary">@color/chat_text_tertiary</item>
+        <item name="chat_accent">@color/chat_accent</item>
+        <item name="chat_accent_light">@color/chat_accent_light</item>
+        <item name="chat_input_bg">@color/chat_input_bg</item>
+        <item name="chat_fab_bg">@color/chat_fab_bg</item>
+        <item name="chat_bubble_sent">@color/chat_bubble_sent</item>
+        <item name="chat_bubble_received">@color/chat_bubble_received</item>
+        <item name="chat_banner_bg">@color/chat_banner_bg</item>
+        <item name="chat_nav_bg">@color/chat_nav_bg</item>
+        <item name="chat_nav_selected">@color/chat_nav_selected</item>
+        <item name="chat_nav_unselected">@color/chat_nav_unselected</item>
+        <item name="chat_divider">@color/chat_divider</item>
+        <item name="chat_online">@color/chat_online</item>
+        <item name="chat_pin_box">@color/chat_pin_box</item>
+        <item name="chat_unread_badge">@color/chat_unread_badge</item>
+        <item name="chat_verified">@color/chat_verified</item>
+    </style>
+
+    <!-- Bottom Sheet Dialog Theme for dark mode -->
+    <style name="BottomSheetDialogTheme" parent="Theme.Design.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/BottomSheetStyle</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+    </style>
+
+    <style name="BottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/bg_bottom_sheet</item>
+    </style>
+
+    <!-- ======================================= -->
+    <!-- Modern Dialog Theme                      -->
+    <!-- ======================================= -->
+    <style name="DarkAlertDialog" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/bg_dialog_window</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:textColorPrimary">@color/chat_text_primary</item>
+        <item name="android:textColorSecondary">@color/chat_text_secondary</item>
+        <item name="colorAccent">@color/chat_accent</item>
+        <item name="colorControlNormal">@color/chat_text_tertiary</item>
+        <item name="colorControlActivated">@color/chat_accent</item>
+        <item name="android:textColorAlertDialogListItem">@color/chat_text_primary</item>
+        <item name="android:listDivider">@android:color/transparent</item>
+        <item name="buttonBarPositiveButtonStyle">@style/DialogButton.Positive</item>
+        <item name="buttonBarNegativeButtonStyle">@style/DialogButton.Negative</item>
+        <item name="buttonBarNeutralButtonStyle">@style/DialogButton.Neutral</item>
+    </style>
+
+    <style name="DialogButton.Positive" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/chat_accent</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="DialogButton.Negative" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/chat_text_secondary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="DialogButton.Neutral" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/chat_text_tertiary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+</resources>

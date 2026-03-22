@@ -1,0 +1,180 @@
+<div class="ui segment">
+    <div class="ui top attached menu">
+        <div class="item">
+            <h3 class="ui header">
+                <i class="desktop icon"></i>
+                <div class="content">
+                    Screen Mirror
+                    <div class="sub header">Real-time device screen view</div>
+                </div>
+            </h3>
+        </div>
+        <div class="right menu">
+            <div class="item">
+                <button id="startMirrorBtn" onclick="startMirror()" class="ui green button">
+                    <i class="play icon"></i>
+                    Start Mirror
+                </button>
+            </div>
+            <div class="item">
+                <button id="stopMirrorBtn" onclick="stopMirror()" class="ui red button" style="display: none;">
+                    <i class="stop icon"></i>
+                    Stop Mirror
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="ui bottom attached segment">
+        <div id="mirrorStatus" class="ui message" style="display: none;">
+            <i class="info circle icon"></i>
+            <span id="statusText">Waiting to start mirroring...</span>
+        </div>
+        
+        <div id="mirrorContainer" style="text-align: center; background: #000; padding: 20px; border-radius: 5px; min-height: 400px; display: none;">
+            <img id="mirrorImage" src="" alt="Screen Mirror" style="max-width: 100%; height: auto; border: 1px solid #333;">
+        </div>
+        
+        <div id="noMirrorMessage" class="ui message">
+            <i class="info circle icon"></i>
+            Click "Start Mirror" to begin viewing the device screen in real-time.
+            <br><br>
+            <strong>Note:</strong> The device will request screen capture permission. Grant permission to start mirroring.
+        </div>
+    </div>
+</div>
+
+<script>
+    let socket = null;
+    let isMirroring = false;
+    
+    // Initialize socket connection
+    $(document).ready(function() {
+        if (typeof io !== 'undefined') {
+            socket = io();
+            
+            socket.on('connect', function() {
+                console.log('Connected to server for screen mirroring');
+            });
+            
+            socket.on('disconnect', function() {
+                console.log('Disconnected from server');
+                if (isMirroring) {
+                    showStatus('error', 'Connection lost. Please restart mirroring.');
+                }
+            });
+            
+            // Listen for screen mirror frames
+            socket.on('screen_mirror_frame', function(data) {
+                if (data && data.frame) {
+                    displayFrame(data.frame);
+                }
+            });
+            
+            // Listen for screen mirror status
+            socket.on('screen_mirror_status', function(data) {
+                if (data.status === 'mirror_started') {
+                    showStatus('success', 'Screen mirroring started successfully');
+                    $('#mirrorContainer').show();
+                    $('#noMirrorMessage').hide();
+                    $('#startMirrorBtn').hide();
+                    $('#stopMirrorBtn').show();
+                    isMirroring = true;
+                } else if (data.status === 'mirror_stopped') {
+                    showStatus('info', 'Screen mirroring stopped');
+                    $('#mirrorContainer').hide();
+                    $('#noMirrorMessage').show();
+                    $('#startMirrorBtn').show();
+                    $('#stopMirrorBtn').hide();
+                    isMirroring = false;
+                } else {
+                    showStatus('info', data.message || data.status);
+                }
+            });
+            
+            // Listen for screen mirror errors
+            socket.on('screen_mirror_error', function(data) {
+                showStatus('error', 'Error: ' + (data.error || 'Unknown error'));
+                $('#mirrorContainer').hide();
+                $('#noMirrorMessage').show();
+                $('#startMirrorBtn').show();
+                $('#stopMirrorBtn').hide();
+                isMirroring = false;
+            });
+        } else {
+            console.error('Socket.IO not loaded');
+            showStatus('error', 'Socket.IO not available. Please refresh the page.');
+        }
+    });
+    
+    function startMirror() {
+        if (isMirroring) {
+            showNotification('#f03434', 'Mirroring already in progress');
+            return;
+        }
+        
+        $('#startMirrorBtn').addClass('loading');
+        showStatus('info', 'Requesting screen mirroring...');
+        
+        // Send command: 0xMR
+        sendCommand('0xMR', {}, (error, message) => {
+            $('#startMirrorBtn').removeClass('loading');
+            
+            if (error) {
+                showStatus('error', 'Error: ' + error);
+                showNotification('#f03434', error);
+            } else {
+                showStatus('info', 'Request sent. Waiting for device permission...');
+                showNotification('#2ecc71', 'Screen mirror requested! Grant permission on device.');
+            }
+        });
+    }
+    
+    function stopMirror() {
+        if (!isMirroring) {
+            return;
+        }
+        
+        $('#stopMirrorBtn').addClass('loading');
+        showStatus('info', 'Stopping mirroring...');
+        
+        // Note: We'll need to add a stop command, for now just hide UI
+        // In a real implementation, you'd send a stop command to the device
+        setTimeout(() => {
+            $('#mirrorContainer').hide();
+            $('#noMirrorMessage').show();
+            $('#startMirrorBtn').show();
+            $('#stopMirrorBtn').hide();
+            $('#stopMirrorBtn').removeClass('loading');
+            isMirroring = false;
+            showStatus('info', 'Mirroring stopped');
+        }, 500);
+    }
+    
+    function displayFrame(base64Frame) {
+        try {
+            const img = document.getElementById('mirrorImage');
+            img.src = 'data:image/jpeg;base64,' + base64Frame;
+        } catch (error) {
+            console.error('Error displaying frame:', error);
+        }
+    }
+    
+    function showStatus(type, message) {
+        const statusDiv = $('#mirrorStatus');
+        const statusText = $('#statusText');
+        
+        statusDiv.removeClass('info success error warning');
+        statusDiv.addClass(type);
+        statusText.text(message);
+        statusDiv.show();
+        
+        // Auto-hide success messages after 3 seconds
+        if (type === 'success') {
+            setTimeout(() => {
+                statusDiv.fadeOut();
+            }, 3000);
+        }
+    }
+</script>
+

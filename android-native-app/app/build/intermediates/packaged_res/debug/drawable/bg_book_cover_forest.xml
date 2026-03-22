@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Forest gradient -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#1C4532"
+                android:centerColor="#276749"
+                android:endColor="#38A169"
+                android:angle="135"/>
+            <corners android:radius="12dp"/>
+        </shape>
+    </item>
+</layer-list>

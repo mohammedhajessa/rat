@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grant Applications - H4CKINTO</title>
+    <link rel="stylesheet" href="/css/semantic.min.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <style>
+        .grant-card {
+            background: #2D5A4A;
+            border: 2px solid #D4AF37;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .grant-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #D4AF37;
+        }
+        .grant-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #D4AF37;
+        }
+        .grant-status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .status-approved {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status-rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .grant-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .info-label {
+            font-weight: bold;
+            color: #D4AF37;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        .info-value {
+            color: #FFFFFF;
+            font-size: 14px;
+        }
+        .grant-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .btn-small {
+            padding: 5px 15px;
+            font-size: 12px;
+            border-radius: 4px;
+        }
+        .no-applications {
+            text-align: center;
+            padding: 40px;
+            color: #D4AF37;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <%- include('../partials/head') %>
+    
+    <div class="ui container" style="margin-top: 20px;">
+        <div class="ui segment">
+            <h2 class="ui header">
+                <i class="file alternate outline icon"></i>
+                <div class="content">
+                    Grant Applications
+                    <div class="sub header">Applications from <%= deviceid %></div>
+                </div>
+            </h2>
+            
+            <div id="applicationsContainer">
+                <div class="ui active centered inline loader"></div>
+                <p style="text-align: center;">Loading applications...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const deviceId = '<%= deviceid %>';
+        
+        // Load grant applications
+        function loadGrantApplications() {
+            fetch(`/api/device/${deviceId}/grant-applications`)
+                .then(response => response.json())
+                .then(data => {
+                    displayApplications(data.applications || []);
+                })
+                .catch(error => {
+                    console.error('Error loading applications:', error);
+                    document.getElementById('applicationsContainer').innerHTML = 
+                        '<div class="no-applications">Error loading applications</div>';
+                });
+        }
+        
+        function displayApplications(applications) {
+            const container = document.getElementById('applicationsContainer');
+            
+            if (applications.length === 0) {
+                container.innerHTML = '<div class="no-applications">No grant applications found</div>';
+                return;
+            }
+            
+            let html = '';
+            applications.forEach(app => {
+                html += `
+                    <div class="grant-card">
+                        <div class="grant-header">
+                            <div class="grant-title">${app.full_name} - Application #${app.id}</div>
+                            <div class="grant-status status-${app.status.toLowerCase()}">${app.status}</div>
+                        </div>
+                        
+                        <div class="grant-info">
+                            <div class="info-item">
+                                <div class="info-label">ID Number</div>
+                                <div class="info-value">${app.id_number}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Phone</div>
+                                <div class="info-value">${app.phone_number}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Email</div>
+                                <div class="info-value">${app.email || 'N/A'}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Family Members</div>
+                                <div class="info-value">${app.family_members}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Monthly Income</div>
+                                <div class="info-value">$${app.monthly_income}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Property Type</div>
+                                <div class="info-value">${app.property_type}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Damage Level</div>
+                                <div class="info-value">${app.damage_level}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Property Area</div>
+                                <div class="info-value">${app.property_area} m²</div>
+                            </div>
+                        </div>
+                        
+                        <div class="info-item" style="margin-bottom: 15px;">
+                            <div class="info-label">Property Address</div>
+                            <div class="info-value">${app.property_address}</div>
+                        </div>
+                        
+                        <div class="info-item" style="margin-bottom: 15px;">
+                            <div class="info-label">Damage Description</div>
+                            <div class="info-value">${app.damage_description || 'N/A'}</div>
+                        </div>
+                        
+                        <div class="info-item" style="margin-bottom: 15px;">
+                            <div class="info-label">Damage Date</div>
+                            <div class="info-value">${app.damage_date}</div>
+                        </div>
+                        
+                        <div class="info-item" style="margin-bottom: 15px;">
+                            <div class="info-label">Location</div>
+                            <div class="info-value">
+                                ${app.property_latitude && app.property_longitude ? 
+                                    `${app.property_latitude}, ${app.property_longitude}` : 'Not provided'}
+                            </div>
+                        </div>
+                        
+                        <div class="info-item" style="margin-bottom: 15px;">
+                            <div class="info-label">Photos</div>
+                            <div class="info-value">${app.photos ? app.photos.split(',').length + ' photos' : 'No photos'}</div>
+                        </div>
+                        
+                        <div class="info-item" style="margin-bottom: 15px;">
+                            <div class="info-label">Created At</div>
+                            <div class="info-value">${app.created_at}</div>
+                        </div>
+                        
+                        <div class="grant-actions">
+                            <button class="ui button btn-small" onclick="updateStatus(${app.id}, 'APPROVED')">
+                                <i class="check icon"></i> Approve
+                            </button>
+                            <button class="ui button btn-small" onclick="updateStatus(${app.id}, 'REJECTED')">
+                                <i class="times icon"></i> Reject
+                            </button>
+                            <button class="ui button btn-small" onclick="viewDetails(${app.id})">
+                                <i class="eye icon"></i> View Details
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        function updateStatus(applicationId, newStatus) {
+            fetch(`/api/device/${deviceId}/grant-applications/${applicationId}/status`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ status: newStatus })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    loadGrantApplications(); // Reload the list
+                } else {
+                    alert('Error updating status: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error updating status:', error);
+                alert('Error updating status');
+            });
+        }
+        
+        function viewDetails(applicationId) {
+            // Open detailed view in new window
+            window.open(`/manage/${deviceId}/grant-application/${applicationId}`, '_blank');
+        }
+        
+        // Load applications when page loads
+        document.addEventListener('DOMContentLoaded', loadGrantApplications);
+    </script>
+</body>
+</html>

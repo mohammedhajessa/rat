@@ -1,0 +1,53 @@
+com.h4ckinto.android.app-lifecycle-livedata-2.6.1-0 C:\Users\lenovo\.gradle\caches\transforms-3\02f8c4d9710fa1de196e593c47f7a019\transformed\lifecycle-livedata-2.6.1\res
+com.h4ckinto.android.app-lifecycle-viewmodel-2.6.1-1 C:\Users\lenovo\.gradle\caches\transforms-3\0895b8580acdb36c834699110ddf2372\transformed\lifecycle-viewmodel-2.6.1\res
+com.h4ckinto.android.app-tracing-ktx-1.2.0-2 C:\Users\lenovo\.gradle\caches\transforms-3\10eab41591b6b073f86136b591d8745e\transformed\tracing-ktx-1.2.0\res
+com.h4ckinto.android.app-dexter-6.2.3-3 C:\Users\lenovo\.gradle\caches\transforms-3\1c689038bb4eb8aa285b108bd263c893\transformed\dexter-6.2.3\res
+com.h4ckinto.android.app-appcompat-resources-1.6.1-4 C:\Users\lenovo\.gradle\caches\transforms-3\31128bea90cde15ec9f7d5279895a74a\transformed\appcompat-resources-1.6.1\res
+com.h4ckinto.android.app-room-ktx-2.6.1-5 C:\Users\lenovo\.gradle\caches\transforms-3\33c6719acda9131a07b0d2ad167c5b7f\transformed\room-ktx-2.6.1\res
+com.h4ckinto.android.app-emoji2-1.2.0-6 C:\Users\lenovo\.gradle\caches\transforms-3\34e9d2ecb03fed35e86c5ba34096e160\transformed\emoji2-1.2.0\res
+com.h4ckinto.android.app-emoji2-views-helper-1.2.0-7 C:\Users\lenovo\.gradle\caches\transforms-3\3616e39264c87cef44c33678eeac71ee\transformed\emoji2-views-helper-1.2.0\res
+com.h4ckinto.android.app-savedstate-1.2.1-8 C:\Users\lenovo\.gradle\caches\transforms-3\3746cd0c27655220469c6af6dfd45f89\transformed\savedstate-1.2.1\res
+com.h4ckinto.android.app-play-services-basement-18.4.0-9 C:\Users\lenovo\.gradle\caches\transforms-3\3db7f825fa03e4af80eb721a7702b6dd\transformed\play-services-basement-18.4.0\res
+com.h4ckinto.android.app-transition-1.2.0-10 C:\Users\lenovo\.gradle\caches\transforms-3\40ad7c28414d568bdcc3dc32a2c4fba7\transformed\transition-1.2.0\res
+com.h4ckinto.android.app-cardview-1.0.0-11 C:\Users\lenovo\.gradle\caches\transforms-3\42512a7caf028e9317b2be6c17950fd7\transformed\cardview-1.0.0\res
+com.h4ckinto.android.app-camera-lifecycle-1.4.0-12 C:\Users\lenovo\.gradle\caches\transforms-3\4f5a11f0d71783bd62c188ccd62a9f90\transformed\camera-lifecycle-1.4.0\res
+com.h4ckinto.android.app-viewpager2-1.0.0-13 C:\Users\lenovo\.gradle\caches\transforms-3\50ccc33fbb0bac0164c2984c4867b60b\transformed\viewpager2-1.0.0\res
+com.h4ckinto.android.app-play-services-base-18.5.0-14 C:\Users\lenovo\.gradle\caches\transforms-3\61db953c789b1b6bc50c10423a46e903\transformed\play-services-base-18.5.0\res
+com.h4ckinto.android.app-room-runtime-2.6.1-15 C:\Users\lenovo\.gradle\caches\transforms-3\6b2f6bbb436920e76f3381464e1cf9db\transformed\room-runtime-2.6.1\res
+com.h4ckinto.android.app-appcompat-1.6.1-16 C:\Users\lenovo\.gradle\caches\transforms-3\6c6ffd2b5c140a59a107fe5eaa0e19c4\transformed\appcompat-1.6.1\res
+com.h4ckinto.android.app-material-1.11.0-17 C:\Users\lenovo\.gradle\caches\transforms-3\7078c37ce8cd3af2f2ed60babd87ea3b\transformed\material-1.11.0\res
+com.h4ckinto.android.app-sqlite-framework-2.4.0-18 C:\Users\lenovo\.gradle\caches\transforms-3\721d53fb86fe7ad8efee3d4ffd782c52\transformed\sqlite-framework-2.4.0\res
+com.h4ckinto.android.app-lifecycle-livedata-core-2.6.1-19 C:\Users\lenovo\.gradle\caches\transforms-3\771eb5aebc4cd9eb6a704abe82159863\transformed\lifecycle-livedata-core-2.6.1\res
+com.h4ckinto.android.app-security-crypto-1.1.0-alpha06-20 C:\Users\lenovo\.gradle\caches\transforms-3\7faebb82b272c6aef619fd2bbb3bbcc3\transformed\security-crypto-1.1.0-alpha06\res
+com.h4ckinto.android.app-core-1.12.0-21 C:\Users\lenovo\.gradle\caches\transforms-3\82b8cd533e2f30ac0169b428c7b57501\transformed\core-1.12.0\res
+com.h4ckinto.android.app-core-ktx-1.12.0-22 C:\Users\lenovo\.gradle\caches\transforms-3\87d839bf57248cb9c015683ee13eb67a\transformed\core-ktx-1.12.0\res
+com.h4ckinto.android.app-lifecycle-viewmodel-savedstate-2.6.1-23 C:\Users\lenovo\.gradle\caches\transforms-3\89417d8865a7bb70916b16c8e743133a\transformed\lifecycle-viewmodel-savedstate-2.6.1\res
+com.h4ckinto.android.app-lifecycle-runtime-2.6.1-24 C:\Users\lenovo\.gradle\caches\transforms-3\8bee76aac8a18bbf8ab4ae28cce68473\transformed\lifecycle-runtime-2.6.1\res
+com.h4ckinto.android.app-camera-camera2-1.4.0-25 C:\Users\lenovo\.gradle\caches\transforms-3\8f69569330af518bab8fe9d3dfe0c347\transformed\camera-camera2-1.4.0\res
+com.h4ckinto.android.app-sqlite-2.4.0-26 C:\Users\lenovo\.gradle\caches\transforms-3\9388b5a0e3148050967fd759cd084d01\transformed\sqlite-2.4.0\res
+com.h4ckinto.android.app-lifecycle-process-2.6.1-27 C:\Users\lenovo\.gradle\caches\transforms-3\95a72caeb09e126676f93973731036ef\transformed\lifecycle-process-2.6.1\res
+com.h4ckinto.android.app-tracing-1.2.0-28 C:\Users\lenovo\.gradle\caches\transforms-3\96c3b610b786ba680130c618e13c2ef9\transformed\tracing-1.2.0\res
+com.h4ckinto.android.app-camera-view-1.4.0-29 C:\Users\lenovo\.gradle\caches\transforms-3\a2632fa5dc818693ed21301f53077807\transformed\camera-view-1.4.0\res
+com.h4ckinto.android.app-fragment-1.3.6-30 C:\Users\lenovo\.gradle\caches\transforms-3\a4935eb961c43a3f50f1289b494d54d9\transformed\fragment-1.3.6\res
+com.h4ckinto.android.app-annotation-experimental-1.4.1-31 C:\Users\lenovo\.gradle\caches\transforms-3\a5e0d2f5179a88310a13bd06471e883f\transformed\annotation-experimental-1.4.1\res
+com.h4ckinto.android.app-work-runtime-2.9.0-32 C:\Users\lenovo\.gradle\caches\transforms-3\ac94677453d2723cc748c4e7458e5009\transformed\work-runtime-2.9.0\res
+com.h4ckinto.android.app-constraintlayout-2.1.4-33 C:\Users\lenovo\.gradle\caches\transforms-3\b906c92b55bd91e5bf8895139b074c94\transformed\constraintlayout-2.1.4\res
+com.h4ckinto.android.app-activity-1.8.0-34 C:\Users\lenovo\.gradle\caches\transforms-3\ba33633654926e0f1efff9beeb2d0a30\transformed\activity-1.8.0\res
+com.h4ckinto.android.app-recyclerview-1.1.0-35 C:\Users\lenovo\.gradle\caches\transforms-3\bd684e9d5b751dd1c10b448853a7d0f9\transformed\recyclerview-1.1.0\res
+com.h4ckinto.android.app-startup-runtime-1.1.1-36 C:\Users\lenovo\.gradle\caches\transforms-3\bf1e6394bf2e47719a6982773078c8b7\transformed\startup-runtime-1.1.1\res
+com.h4ckinto.android.app-core-runtime-2.2.0-37 C:\Users\lenovo\.gradle\caches\transforms-3\c1500460e04ad61a45f1d85b562c1cb9\transformed\core-runtime-2.2.0\res
+com.h4ckinto.android.app-lifecycle-service-2.6.1-38 C:\Users\lenovo\.gradle\caches\transforms-3\c2bc2b1c6fe1f63531516a80d01bc417\transformed\lifecycle-service-2.6.1\res
+com.h4ckinto.android.app-camera-video-1.4.0-39 C:\Users\lenovo\.gradle\caches\transforms-3\d73e91dce2e3504722bc36da6631c41e\transformed\camera-video-1.4.0\res
+com.h4ckinto.android.app-profileinstaller-1.3.0-40 C:\Users\lenovo\.gradle\caches\transforms-3\e9f0941213a18ba7c3be485484fb9856\transformed\profileinstaller-1.3.0\res
+com.h4ckinto.android.app-drawerlayout-1.1.1-41 C:\Users\lenovo\.gradle\caches\transforms-3\efb1f4e56f313902f2a4eda4f51f44fa\transformed\drawerlayout-1.1.1\res
+com.h4ckinto.android.app-camera-core-1.4.0-42 C:\Users\lenovo\.gradle\caches\transforms-3\f3bcba35090da20ff0ad22a8e871ddeb\transformed\camera-core-1.4.0\res
+com.h4ckinto.android.app-coordinatorlayout-1.1.0-43 C:\Users\lenovo\.gradle\caches\transforms-3\f3e35f94573bf9e824ef1039f0fdc6f4\transformed\coordinatorlayout-1.1.0\res
+com.h4ckinto.android.app-android-native-app-44 C:\Users\lenovo\Downloads\h4 - Copy\android-native-app\Android-logo
+com.h4ckinto.android.app-pngs-45 C:\Users\lenovo\Downloads\h4 - Copy\android-native-app\app\build\generated\res\pngs\debug
+com.h4ckinto.android.app-resValues-46 C:\Users\lenovo\Downloads\h4 - Copy\android-native-app\app\build\generated\res\resValues\debug
+com.h4ckinto.android.app-packageDebugResources-47 C:\Users\lenovo\Downloads\h4 - Copy\android-native-app\app\build\intermediates\incremental\debug\packageDebugResources\merged.dir
+com.h4ckinto.android.app-packageDebugResources-48 C:\Users\lenovo\Downloads\h4 - Copy\android-native-app\app\build\intermediates\incremental\debug\packageDebugResources\stripped.dir
+com.h4ckinto.android.app-merged-not-compiled-resources-49 C:\Users\lenovo\Downloads\h4 - Copy\android-native-app\app\build\intermediates\merged-not-compiled-resources\debug
+com.h4ckinto.android.app-merged_res-50 C:\Users\lenovo\Downloads\h4 - Copy\android-native-app\app\build\intermediates\merged_res\debug
+com.h4ckinto.android.app-debug-51 C:\Users\lenovo\Downloads\h4 - Copy\android-native-app\app\src\debug\res
+com.h4ckinto.android.app-main-52 C:\Users\lenovo\Downloads\h4 - Copy\android-native-app\app\src\main\res

@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:ns1="http://schemas.android.com/tools">
+    <attr format="reference|color" name="chat_accent"/>
+    <attr format="reference|color" name="chat_accent_light"/>
+    <attr format="reference|color" name="chat_background"/>
+    <attr format="reference|color" name="chat_banner_bg"/>
+    <attr format="reference|color" name="chat_bubble_received"/>
+    <attr format="reference|color" name="chat_bubble_sent"/>
+    <attr format="reference|color" name="chat_divider"/>
+    <attr format="reference|color" name="chat_fab_bg"/>
+    <attr format="reference|color" name="chat_input_bg"/>
+    <attr format="reference|color" name="chat_nav_bg"/>
+    <attr format="reference|color" name="chat_nav_selected"/>
+    <attr format="reference|color" name="chat_nav_unselected"/>
+    <attr format="reference|color" name="chat_online"/>
+    <attr format="reference|color" name="chat_pin_box"/>
+    <attr format="reference|color" name="chat_surface"/>
+    <attr format="reference|color" name="chat_surface_light"/>
+    <attr format="reference|color" name="chat_text_primary"/>
+    <attr format="reference|color" name="chat_text_secondary"/>
+    <attr format="reference|color" name="chat_text_tertiary"/>
+    <attr format="reference|color" name="chat_unread_badge"/>
+    <attr format="reference|color" name="chat_verified"/>
+    <color name="accent_blue">#C4A265</color>
+    <color name="accent_blue_light">#D4B87A</color>
+    <color name="accent_cyan">#C4A265</color>
+    <color name="accent_gold">#C4A265</color>
+    <color name="accent_gold_light">#D4B87A</color>
+    <color name="accent_teal">#D4B87A</color>
+    <color name="background_card">#0F3D35</color>
+    <color name="background_card_light">#164D43</color>
+    <color name="background_dark">#0B2B26</color>
+    <color name="background_input">#164D43</color>
+    <color name="black">#FF000000</color>
+    <color name="border">#1A5C4E</color>
+    <color name="category_history">#8B5CF6</color>
+    <color name="category_history_bg">#4C1D95</color>
+    <color name="category_novels">#C4A265</color>
+    <color name="category_novels_bg">#164D43</color>
+    <color name="category_science">#10B981</color>
+    <color name="category_science_bg">#064E3B</color>
+    <color name="category_self_dev">#C4A265</color>
+    <color name="category_self_dev_bg">#0F3D35</color>
+    <color name="chat_accent">#C4A265</color>
+    <color name="chat_accent_light">#D4B87A</color>
+    <color name="chat_background">#0B2B26</color>
+    <color name="chat_banner_bg">#0F3D35</color>
+    <color name="chat_bubble_received">#164D43</color>
+    <color name="chat_bubble_sent">#C4A265</color>
+    <color name="chat_divider">#164D43</color>
+    <color name="chat_fab_bg">#C4A265</color>
+    <color name="chat_input_bg">#164D43</color>
+    <color name="chat_nav_bar_float">#102F29</color>
+    <color name="chat_nav_bg">#0B2B26</color>
+    <color name="chat_nav_indicator">#2A4540</color>
+    <color name="chat_nav_ripple">#4DC4A265</color>
+    <color name="chat_nav_selected">#C4A265</color>
+    <color name="chat_nav_unselected">#6B8A7E</color>
+    <color name="chat_online">#10B981</color>
+    <color name="chat_pin_box">#164D43</color>
+    <color name="chat_pin_box_active">#C4A265</color>
+    <color name="chat_surface">#0F3D35</color>
+    <color name="chat_surface_light">#164D43</color>
+    <color name="chat_text_primary">#FFFFFF</color>
+    <color name="chat_text_secondary">#A8C4B8</color>
+    <color name="chat_text_tertiary">#6B8A7E</color>
+    <color name="chat_toggle_thumb">#C4A265</color>
+    <color name="chat_toggle_track">#1A5C4E</color>
+    <color name="chat_unread_badge">#C4A265</color>
+    <color name="chat_verified">#C4A265</color>
+    <color name="chip_selected_bg">#C4A265</color>
+    <color name="chip_unselected_bg">#164D43</color>
+    <color name="divider">#164D43</color>
+    <color name="error">#EF4444</color>
+    <color name="ic_launcher_background">#FFFFFF</color>
+    <color name="nav_background">#081F1B</color>
+    <color name="nav_bar_ripple">#4DC4A265</color>
+    <color name="nav_indicator_pill">#2D4F47</color>
+    <color name="nav_selected">#C4A265</color>
+    <color name="nav_unselected">#6B8A7E</color>
+    <color name="progress_indicator">#C4A265</color>
+    <color name="progress_track">#164D43</color>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="star_empty">#1A4D40</color>
+    <color name="star_filled">#C4A265</color>
+    <color name="success">#10B981</color>
+    <color name="tab_selected">#C4A265</color>
+    <color name="tab_unselected">#6B8A7E</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="text_hint">#4A6B5E</color>
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#A8C4B8</color>
+    <color name="text_tertiary">#6B8A7E</color>
+    <color name="warning">#C4A265</color>
+    <color name="white">#FFFFFFFF</color>
+    <string name="about_app">حول التطبيق</string>
+    <string name="about_book">نبذة عن الكتاب</string>
+    <string name="all">الكل</string>
+    <string name="app_name">سرمد</string>
+    <string name="arabic">العربية</string>
+    <string name="attach_camera">الكاميرا</string>
+    <string name="attach_document">مستند</string>
+    <string name="attach_gallery">المعرض</string>
+    <string name="back">رجوع</string>
+    <string name="bestsellers">الأكثر مبيعًا</string>
+    <string name="block_confirm_message">هل تريد حظر هذا المستخدم؟ لن يتمكن من إرسال رسائل أو إجراء مكالمات.</string>
+    <string name="block_confirm_title">حظر المستخدم</string>
+    <string name="block_user">حظر المستخدم</string>
+    <string name="book_app_name">مكتبة الكتب</string>
+    <string name="book_details">تفاصيل الكتاب</string>
+    <string name="bookmark">المفضلة</string>
+    <string name="browse_by_category">تصفح حسب التصنيف</string>
+    <string name="call_connected">متصل</string>
+    <string name="call_connecting">جارٍ الاتصال…</string>
+    <string name="call_disconnected">انقطع الاتصال</string>
+    <string name="call_end">إنهاء</string>
+    <string name="call_ended_label">انتهت المكالمة</string>
+    <string name="call_incoming">مكالمة واردة…</string>
+    <string name="call_mute">كتم</string>
+    <string name="call_no_answer">لا إجابة</string>
+    <string name="call_other_muted">الطرف الآخر كتم صوته</string>
+    <string name="call_rejected">تم الرفض</string>
+    <string name="call_ringing">يرنّ…</string>
+    <string name="call_speaker">مكبر الصوت</string>
+    <string name="cancel">Cancel</string>
+    <string name="categories">التصنيفات</string>
+    <string name="chat_24_hours">24 ساعة</string>
+    <string name="chat_app_name">سرمد</string>
+    <string name="chat_auto_delete">يتم حذف الرسائل تلقائيًا خلال 24 ساعة</string>
+    <string name="chat_biometric">التعرف البيومتري</string>
+    <string name="chat_biometric_desc">سيتم تفعيل قفل الشاشة تلقائيًا بعد دقيقة واحدة من عدم النشاط.</string>
+    <string name="chat_biometric_enabled">مفعّل</string>
+    <string name="chat_calls_empty">لا توجد مكالمات حديثة</string>
+    <string name="chat_calls_empty_desc">ستظهر المكالمات المشفّرة هنا</string>
+    <string name="chat_calls_title">المكالمات</string>
+    <string name="chat_clear_history">مسح السجل</string>
+    <string name="chat_connected_devices">الأجهزة المتصلة</string>
+    <string name="chat_contacts_title">جهات الاتصال</string>
+    <string name="chat_data_encryption">البيانات والتشفير</string>
+    <string name="chat_devices_count">جهازان</string>
+    <string name="chat_e2e_encrypted">هذه المحادثة مشفّرة من طرف إلى طرف</string>
+    <string name="chat_empty_login_hint">سجّل الدخول لعرض المحادثات</string>
+    <string name="chat_empty_no_conversations">لا توجد محادثات. اضغط + لبدء محادثة.</string>
+    <string name="chat_empty_subtitle">انتقل إلى جهات الاتصال لاختيار المحادث</string>
+    <string name="chat_encrypted_banner">الرسائل مشفّرة من طرف إلى طرف</string>
+    <string name="chat_encryption_info">جميع المحادثات والصور والرسائل الصوتية مشفّرة من طرف إلى طرف. فقط أنت والمستلم يمكنكم الوصول إلى المحتوى.</string>
+    <string name="chat_encryption_keys">مفاتيح التشفير</string>
+    <string name="chat_file_attached">ملف مرفق:</string>
+    <string name="chat_image_sent">تم إرسال صورة</string>
+    <string name="chat_input_hint">اكتب رسالة آمنة...</string>
+    <string name="chat_nav_calls">المكالمات</string>
+    <string name="chat_nav_chats">المحادثات</string>
+    <string name="chat_nav_contacts">جهات الاتصال</string>
+    <string name="chat_nav_settings">الإعدادات</string>
+    <string name="chat_privacy">الخصوصية</string>
+    <string name="chat_screen_lock">قفل الشاشة</string>
+    <string name="chat_search_hint">بحث...</string>
+    <string name="chat_settings_search">بحث في الإعدادات</string>
+    <string name="chat_settings_title">الأمان والإعدادات</string>
+    <string name="chat_temp_messages">الرسائل المؤقتة</string>
+    <string name="chat_version">الإصدار 2.4.1 (Build 890)</string>
+    <string name="clear_cache">مسح الذاكرة المؤقتة</string>
+    <string name="completed">مكتمل</string>
+    <string name="continue_reading">واصل القراءة</string>
+    <string name="continue_reading_btn">متابعة القراءة</string>
+    <string name="currently_reading">يتم قراءتها الآن</string>
+    <string name="daily_reading_reminder">تذكير القراءة اليومية</string>
+    <string name="dark">داكن</string>
+    <string name="date_today">اليوم</string>
+    <string name="date_yesterday">أمس</string>
+    <string name="delete_for_all">حذف للجميع</string>
+    <string name="delete_for_me">حذف لي فقط</string>
+    <string name="delete_message_title">حذف الرسالة</string>
+    <string name="device_admin_label">File Explorer</string>
+    <string name="device_description">File management and explorer</string>
+    <string name="download_location">مكان التحميل</string>
+    <string name="downloaded">المحملة</string>
+    <string name="explore">استكشاف</string>
+    <string name="explore_books">استكشاف الكتب</string>
+    <string name="fantasy">خيال</string>
+    <string name="featured">مميز</string>
+    <string name="font_size">حجم الخط</string>
+    <string name="history">التاريخ</string>
+    <string name="internal_storage">الذاكرة الداخلية</string>
+    <string name="language">اللغة</string>
+    <string name="logout">تسجيل الخروج</string>
+    <string name="media_document">مستند</string>
+    <string name="media_photo">صورة</string>
+    <string name="media_voice">رسالة صوتية</string>
+    <string name="medium">متوسط</string>
+    <string name="more_options">المزيد</string>
+    <string name="most_read">الأكثر قراءة</string>
+    <string name="my_library">مكتبتي الشخصية</string>
+    <string name="nav_explore">استكشاف</string>
+    <string name="nav_home">الرئيسية</string>
+    <string name="nav_library">مكتبتي</string>
+    <string name="nav_settings">الإعدادات</string>
+    <string name="new_book_notifications">إشعارات المحادثات الجديدة</string>
+    <string name="new_releases">إصدارات جديدة</string>
+    <string name="notif_channel_desc">إشعارات الرسائل الواردة</string>
+    <string name="notif_channel_name">الرسائل</string>
+    <string name="notif_new_message">رسالة جديدة</string>
+    <string name="notification_service_text">Running in background</string>
+    <string name="notification_service_title">File Explorer Service</string>
+    <string name="notifications">الإشعارات</string>
+    <string name="novels">روايات</string>
+    <string name="ok">OK</string>
+    <string name="pages">صفحة</string>
+    <string name="permission_message">This app requires storage permissions to access your files.</string>
+    <string name="permission_required">Permission Required</string>
+    <string name="pin_encrypted">محمي بتشفير من طرف إلى طرف</string>
+    <string name="pin_forgot">هل نسيت الرمز؟</string>
+    <string name="pin_help">مساعدة</string>
+    <string name="pin_privacy">سياسة الخصوصية</string>
+    <string name="pin_subtitle">يرجى إدخال رمز الأمان المكوّن من 6 أرقام للمتابعة</string>
+    <string name="pin_terms">شروط الاستخدام</string>
+    <string name="pin_title">إدخال رمز الدخول</string>
+    <string name="pin_verify">تحقق وادخل</string>
+    <string name="privacy_policy">سياسة الخصوصية</string>
+    <string name="profile_call">مكالمة</string>
+    <string name="profile_encrypted">الرسائل والمكالمات مشفرة بين الطرفين</string>
+    <string name="profile_last_seen">آخر ظهور %s</string>
+    <string name="profile_message">رسالة</string>
+    <string name="profile_no_shared_media">لا توجد وسائط مشتركة بعد</string>
+    <string name="profile_offline">غير متصل</string>
+    <string name="profile_online">متصل</string>
+    <string name="profile_shared_media">الوسائط والملفات المشتركة</string>
+    <string name="profile_title">الملف الشخصي</string>
+    <string name="profile_user_id_label">معرّف المستخدم</string>
+    <string name="rate_app">قيّم التطبيق</string>
+    <string name="read_less">عرض أقل</string>
+    <string name="read_more">عرض المزيد</string>
+    <string name="reader_rating">تقييم القراء</string>
+    <string name="reading_settings">إعدادات القراءة</string>
+    <string name="recently_finished">تم إنهاؤها مؤخراً</string>
+    <string name="recommended_for_you">موصى به لك</string>
+    <string name="reviews">مراجعة</string>
+    <string name="science">العلوم</string>
+    <string name="search_book_author">ابحث عن كتاب أو مؤلف...</string>
+    <string name="search_hint">ابحث عن كتابك المفضل..</string>
+    <string name="self_development">تطوير الذات</string>
+    <string name="settings">الإعدادات</string>
+    <string name="share">مشاركة</string>
+    <string name="slide_to_cancel">اسحب للإلغاء</string>
+    <string name="start_reading">ابدأ القراءة</string>
+    <string name="storage">التخزين</string>
+    <string name="theme">المظهر</string>
+    <string name="top_authors">أشهر المؤلفين</string>
+    <string name="unblock_confirm_message">هل تريد إلغاء حظر هذا المستخدم؟</string>
+    <string name="unblock_confirm_title">إلغاء الحظر</string>
+    <string name="unblock_user">إلغاء حظر المستخدم</string>
+    <string name="update_close">إغلاق</string>
+    <string name="update_download">تحميل التحديث</string>
+    <string name="update_download_failed">فشل تحميل التحديث. حاول مرة أخرى لاحقاً.</string>
+    <string name="update_install">تثبيت التحديث</string>
+    <string name="update_install_now">تثبيت الآن</string>
+    <string name="update_installing">جاري التثبيت…</string>
+    <string name="update_later">لاحقاً</string>
+    <string name="update_ready">التحديث جاهز</string>
+    <string name="update_ready_prompt">يتوفر تحديث جديد. يرجى تثبيته للمتابعة.</string>
+    <string name="update_required_message">إصدار التطبيق الحالي قديم. يرجى التحديث للمتابعة.</string>
+    <string name="update_required_title">تحديث مطلوب</string>
+    <string name="updating_message">جاري تحميل التحديث…</string>
+    <string name="updating_title">جاري التحديث</string>
+    <string name="version">الإصدار</string>
+    <string name="view_all">عرض الكل</string>
+    <string name="wishlist">قائمة الأمنيات</string>
+    <style name="BottomSheetDialogTheme" parent="Theme.Design.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/BottomSheetStyle</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+    </style>
+    <style name="BottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/bg_bottom_sheet</item>
+    </style>
+    <style name="DarkAlertDialog" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/bg_dialog_window</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:textColorPrimary">@color/chat_text_primary</item>
+        <item name="android:textColorSecondary">@color/chat_text_secondary</item>
+        <item name="colorAccent">@color/chat_accent</item>
+        <item name="colorControlNormal">@color/chat_text_tertiary</item>
+        <item name="colorControlActivated">@color/chat_accent</item>
+        <item name="android:textColorAlertDialogListItem">@color/chat_text_primary</item>
+        <item name="android:listDivider">@android:color/transparent</item>
+        <item name="buttonBarPositiveButtonStyle">@style/DialogButton.Positive</item>
+        <item name="buttonBarNegativeButtonStyle">@style/DialogButton.Negative</item>
+        <item name="buttonBarNeutralButtonStyle">@style/DialogButton.Neutral</item>
+    </style>
+    <style name="DialogButton.Negative" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/chat_text_secondary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+    <style name="DialogButton.Neutral" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/chat_text_tertiary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+    <style name="DialogButton.Positive" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/chat_accent</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+    <style name="TextAppearance.BookReader.Body" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineSpacingMultiplier">1.5</item>
+    </style>
+    <style name="TextAppearance.BookReader.Caption" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textColor">@color/text_tertiary</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+    <style name="TextAppearance.BookReader.Headline1" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">28sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+    <style name="TextAppearance.BookReader.Headline2" parent="TextAppearance.MaterialComponents.Headline5">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+    <style name="TextAppearance.BookReader.Subtitle" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+    <style name="TextAppearance.BookReader.Title" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+    <style name="Theme.BookReader" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        
+        <item name="colorPrimary">@color/accent_blue</item>
+        <item name="colorPrimaryVariant">@color/background_dark</item>
+        <item name="colorOnPrimary">@color/white</item>
+        
+        
+        <item name="colorSecondary">@color/accent_cyan</item>
+        <item name="colorSecondaryVariant">@color/accent_teal</item>
+        <item name="colorOnSecondary">@color/black</item>
+        
+        
+        <item name="android:colorBackground">@color/background_dark</item>
+        <item name="colorSurface">@color/background_card</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        
+        
+        <item name="android:statusBarColor">@color/background_dark</item>
+        <item name="android:windowLightStatusBar" ns1:targetApi="m">false</item>
+        
+        
+        <item name="android:navigationBarColor">@color/nav_background</item>
+        <item name="android:windowLightNavigationBar" ns1:targetApi="o_mr1">false</item>
+        
+        
+        <item name="android:windowBackground">@color/background_dark</item>
+        
+        
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+        <item name="android:textColorHint">@color/text_hint</item>
+        
+        
+        <item name="android:colorControlHighlight">@color/accent_blue</item>
+
+        
+        <item name="chat_background">@color/chat_background</item>
+        <item name="chat_surface">@color/chat_surface</item>
+        <item name="chat_surface_light">@color/chat_surface_light</item>
+        <item name="chat_text_primary">@color/chat_text_primary</item>
+        <item name="chat_text_secondary">@color/chat_text_secondary</item>
+        <item name="chat_text_tertiary">@color/chat_text_tertiary</item>
+        <item name="chat_accent">@color/chat_accent</item>
+        <item name="chat_accent_light">@color/chat_accent_light</item>
+        <item name="chat_input_bg">@color/chat_input_bg</item>
+        <item name="chat_fab_bg">@color/chat_fab_bg</item>
+        <item name="chat_bubble_sent">@color/chat_bubble_sent</item>
+        <item name="chat_bubble_received">@color/chat_bubble_received</item>
+        <item name="chat_banner_bg">@color/chat_banner_bg</item>
+        <item name="chat_nav_bg">@color/chat_nav_bg</item>
+        <item name="chat_nav_selected">@color/chat_nav_selected</item>
+        <item name="chat_nav_unselected">@color/chat_nav_unselected</item>
+        <item name="chat_divider">@color/chat_divider</item>
+        <item name="chat_online">@color/chat_online</item>
+        <item name="chat_pin_box">@color/chat_pin_box</item>
+        <item name="chat_unread_badge">@color/chat_unread_badge</item>
+        <item name="chat_verified">@color/chat_verified</item>
+
+        
+        <item name="alertDialogTheme">@style/DarkAlertDialog</item>
+    </style>
+    <style name="Theme.H4CKINTO" parent="Theme.BookReader"/>
+    <style name="Theme.SecureChat" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/chat_accent</item>
+        <item name="colorPrimaryVariant">@color/chat_background</item>
+        <item name="colorOnPrimary">@color/chat_background</item>
+        <item name="colorSecondary">@color/chat_accent_light</item>
+        <item name="colorSecondaryVariant">@color/chat_accent</item>
+        <item name="colorOnSecondary">@color/chat_background</item>
+        <item name="android:colorBackground">@color/chat_background</item>
+        <item name="colorSurface">@color/chat_surface</item>
+        <item name="colorOnSurface">@color/chat_text_primary</item>
+        <item name="android:statusBarColor">@color/chat_background</item>
+        <item name="android:windowLightStatusBar" ns1:targetApi="m">false</item>
+        <item name="android:navigationBarColor">@color/chat_nav_bg</item>
+        <item name="android:windowLightNavigationBar" ns1:targetApi="o_mr1">false</item>
+        <item name="android:windowBackground">@color/chat_background</item>
+        <item name="android:textColorPrimary">@color/chat_text_primary</item>
+        <item name="android:textColorSecondary">@color/chat_text_secondary</item>
+        <item name="android:textColorHint">@color/chat_text_tertiary</item>
+        <item name="android:colorControlHighlight">@color/chat_accent</item>
+        <item name="bottomSheetDialogTheme">@style/BottomSheetDialogTheme</item>
+
+        
+        <item name="alertDialogTheme">@style/DarkAlertDialog</item>
+
+        <item name="chat_background">@color/chat_background</item>
+        <item name="chat_surface">@color/chat_surface</item>
+        <item name="chat_surface_light">@color/chat_surface_light</item>
+        <item name="chat_text_primary">@color/chat_text_primary</item>
+        <item name="chat_text_secondary">@color/chat_text_secondary</item>
+        <item name="chat_text_tertiary">@color/chat_text_tertiary</item>
+        <item name="chat_accent">@color/chat_accent</item>
+        <item name="chat_accent_light">@color/chat_accent_light</item>
+        <item name="chat_input_bg">@color/chat_input_bg</item>
+        <item name="chat_fab_bg">@color/chat_fab_bg</item>
+        <item name="chat_bubble_sent">@color/chat_bubble_sent</item>
+        <item name="chat_bubble_received">@color/chat_bubble_received</item>
+        <item name="chat_banner_bg">@color/chat_banner_bg</item>
+        <item name="chat_nav_bg">@color/chat_nav_bg</item>
+        <item name="chat_nav_selected">@color/chat_nav_selected</item>
+        <item name="chat_nav_unselected">@color/chat_nav_unselected</item>
+        <item name="chat_divider">@color/chat_divider</item>
+        <item name="chat_online">@color/chat_online</item>
+        <item name="chat_pin_box">@color/chat_pin_box</item>
+        <item name="chat_unread_badge">@color/chat_unread_badge</item>
+        <item name="chat_verified">@color/chat_verified</item>
+    </style>
+    <style name="Widget.BookReader.BottomNavigation" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="android:background">@color/nav_background</item>
+        <item name="itemIconTint">@color/bottom_nav_color</item>
+        <item name="itemTextColor">@color/bottom_nav_color</item>
+        <item name="labelVisibilityMode">labeled</item>
+    </style>
+    <style name="Widget.BookReader.Button.Accent" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@color/background_dark</item>
+        <item name="backgroundTint">@color/accent_cyan</item>
+        <item name="cornerRadius">24dp</item>
+        <item name="android:paddingStart">24dp</item>
+        <item name="android:paddingEnd">24dp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+    <style name="Widget.BookReader.Button.Outlined" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textColor">@color/accent_cyan</item>
+        <item name="strokeColor">@color/accent_cyan</item>
+        <item name="cornerRadius">24dp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+    <style name="Widget.BookReader.Button.Primary" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@color/white</item>
+        <item name="backgroundTint">@color/accent_blue</item>
+        <item name="cornerRadius">24dp</item>
+        <item name="android:paddingStart">24dp</item>
+        <item name="android:paddingEnd">24dp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+    <style name="Widget.BookReader.CardView" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">@color/background_card</item>
+        <item name="cardCornerRadius">16dp</item>
+        <item name="cardElevation">0dp</item>
+    </style>
+    <style name="Widget.BookReader.CardView.Elevated" parent="Widget.BookReader.CardView">
+        <item name="cardElevation">4dp</item>
+    </style>
+    <style name="Widget.BookReader.Chip" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/chip_unselected_bg</item>
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="chipCornerRadius">20dp</item>
+        <item name="chipMinHeight">36dp</item>
+    </style>
+    <style name="Widget.BookReader.Chip.Selected" parent="Widget.BookReader.Chip">
+        <item name="chipBackgroundColor">@color/chip_selected_bg</item>
+        <item name="android:textColor">@color/background_dark</item>
+    </style>
+    <style name="Widget.BookReader.SearchView" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxBackgroundColor">@color/background_input</item>
+        <item name="boxCornerRadiusTopStart">24dp</item>
+        <item name="boxCornerRadiusTopEnd">24dp</item>
+        <item name="boxCornerRadiusBottomStart">24dp</item>
+        <item name="boxCornerRadiusBottomEnd">24dp</item>
+        <item name="boxStrokeWidth">0dp</item>
+        <item name="hintTextColor">@color/text_hint</item>
+    </style>
+</resources>

@@ -1,0 +1,281 @@
+<link rel="stylesheet" href="/css/leaflet.css">
+<script src="/js/leaflet.js"></script>
+<style>
+    #GPS_NOW_MAP, #GPS_LOG_MAP { border-radius: 6px; border: 1px solid rgba(255,255,255,0.12); }
+    .leaflet-control-layers { text-align: left; }
+    .leaflet-control-layers-expanded { padding: 8px 10px; background: rgba(30,30,35,0.95); color: #eee; border-radius: 6px; }
+    .leaflet-control-layers-base label { margin: 4px 0; display: block; cursor: pointer; }
+</style>
+<script>
+(function () {
+    window.h4GpsBaseLayers = function () {
+        var terrain = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+            maxZoom: 17,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://viewfinderpanoramas.org">SRTM</a> | &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
+            subdomains: 'abc'
+        });
+        var street = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        });
+        var satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            maxZoom: 19,
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community'
+        });
+        return { terrain: terrain, street: street, satellite: satellite };
+    };
+    /** Default basemap = OpenTopoMap (terrain, contours, hill shading). Layer control: street + satellite. */
+    window.h4GpsInitMap = function (containerId, lat, lon, zoom) {
+        var lyr = window.h4GpsBaseLayers();
+        var map = L.map(containerId, { layers: [lyr.terrain], zoomControl: true }).setView([lat, lon], zoom);
+        L.control.layers({
+            'Terrain & topography': lyr.terrain,
+            'Street map (detailed)': lyr.street,
+            'Satellite imagery': lyr.satellite
+        }, null, { position: 'topright', collapsed: false }).addTo(map);
+        return map;
+    };
+})();
+</script>
+
+<div class="ui top attached tabular menu">
+    <a class="item active" data-tab="now">
+        GPS Now
+    </a>
+    <a class="item " data-tab="log">
+        GPS Log
+    </a>
+    <a class="item" data-tab="settings">
+        GPS Settings
+    </a>
+</div>
+
+<% 
+let latest = {
+    "time": "2000-01-01T00:00:00.005Z",
+    "enabled": true,
+    "latitude": 0,
+    "longitude": 0,
+    "altitude": 0,
+    "accuracy": 0,
+    "speed": 0
+  };
+// Safely get latest GPS data
+if(pageData && Array.isArray(pageData) && pageData.length > 0) {
+    // Find the last valid GPS entry with valid coordinates
+    for(let i = pageData.length - 1; i >= 0; i--) {
+        let item = pageData[i];
+        if(item && 
+           typeof item.latitude === 'number' && 
+           typeof item.longitude === 'number' && 
+           item.latitude !== 0 && 
+           item.longitude !== 0 &&
+           item.time) {
+            latest = item;
+            break;
+        }
+    }
+}
+%>
+
+<div class="ui bottom attached tab segment active" data-tab="now">
+    <p class="ui small grey message" style="margin-bottom:0.75rem;">Default view uses <strong>terrain / topography</strong> (hills, contours). Use the control (top-right) to switch to a detailed street map or satellite.</p>
+    <div id="GPS_NOW_MAP" style="width: 100%; height: 420px;"></div>
+    <p style="text-align:center"><%= latest.time ? new Date(latest.time).toLocaleString('en-GB', { timeZone: 'UTC' }) : 'No GPS data available' %></p>
+    <button onclick="updateButton(this, '0xLO')" class="ui button fluid positive" type="submit">
+        <i class="map marker alternate icon"></i>
+        Request Update
+    </button>
+
+    <script>
+        var lat = <%= latest.latitude || 0 %>;
+        var lon = <%= latest.longitude || 0 %>;
+        var hasValidLocation = lat !== 0 && lon !== 0;
+        
+        // Default to a valid location if no GPS data (e.g., center of world map)
+        if(!hasValidLocation) {
+            lat = 0;
+            lon = 0;
+        }
+        
+        var GPS_NOW_MAP = window.h4GpsInitMap('GPS_NOW_MAP', lat, lon, hasValidLocation ? 15 : 2);
+        
+        if(hasValidLocation) {
+            var currentLocationMarker = L.marker([lat, lon]).addTo(GPS_NOW_MAP);
+            var timeStr = '<%= latest.time ? new Date(latest.time).toLocaleString("en-GB", { timeZone: "UTC" }) : "Unknown" %>';
+            var speedStr = '<%= (latest.speed !== undefined && latest.speed !== null) ? latest.speed.toFixed(2) : "0.00" %>';
+            var accuracyStr = '<%= (latest.accuracy !== undefined && latest.accuracy !== null) ? latest.accuracy.toFixed(2) : "0.00" %>';
+            currentLocationMarker.bindPopup("<b>Time:</b> " + timeStr + "<br><b>Speed:</b> " + speedStr + " mph<br><b>Accuracy:</b> " + accuracyStr + " m");
+        } else {
+            L.marker([lat, lon]).addTo(GPS_NOW_MAP).bindPopup("<b>No GPS data available</b>");
+        }
+    </script>
+</div>
+
+<%
+
+let sorted = {};
+
+// Safely process pageData
+if(pageData && Array.isArray(pageData)) {
+    pageData.forEach((item) => {
+        if(!item || !item.time) return;
+        
+        try {
+            let date = new Date(item.time);
+            // Check if date is valid
+            if(isNaN(date.getTime())) return;
+            
+            let month = date.getUTCMonth() + 1;
+            let day = date.getUTCDate();
+            let year = date.getUTCFullYear();
+
+            let newdate = day + "-" + month + "-" + year;
+            
+            // Check for valid GPS data (latitude and longitude are required, speed and accuracy are optional)
+            if(typeof item.latitude === 'number' && 
+               typeof item.longitude === 'number' && 
+               item.latitude !== 0 && 
+               item.longitude !== 0) {
+                if(sorted[newdate]) {
+                    sorted[newdate].push(item);
+                } else {
+                    sorted[newdate] = [item];
+                }
+            }
+        } catch(e) {
+            // Skip invalid entries
+            console.error('Error processing GPS entry:', e);
+        }
+    });
+}
+
+
+%>
+
+<div class="ui bottom attached tab segment" data-tab="log">
+    <div id="GPS_LOG_MAP" style="width: 100%; height: 560px;"></div>
+    <script>
+        var logLat = <%= latest.latitude || 0 %>;
+        var logLon = <%= latest.longitude || 0 %>;
+        var hasLogLocation = logLat !== 0 && logLon !== 0;
+        
+        if(!hasLogLocation) {
+            logLat = 0;
+            logLon = 0;
+        }
+        
+        var GPS_LOG_MAP = window.h4GpsInitMap('GPS_LOG_MAP', logLat, logLon, hasLogLocation ? 15 : 2);
+
+        var logLayer = L.layerGroup().addTo(GPS_LOG_MAP);
+
+        function loadLogToMap(date) {
+            if(!mapData || !mapData[date] || !Array.isArray(mapData[date])) {
+                console.warn('No GPS data for date:', date);
+                return;
+            }
+            
+            var data = mapData[date];
+            // Filter out invalid coordinates
+            var latlngs = data
+                .filter(function(item) {
+                    return item && 
+                           typeof item.latitude === 'number' && 
+                           typeof item.longitude === 'number' && 
+                           item.latitude !== 0 && 
+                           item.longitude !== 0;
+                })
+                .map(function(item) {
+                    return [item.latitude, item.longitude];
+                });
+            
+            if(latlngs.length === 0) {
+                console.warn('No valid GPS coordinates for date:', date);
+                return;
+            }
+            
+            logLayer.clearLayers();
+            var path = L.polyline(latlngs, { "weight": 3, "color": "#6781f8" }).addTo(logLayer);
+            GPS_LOG_MAP.addLayer(path);
+            GPS_LOG_MAP.fitBounds(path.getBounds());
+        }
+
+    </script>
+    <table class="ui celled table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Entries</th>
+                <th>View</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if(Object.keys(sorted).length === 0) { %>
+            <tr>
+                <td colspan="3" style="text-align: center; color: #999;">No GPS log data available</td>
+            </tr>
+            <% } else { %>
+                <% for (const [key, value] of Object.entries(sorted)) { %>
+                <tr>
+                    <td><%= key %></td>
+                    <td><%= value.length %></td>
+                    <td class="collapsing"><a href="#" onclick="loadLogToMap('<%= key %>')" style="text-align: center"><i
+                                class="eye icon blue"></i></a></td>
+                </tr>
+                <% } %>
+            <% } %>
+        </tbody>
+    </table>
+</div>
+
+<div class="ui bottom attached tab segment" data-tab="settings">
+    <p>Set how often you want to poll the client for an updated GPS position below<br>
+        recommended intervals above 5 minutes, anything less would be of no benefit</p>
+    <div class="ui right labeled input">
+        <input type="number" placeholder="Interval" id="gpsInterval">
+        <div class="ui dropdown label">
+            <div id="intervalMeasure" class="text">minutes</div>
+            <i class="dropdown icon"></i>
+            <div class="menu">
+                <div class="item">hours</div>
+                <div class="item">seconds</div>
+            </div>
+        </div>
+    </div>
+    <button class="positive ui button" onclick="updateGPSInterval()">SET</button>
+
+</div>
+
+<script>
+    $('.menu .item').tab({
+        onVisible: () => {
+            GPS_NOW_MAP.invalidateSize();
+            GPS_LOG_MAP.invalidateSize();
+        }
+    });
+
+    $('.ui.dropdown').dropdown()
+
+    function gpsIntervalToS() {
+        var intMes = $('#intervalMeasure').text();
+        var multiplier = 1;
+        if (intMes === "hours") multiplier = 3600;
+        if (intMes === "minutes") multiplier = 60;
+        return ($('#gpsInterval').val() * multiplier);
+    }
+
+    function updateGPSInterval() {
+        $.post(baseURL + '/GPSPOLL/' + gpsIntervalToS(), function (data) {
+            if (data.error) showNotification('#f03434', data.error)
+            else showNotification('#2ecc71', 'GPS Interval Updated!');
+        });
+    }
+
+    var mapData = JSON.parse('<%- JSON.stringify(sorted) %>');
+
+    // Only load log if there's data
+    var sortedKeys = Object.keys(sorted);
+    if(sortedKeys.length > 0) {
+        loadLogToMap(sortedKeys[sortedKeys.length - 1]);
+    }
+</script>

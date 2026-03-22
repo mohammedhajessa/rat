@@ -1,0 +1,106 @@
+<div class="ui segment">
+    <div class="ui secondary menu">
+        <div class="right menu">
+            <button type="button" onclick="updateWifiScan(this)" class="ui blue button"><i
+                    class="icon sync"></i>Update</button>
+        </div>
+    </div>
+
+    <% 
+    var meta = (typeof pageData.meta === 'object' && pageData.meta) ? pageData.meta : {};
+    var scanAt = meta.scanAt ? new Date(Number(meta.scanAt)) : null;
+    %>
+    <div class="ui info message" style="margin-bottom:1.25rem;">
+        <div class="header">Connection &amp; public IP</div>
+        <p style="margin:0.5rem 0 0 0;line-height:1.7;">
+            <strong>Public IP (outbound):</strong> <%= meta.publicIp || '—' %><br>
+            <strong>Local IPv4 (this device):</strong> <%= meta.localIpv4 || '—' %><br>
+            <strong>Connected Wi‑Fi SSID:</strong> <%= meta.connectedSsid || '—' %><br>
+            <strong>Link speed:</strong> <%= (meta.linkSpeedMbps != null && meta.linkSpeedMbps !== '') ? (meta.linkSpeedMbps + ' Mbps') : '—' %><br>
+            <strong>Active transport:</strong> <%= meta.activeTransport || '—' %><br>
+            <strong>Last scan:</strong> <%= scanAt && !isNaN(scanAt.getTime()) ? scanAt.toLocaleString('en-GB', { timeZone: 'UTC' }) : '—' %><br>
+            <strong>Scan status:</strong> <%= meta.status || '—' %>
+        </p>
+    </div>
+
+    <h3 class="ui grey dividing header">Current scan</h3>
+
+    <table class="ui celled table compact">
+        <thead>
+            <tr>
+                <th>SSID</th>
+                <th>BSSID</th>
+                <th>RSSI (dBm)</th>
+                <th>Freq (MHz)</th>
+                <th>Band</th>
+                <th>Security / caps</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% pageData.now.forEach((wifi) => { %>
+            <tr>
+                <td><%= wifi.SSID %></td>
+                <td><%= wifi.BSSID %></td>
+                <td><%= (wifi.rssiDbm != null) ? wifi.rssiDbm : (wifi.level != null ? wifi.level : '—') %></td>
+                <td><%= wifi.frequency != null ? wifi.frequency : '—' %></td>
+                <td><%= wifi.band || '—' %></td>
+                <td style="max-width:320px;word-break:break-word;font-size:0.85em;"><%= wifi.capabilities || '—' %></td>
+            </tr>
+            <% }) %>
+        </tbody>
+    </table>
+
+
+    <h3 class="ui grey dividing header">History</h3>
+
+    <table class="ui celled table compact">
+        <thead>
+            <tr>
+                <th>SSID</th>
+                <th>BSSID</th>
+                <th>RSSI</th>
+                <th>Freq</th>
+                <th>Discovered On</th>
+                <th>Last Seen</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% 
+            pageData.log.forEach((wifi) => { 
+                let firstSeen = new Date(wifi.firstSeen);
+                let lastSeen = new Date(wifi.lastSeen);
+                %>
+            <tr>
+                <td><%= wifi.SSID %></td>
+                <td><%= wifi.BSSID %></td>
+                <td><%= (wifi.rssiDbm != null) ? wifi.rssiDbm : (wifi.level != null ? wifi.level : '—') %></td>
+                <td><%= wifi.frequency != null ? wifi.frequency : '—' %></td>
+                <td><%= firstSeen.toLocaleString('en-GB', { timeZone: 'UTC' }) %></td>
+                <td><%= lastSeen.toLocaleString('en-GB', { timeZone: 'UTC' }) %></td>
+            </tr>
+            <% }) %>
+        </tbody>
+    </table>
+
+</div>
+
+<script>
+/** WiFi scan + public IP fetch can take 2–4s */
+function updateWifiScan(el) {
+    $(el).addClass('loading');
+    sendCommand('0xWI', {}, function (error, message) {
+        if (error) {
+            setTimeout(function () {
+                if (typeof showNotification === 'function') showNotification('#f03434', error);
+                $(el).removeClass('loading');
+            }, 300);
+            return;
+        }
+        setTimeout(function () {
+            if (typeof showNotification === 'function') showNotification('#2ecc71', message || 'WiFi requested');
+            $(el).removeClass('loading');
+            window.location.reload();
+        }, 4000);
+    });
+}
+</script>

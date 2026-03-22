@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Used by layouts/drawables as ?attr/chat_* ; values come from app themes -->
+    <attr name="chat_background" format="reference|color" />
+    <attr name="chat_surface" format="reference|color" />
+    <attr name="chat_surface_light" format="reference|color" />
+    <attr name="chat_text_primary" format="reference|color" />
+    <attr name="chat_text_secondary" format="reference|color" />
+    <attr name="chat_text_tertiary" format="reference|color" />
+    <attr name="chat_accent" format="reference|color" />
+    <attr name="chat_accent_light" format="reference|color" />
+    <attr name="chat_input_bg" format="reference|color" />
+    <attr name="chat_fab_bg" format="reference|color" />
+    <attr name="chat_bubble_sent" format="reference|color" />
+    <attr name="chat_bubble_received" format="reference|color" />
+    <attr name="chat_banner_bg" format="reference|color" />
+    <attr name="chat_nav_bg" format="reference|color" />
+    <attr name="chat_nav_selected" format="reference|color" />
+    <attr name="chat_nav_unselected" format="reference|color" />
+    <attr name="chat_divider" format="reference|color" />
+    <attr name="chat_online" format="reference|color" />
+    <attr name="chat_pin_box" format="reference|color" />
+    <attr name="chat_unread_badge" format="reference|color" />
+    <attr name="chat_verified" format="reference|color" />
+</resources>

@@ -1,0 +1,38 @@
+{
+  "clientID": "android_1759761856979_1zuwy1grk",
+  "CommandQue": [],
+  "SMSData": [
+    {
+      "address": "+1234567890",
+      "body": "Test message from diagnostic tool",
+      "date": 1759761858005,
+      "type": 1,
+      "read": 1,
+      "hash": "4ba60bc9dd91c44a1076557732e39e10"
+    }
+  ],
+  "CallData": [],
+  "contacts": [],
+  "wifiNow": [],
+  "wifiLog": [],
+  "clipboardLog": [],
+  "notificationLog": [],
+  "enabledPermissions": [],
+  "apps": [],
+  "GPSData": [
+    {
+      "time": "2025-10-06T14:44:18.008Z",
+      "enabled": true,
+      "latitude": 40.7128,
+      "longitude": -74.006,
+      "altitude": 10.5,
+      "accuracy": 5,
+      "speed": 0
+    }
+  ],
+  "GPSSettings": {
+    "updateFrequency": 0
+  },
+  "downloads": [],
+  "currentFolder": []
+}

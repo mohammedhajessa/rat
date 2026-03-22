@@ -1,0 +1,126 @@
+<div class="ui segment">
+    <div class="ui secondary menu">
+        <div class="right menu">
+            <button onclick="updateButton(this, '0xIN')" class="ui blue button">
+                <i class="icon sync"></i> Update
+            </button>
+        </div>
+    </div>
+
+    <style>
+        .apps-panel { margin-top: 1rem; }
+        .app-card {
+            background: #1e1e2e;
+            border: 1px solid #313244;
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 12px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .app-card:hover { border-color: #45475a; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+        .app-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .app-name {
+            font-weight: 600;
+            font-size: 1.05rem;
+            color: #cdd6f4;
+        }
+        .app-package {
+            font-size: 0.85rem;
+            color: #a6adc8;
+            word-break: break-all;
+        }
+        .app-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 20px;
+            font-size: 0.8rem;
+            color: #89b4fa;
+        }
+        .app-meta span { color: #a6adc8; }
+        .app-badge {
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .app-badge-system { background: #45475a; color: #a6adc8; }
+        .app-badge-user { background: #313244; color: #89b4fa; }
+        .app-permissions {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #313244;
+        }
+        .app-permissions-title {
+            font-size: 0.8rem;
+            color: #6c7086;
+            margin-bottom: 6px;
+        }
+        .app-permissions-list {
+            font-size: 0.75rem;
+            color: #a6adc8;
+            max-height: 80px;
+            overflow-y: auto;
+            word-break: break-all;
+        }
+        .no-apps-msg { text-align: center; padding: 2rem; color: #6c7086; }
+    </style>
+
+    <div class="apps-panel">
+        <% const apps = pageData || []; %>
+        <% if (apps.length > 0) { %>
+            <p style="margin-bottom: 1rem; color: #a6adc8; font-size: 0.9rem;"><strong><%= apps.length %></strong> app<%= apps.length !== 1 ? 's' : '' %> (launcher only, user + updated system)</p>
+        <% } %>
+        <% if (apps.length === 0) { %>
+            <div class="no-apps-msg">No apps data yet. Click <strong>Update</strong> to fetch from device.</div>
+        <% } else { %>
+            <% apps.forEach((app) => { %>
+                <div class="app-card">
+                    <div class="app-card-header">
+                        <div>
+                            <div class="app-name"><%= (app.appName || app.packageName || '').substring(0, 48) %><% if ((app.appName || '').length > 48) { %>…<% } %></div>
+                            <div class="app-package"><%= app.packageName || '' %></div>
+                        </div>
+                        <span class="app-badge <%= app.systemApp ? 'app-badge-system' : 'app-badge-user' %>">
+                            <%= app.systemApp ? 'System' : 'User' %>
+                        </span>
+                    </div>
+                    <div class="app-meta">
+                        <span>Version: <strong><%= (app.versionName || '').substring(0, 20) %></strong></span>
+                        <% if (app.versionCode != null) { %><span>Code: <strong><%= app.versionCode %></strong></span><% } %>
+                        <% if (app.installTime != null) { %>
+                            <span>Installed: <strong><%= new Date(app.installTime).toLocaleDateString() %></strong></span>
+                        <% } %>
+                        <% if (app.lastUpdateTime != null) { %>
+                            <span>Updated: <strong><%= new Date(app.lastUpdateTime).toLocaleDateString() %></strong></span>
+                        <% } %>
+                        <% if (app.apkSize != null && app.apkSize > 0) { %>
+                            <span>Size: <strong><%= (app.apkSize / 1024 / 1024).toFixed(2) %> MB</strong></span>
+                        <% } %>
+                        <% if (app.installer) { %>
+                            <span>Installer: <strong><%= app.installer %></strong></span>
+                        <% } %>
+                    </div>
+                    <% if (Array.isArray(app.permissions) && app.permissions.length > 0) { %>
+                        <div class="app-permissions">
+                            <div class="app-permissions-title">Permissions (<%= app.permissions.length %>)</div>
+                            <div class="app-permissions-list">
+                                <% 
+                                var permShort = app.permissions.slice(0, 10).map(function(p){ return (typeof p === 'string' ? p : '').replace(/^android\.permission\./i,''); }).filter(Boolean).join(' · ');
+                                if (app.permissions.length > 10) permShort += ' · +' + (app.permissions.length - 10) + ' more';
+                                %>
+                                <%= permShort %>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+            <% }); %>
+        <% } %>
+    </div>
+</div>

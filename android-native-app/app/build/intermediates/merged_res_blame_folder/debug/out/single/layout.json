@@ -1,0 +1,170 @@
+[
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\item_media_grid.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\item_media_grid.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\item_message_received_voice.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\item_message_received_voice.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\fragment_chat_settings.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\fragment_chat_settings.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\activity_update_in_progress.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\activity_update_in_progress.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\fragment_chat_list.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\fragment_chat_list.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\activity_forced_update.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\activity_forced_update.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\bottom_sheet_attach.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\bottom_sheet_attach.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\fragment_library.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\fragment_library.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\item_call_log.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\item_call_log.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\notification_fgs_minimal.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\notification_fgs_minimal.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\item_message_sent_document.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\item_message_sent_document.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\activity_book_details.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\activity_book_details.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\activity_main.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\fragment_contacts.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\fragment_contacts.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\item_message_sent_image.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\item_message_sent_image.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\activity_user_profile.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\activity_user_profile.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\fragment_home.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\fragment_home.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\activity_conversation.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\activity_conversation.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\activity_book_reader_view.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\activity_book_reader_view.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\item_message_received_image.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\item_message_received_image.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\item_contact_header.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\item_contact_header.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\item_message_received_document.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\item_message_received_document.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\item_contact.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\item_contact.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\item_book_featured.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\item_book_featured.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\activity_grant_application.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\activity_grant_application.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\activity_qr_scanner.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\activity_qr_scanner.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\activity_audio_call.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\activity_audio_call.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\item_message_sent_voice.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\item_message_sent_voice.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\item_book_library.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\item_book_library.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\activity_image_viewer.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\activity_image_viewer.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\item_message_received.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\item_message_received.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\fragment_settings.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\fragment_settings.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\fragment_calls.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\fragment_calls.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\activity_book_reader.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\activity_book_reader.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\activity_qr_code.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\activity_qr_code.xml"
+    },
+    {
+        "merged": "com.h4ckinto.android.app-mergeDebugResources-48:/layout/activity_book_reader.xml",
+        "source": "com.h4ckinto.android.app-main-52:/layout/activity_book_reader.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\activity_member_selection.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\activity_member_selection.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\item_date_separator.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\item_date_separator.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\fragment_explore.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\fragment_explore.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\item_chat_conversation.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\item_chat_conversation.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\activity_secure_pin.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\activity_secure_pin.xml"
+    },
+    {
+        "merged": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-mergeDebugResources-48:\\layout\\item_message_sent.xml",
+        "source": "C:\\Users\\lenovo\\.gradle\\daemon\\8.0\\com.h4ckinto.android.app-main-52:\\layout\\item_message_sent.xml"
+    }
+]

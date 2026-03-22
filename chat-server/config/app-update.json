@@ -1,0 +1,8 @@
+{
+  "version_name": "3.2.26",
+  "latest_version": 32,
+  "min_supported_version": 30,
+  "apk_url": "https://your-server.com/downloads/app_v32.apk",
+  "force_update": false,
+  "message": "تحديث متاح - يرجى التحديث للحصول على آخر الميزات"
+}

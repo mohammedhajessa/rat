@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <cache-path name="cache" path="." />
+    <cache-path name="voice" path="voice/" />
+    <cache-path name="downloads" path="downloads/" />
+    <external-cache-path name="external_cache" path="." />
+    <!-- App update APK: getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)/update.apk -->
+    <external-files-path name="app_update" path="Download/" />
+</paths>

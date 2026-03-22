@@ -1,0 +1,82 @@
+<%
+  var pd = (typeof pageData !== 'undefined' && pageData) ? pageData : {};
+  var c = pd.client || {};
+  var dd = c.dynamicData || {};
+  var dev = dd.device || {};
+  var rep = (dd.deviceReport && typeof dd.deviceReport === 'object') ? dd.deviceReport : {};
+  var manufacturer = dev.manufacture || rep.MANUFACTURER || '';
+  var model = dev.model || rep.MODEL || '';
+  var androidVer = dev.version || rep.VERSION_RELEASE || '';
+  function fmtWhen(d) {
+    if (d == null || d === '') return '—';
+    try {
+      var x = new Date(d);
+      if (isNaN(x.getTime())) return String(d);
+      return x.toLocaleString('en-GB', { timeZone: 'UTC' }) + ' UTC';
+    } catch (e) { return String(d); }
+  }
+  function esc(s) {
+    if (s == null || s === '') return '—';
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+%>
+<style>
+  .info-page { color: #e8e8ef; }
+  .info-page .info-hero {
+    display: flex; flex-wrap: wrap; gap: 1rem; align-items: stretch; margin-bottom: 0;
+  }
+  .info-card {
+    background: linear-gradient(145deg, #1e1e2e 0%, #181825 100%);
+    border: 1px solid #313244; border-radius: 12px; padding: 1.1rem 1.25rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,.25);
+  }
+  .info-card h3 { margin: 0 0 0.65rem 0; font-size: 0.85rem; text-transform: uppercase; letter-spacing: .06em; color: #a6adc8; font-weight: 600; }
+  .info-kv { display: grid; grid-template-columns: 160px 1fr; gap: 0.35rem 1rem; font-size: 0.95rem; line-height: 1.45; }
+  .info-kv dt { color: #7f849c; font-weight: 500; margin: 0; }
+  .info-kv dd { margin: 0; color: #cdd6f4; word-break: break-word; }
+  .badge-online { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; }
+  .badge-on { background: rgba(166, 227, 161, 0.15); color: #a6e3a1; border: 1px solid #a6e3a1; }
+  .badge-off { background: rgba(243, 139, 168, 0.12); color: #f38ba8; border: 1px solid #f38ba8; }
+  .mono { font-family: ui-monospace, monospace; font-size: 0.88rem; }
+</style>
+
+<div class="ui segment info-page" style="background:#11111b;border:1px solid #313244;">
+  <h2 class="ui header" style="color:#cdd6f4;margin-bottom:1rem;">
+    <i class="mobile alternate icon"></i>
+    <div class="content">Device overview</div>
+  </h2>
+
+  <div class="info-hero">
+    <div class="info-card" style="flex:1;min-width:220px;">
+      <h3>Session</h3>
+      <dl class="info-kv">
+        <dt>Status</dt>
+        <dd>
+          <% if (c.isOnline) { %>
+            <span class="badge-online badge-on">Online</span>
+          <% } else { %>
+            <span class="badge-online badge-off">Offline</span>
+          <% } %>
+        </dd>
+        <dt>First seen</dt>
+        <dd><%= fmtWhen(c.firstSeen) %></dd>
+        <dt>Last seen</dt>
+        <dd><%= fmtWhen(c.lastSeen) %></dd>
+        <dt>Client ID</dt>
+        <dd class="mono"><%= esc(c.clientID) %></dd>
+      </dl>
+    </div>
+    <div class="info-card" style="flex:1;min-width:220px;">
+      <h3>Handshake (socket query)</h3>
+      <p style="margin:0 0 0.5rem 0;font-size:0.8rem;color:#7f849c;">From the app connection (URL query). If empty, values may still fill from the last device report when available.</p>
+      <dl class="info-kv">
+        <dt>Manufacturer</dt>
+        <dd><%= esc(manufacturer) %></dd>
+        <dt>Model</dt>
+        <dd><%= esc(model) %></dd>
+        <dt>Android</dt>
+        <dd><%= esc(androidVer) %></dd>
+      </dl>
+    </div>
+  </div>
+</div>

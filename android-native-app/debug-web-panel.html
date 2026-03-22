@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Web Panel Connection</title>
+    <script src="http://192.168.1.200:9400/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <h1>Debug Web Panel Connection</h1>
+    <div id="status">Connecting...</div>
+    <div id="notifications"></div>
+    
+    <script>
+        console.log('🔌 Starting debug connection...');
+        
+        const socket = io('http://192.168.1.200:9400', {
+            transports: ['polling', 'websocket'],
+            timeout: 10000
+        });
+        
+        socket.on('connect', function() {
+            console.log('✅ Connected to server');
+            console.log('Socket ID:', socket.id);
+            document.getElementById('status').innerHTML = '✅ Connected to server (Socket ID: ' + socket.id + ')';
+        });
+        
+        socket.on('disconnect', function() {
+            console.log('❌ Disconnected from server');
+            document.getElementById('status').innerHTML = '❌ Disconnected from server';
+        });
+        
+        socket.on('connect_error', function(error) {
+            console.log('❌ Connection error:', error);
+            document.getElementById('status').innerHTML = '❌ Connection error: ' + error.message;
+        });
+        
+        socket.on('notification_received', function(data) {
+            console.log('🔔 Notification received:', data);
+            const div = document.createElement('div');
+            div.innerHTML = '<strong>' + data.data.appName + ':</strong> ' + data.data.title;
+            div.style.border = '1px solid #ccc';
+            div.style.padding = '10px';
+            div.style.margin = '5px';
+            document.getElementById('notifications').appendChild(div);
+        });
+        
+        // Test get all notifications
+        setTimeout(() => {
+            console.log('📤 Testing get_all_notifications...');
+            socket.emit('get_all_notifications', {}, function(response) {
+                console.log('📨 Get all notifications response:', response);
+                if (response && response.notifications) {
+                    document.getElementById('status').innerHTML += '<br>📊 Found ' + response.notifications.length + ' stored notifications';
+                }
+            });
+        }, 2000);
+    </script>
+</body>
+</html>

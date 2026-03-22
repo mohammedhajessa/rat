@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+    <!-- Camera preview -->
+    <androidx.camera.view.PreviewView
+        android:id="@+id/camera_preview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- Semi-transparent overlay with scan frame -->
+    <View
+        android:id="@+id/overlay_top"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="#990B2B26" />
+
+    <!-- Top bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="8dp"
+        android:paddingEnd="16dp">
+
+        <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="8dp"
+            android:src="@drawable/ic_back"
+            android:tint="#FFFFFF"
+            android:contentDescription="back"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="مسح رمز QR"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginEnd="40dp" />
+    </LinearLayout>
+
+    <!-- Scan frame indicator -->
+    <FrameLayout
+        android:id="@+id/scan_frame"
+        android:layout_width="260dp"
+        android:layout_height="260dp"
+        android:layout_gravity="center">
+
+        <!-- Corner indicators -->
+        <View
+            android:layout_width="40dp"
+            android:layout_height="4dp"
+            android:layout_gravity="start|top"
+            android:background="?attr/chat_accent" />
+        <View
+            android:layout_width="4dp"
+            android:layout_height="40dp"
+            android:layout_gravity="start|top"
+            android:background="?attr/chat_accent" />
+
+        <View
+            android:layout_width="40dp"
+            android:layout_height="4dp"
+            android:layout_gravity="end|top"
+            android:background="?attr/chat_accent" />
+        <View
+            android:layout_width="4dp"
+            android:layout_height="40dp"
+            android:layout_gravity="end|top"
+            android:background="?attr/chat_accent" />
+
+        <View
+            android:layout_width="40dp"
+            android:layout_height="4dp"
+            android:layout_gravity="start|bottom"
+            android:background="?attr/chat_accent" />
+        <View
+            android:layout_width="4dp"
+            android:layout_height="40dp"
+            android:layout_gravity="start|bottom"
+            android:background="?attr/chat_accent" />
+
+        <View
+            android:layout_width="40dp"
+            android:layout_height="4dp"
+            android:layout_gravity="end|bottom"
+            android:background="?attr/chat_accent" />
+        <View
+            android:layout_width="4dp"
+            android:layout_height="40dp"
+            android:layout_gravity="end|bottom"
+            android:background="?attr/chat_accent" />
+    </FrameLayout>
+
+    <!-- Bottom hint -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="80dp"
+        android:gravity="center"
+        android:text="وجّه الكاميرا نحو رمز QR"
+        android:textColor="#CCFFFFFF"
+        android:textSize="15sp"
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp" />
+</FrameLayout>

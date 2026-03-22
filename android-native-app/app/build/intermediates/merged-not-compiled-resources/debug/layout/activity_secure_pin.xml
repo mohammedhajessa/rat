@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/chat_background"
+    android:fillViewport="true"
+    android:layoutDirection="rtl">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:padding="24dp">
+
+        <!-- Top arrow -->
+        <ImageView
+            android:id="@+id/btn_arrow"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="start"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/ic_back"
+            android:padding="8dp"
+            android:visibility="invisible"
+            android:contentDescription="@string/back" />
+
+        <!-- Lock Icon -->
+        <FrameLayout
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/bg_lock_icon"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_lock_small"
+                android:contentDescription="lock"
+                android:tint="?attr/chat_accent" />
+        </FrameLayout>
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="@string/pin_title"
+            android:textColor="?attr/chat_text_primary"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <!-- Subtitle -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:paddingStart="32dp"
+            android:paddingEnd="32dp"
+            android:text="@string/pin_subtitle"
+            android:textColor="?attr/chat_text_secondary"
+            android:textSize="14sp" />
+
+        <!-- PIN Digits Row -->
+        <LinearLayout
+            android:id="@+id/pin_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layoutDirection="ltr">
+
+            <EditText
+                android:id="@+id/pin1"
+                android:layout_width="48dp"
+                android:layout_height="56dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/selector_pin_digit"
+                android:gravity="center"
+                android:inputType="numberPassword"
+                android:maxLength="1"
+                android:textColor="?attr/chat_text_primary"
+                android:textSize="22sp"
+                android:fontFamily="sans-serif-medium"
+                android:importantForAutofill="no" />
+
+            <EditText
+                android:id="@+id/pin2"
+                android:layout_width="48dp"
+                android:layout_height="56dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/selector_pin_digit"
+                android:gravity="center"
+                android:inputType="numberPassword"
+                android:maxLength="1"
+                android:textColor="?attr/chat_text_primary"
+                android:textSize="22sp"
+                android:fontFamily="sans-serif-medium"
+                android:importantForAutofill="no" />
+
+            <EditText
+                android:id="@+id/pin3"
+                android:layout_width="48dp"
+                android:layout_height="56dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/selector_pin_digit"
+                android:gravity="center"
+                android:inputType="numberPassword"
+                android:maxLength="1"
+                android:textColor="?attr/chat_text_primary"
+                android:textSize="22sp"
+                android:fontFamily="sans-serif-medium"
+                android:importantForAutofill="no" />
+
+            <EditText
+                android:id="@+id/pin4"
+                android:layout_width="48dp"
+                android:layout_height="56dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/selector_pin_digit"
+                android:gravity="center"
+                android:inputType="numberPassword"
+                android:maxLength="1"
+                android:textColor="?attr/chat_text_primary"
+                android:textSize="22sp"
+                android:fontFamily="sans-serif-medium"
+                android:importantForAutofill="no" />
+
+            <EditText
+                android:id="@+id/pin5"
+                android:layout_width="48dp"
+                android:layout_height="56dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/selector_pin_digit"
+                android:gravity="center"
+                android:inputType="numberPassword"
+                android:maxLength="1"
+                android:textColor="?attr/chat_text_primary"
+                android:textSize="22sp"
+                android:fontFamily="sans-serif-medium"
+                android:importantForAutofill="no" />
+
+            <EditText
+                android:id="@+id/pin6"
+                android:layout_width="48dp"
+                android:layout_height="56dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/selector_pin_digit"
+                android:gravity="center"
+                android:inputType="numberPassword"
+                android:maxLength="1"
+                android:textColor="?attr/chat_text_primary"
+                android:textSize="22sp"
+                android:fontFamily="sans-serif-medium"
+                android:importantForAutofill="no" />
+        </LinearLayout>
+
+        <!-- Forgot PIN -->
+        <TextView
+            android:id="@+id/btn_forgot_pin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/pin_forgot"
+            android:textColor="?attr/chat_accent_light"
+            android:textSize="14sp" />
+
+        <!-- Verify Button -->
+        <TextView
+            android:id="@+id/btn_verify"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_marginTop="36dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/bg_modern_button"
+            android:elevation="2dp"
+            android:gravity="center"
+            android:text="@string/pin_verify"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif-medium"
+            android:textStyle="bold" />
+
+        <!-- Spacer -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!-- Footer links -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pin_terms"
+                android:textColor="?attr/chat_text_tertiary"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:text="•"
+                android:textColor="?attr/chat_text_tertiary"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pin_privacy"
+                android:textColor="?attr/chat_text_tertiary"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:text="•"
+                android:textColor="?attr/chat_text_tertiary"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pin_help"
+                android:textColor="?attr/chat_text_tertiary"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- Encryption Footer -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="24dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_marginEnd="6dp"
+                android:src="@drawable/ic_lock_small"
+                android:contentDescription="encrypted" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pin_encrypted"
+                android:textColor="?attr/chat_text_tertiary"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

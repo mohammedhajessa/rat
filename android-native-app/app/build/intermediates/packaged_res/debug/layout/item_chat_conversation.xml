@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layoutDirection="rtl">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layoutDirection="rtl"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
+        android:background="?attr/selectableItemBackground">
+
+        <!-- Avatar -->
+        <FrameLayout
+            android:id="@+id/avatar_frame"
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true">
+
+            <TextView
+                android:id="@+id/avatar_text"
+                android:layout_width="54dp"
+                android:layout_height="54dp"
+                android:background="@drawable/bg_avatar_placeholder"
+                android:gravity="center"
+                android:textColor="@color/chat_text_primary"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textDirection="ltr" />
+
+            <ImageView
+                android:id="@+id/avatar_image"
+                android:layout_width="54dp"
+                android:layout_height="54dp"
+                android:scaleType="centerCrop"
+                android:visibility="gone" />
+
+            <View
+                android:id="@+id/online_indicator"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_gravity="bottom|start"
+                android:background="@drawable/bg_online_indicator"
+                android:visibility="gone" />
+        </FrameLayout>
+
+        <!-- Center: name + preview (time + mute on preview row) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/avatar_frame"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="14dp"
+            android:orientation="vertical"
+            android:layoutDirection="rtl">
+
+            <!-- Name row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layoutDirection="rtl"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/contact_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@color/chat_text_primary"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:textDirection="rtl"
+                    android:textAlignment="viewStart" />
+
+                <ImageView
+                    android:id="@+id/favorite_icon"
+                    android:layout_width="13dp"
+                    android:layout_height="13dp"
+                    android:layout_marginStart="5dp"
+                    android:src="@drawable/ic_star"
+                    android:contentDescription="favorite"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <!-- Message preview row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal"
+                android:layoutDirection="rtl"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/read_receipt"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginEnd="4dp"
+                    android:src="@drawable/ic_done_all"
+                    android:visibility="gone"
+                    android:contentDescription="read" />
+
+                <TextView
+                    android:id="@+id/message_preview"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@color/chat_text_secondary"
+                    android:textSize="14sp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:textDirection="rtl"
+                    android:textAlignment="viewStart" />
+
+                <!-- Trailing meta: time + mute (LTR), badge below — RTL row order: this block is at visual "start" (left) -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:orientation="vertical"
+                    android:gravity="end">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layoutDirection="ltr"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/timestamp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="6dp"
+                            android:textColor="@color/chat_text_tertiary"
+                            android:textSize="12sp"
+                            android:textDirection="ltr"
+                            android:gravity="center_vertical" />
+
+                        <ImageView
+                            android:id="@+id/mute_icon"
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:src="@drawable/ic_mute"
+                            android:contentDescription="muted"
+                            android:visibility="gone" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/unread_badge"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_gravity="end"
+                        android:background="@drawable/bg_unread_badge"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:textDirection="ltr"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- Subtle divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginStart="84dp"
+        android:layout_marginEnd="16dp"
+        android:background="#08FFFFFF" />
+
+</LinearLayout>

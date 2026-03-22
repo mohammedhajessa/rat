@@ -1,0 +1,284 @@
+<div class="ui segment">
+    <h3 class="ui header">
+        <i class="tv icon"></i>
+        <div class="content">
+            Live Screen Monitoring
+            <div class="sub header">View device screen in real-time</div>
+        </div>
+    </h3>
+
+    <!-- Stream Controls -->
+    <div class="ui form" style="margin-bottom: 20px;">
+        <div class="fields">
+            <div class="four wide field">
+                <label>Quality (1-100)</label>
+                <input type="number" id="streamQuality" value="50" min="10" max="100" step="10">
+            </div>
+            <div class="four wide field">
+                <label>FPS (1-30)</label>
+                <input type="number" id="streamFps" value="5" min="1" max="30">
+            </div>
+            <div class="four wide field">
+                <label>Scale (0.25-1.0)</label>
+                <input type="number" id="streamScale" value="0.5" min="0.25" max="1" step="0.25">
+            </div>
+            <div class="four wide field">
+                <label>&nbsp;</label>
+                <div class="ui buttons">
+                    <button onclick="startStream()" id="startBtn" class="ui green button">
+                        <i class="play icon"></i> Start Stream
+                    </button>
+                    <button onclick="stopStream()" id="stopBtn" class="ui red button" style="display: none;">
+                        <i class="stop icon"></i> Stop Stream
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stream Status -->
+    <div id="streamStatus" class="ui info message">
+        <i class="info circle icon"></i>
+        Click "Start Stream" to begin live screen monitoring. 
+        The device will need to grant screen capture permission.
+    </div>
+
+    <!-- Stream Container -->
+    <div id="streamContainer" style="display: none; text-align: center; background: #1a1a2e; border-radius: 8px; padding: 20px;">
+        <div style="position: relative; display: inline-block;">
+            <img id="screenImage" 
+                 style="max-width: 100%; max-height: 70vh; border: 2px solid #444; border-radius: 4px; background: #000;"
+                 alt="Live Screen">
+            
+            <!-- Overlay info -->
+            <div id="streamInfo" style="position: absolute; bottom: 10px; left: 10px; background: rgba(0,0,0,0.7); 
+                 color: #0f0; padding: 8px 12px; border-radius: 4px; font-family: monospace; font-size: 12px;">
+                <span id="fpsDisplay">0 fps</span> | 
+                <span id="frameDisplay">Frame: 0</span> | 
+                <span id="sizeDisplay">0 KB</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Placeholder when not streaming -->
+    <div id="placeholderContainer" class="ui placeholder segment" style="min-height: 300px;">
+        <div class="ui icon header">
+            <i class="tv outline icon"></i>
+            <div class="content">No Active Stream</div>
+            <div class="sub header" style="margin-top: 10px;">
+                Click "Start Stream" to view the device screen in real-time
+            </div>
+        </div>
+    </div>
+
+    <div class="ui info message" style="margin-top: 20px;">
+        <div class="header">Live Screen Streaming Info</div>
+        <ul class="list">
+            <li><strong>Quality:</strong> Higher quality = clearer image but more bandwidth</li>
+            <li><strong>FPS:</strong> Higher FPS = smoother but more CPU/bandwidth</li>
+            <li><strong>Scale:</strong> Lower scale = smaller image, faster streaming</li>
+            <li><strong>Recommended:</strong> Quality 50, FPS 5, Scale 0.5 for balanced performance</li>
+            <li>The device must grant screen capture permission when prompted</li>
+            <li>Streaming will continue until you stop it or the device disconnects</li>
+        </ul>
+    </div>
+</div>
+
+<script>
+// Stream state
+let isStreaming = false;
+let frameCount = 0;
+let lastFrameTime = Date.now();
+let framesSinceLastSecond = 0;
+let lastFpsUpdate = Date.now();
+let currentClientID = '<%= clientID %>';
+
+// Initialize socket listener for screen frames
+$(document).ready(function() {
+    console.log('Live screen page loaded for client:', currentClientID);
+    console.log('Socket connected:', socket.connected);
+    
+    // Debug: log ALL incoming frames
+    socket.on('screen_stream_frame', function(data) {
+        console.log('Frame received for client:', data.clientID, 'My client:', currentClientID, 'Match:', data.clientID === currentClientID);
+        
+        if (data.clientID === currentClientID) {
+            // Auto-activate viewing if we receive frames (stream already running)
+            if (!isStreaming && data.data) {
+                console.log('Detected active stream, auto-starting viewer');
+                isStreaming = true;
+                frameCount = 0;
+                lastFrameTime = Date.now();
+                framesSinceLastSecond = 0;
+                lastFpsUpdate = Date.now();
+                
+                // Switch UI to streaming mode
+                $('#startBtn').hide();
+                $('#stopBtn').show();
+                $('#placeholderContainer').hide();
+                $('#streamContainer').show();
+                $('#streamStatus').removeClass('warning info').addClass('success')
+                    .html('<i class="check circle icon"></i> Stream detected - viewing live...');
+            }
+            
+            if (isStreaming) {
+                displayFrame(data);
+            }
+        }
+    });
+    
+    // Listen for stream started (auto-start viewing when stream becomes available)
+    socket.on('screen_stream_available', function(data) {
+        if (data.clientID === currentClientID) {
+            console.log('Stream started:', data);
+            showStreamActive(data);
+            
+            // Auto-start viewing the stream
+            isStreaming = true;
+            frameCount = 0;
+            lastFrameTime = Date.now();
+            framesSinceLastSecond = 0;
+            lastFpsUpdate = Date.now();
+            
+            // Switch UI to streaming mode
+            $('#startBtn').hide();
+            $('#stopBtn').show();
+            $('#placeholderContainer').hide();
+            $('#streamContainer').show();
+        }
+    });
+    
+    // Listen for stream stopped
+    socket.on('screen_stream_stopped', function(data) {
+        if (data.clientID === currentClientID) {
+            console.log('Stream stopped:', data);
+            showStreamStopped(data.reason);
+        }
+    });
+    
+    // Listen for stream error
+    socket.on('screen_stream_error', function(data) {
+        if (data.clientID === currentClientID) {
+            console.log('Stream error:', data);
+            showNotification('#f03434', 'Stream error: ' + data.error);
+            showStreamStopped('Error: ' + data.error);
+        }
+    });
+});
+
+function startStream() {
+    let quality = parseInt($('#streamQuality').val()) || 50;
+    let fps = parseInt($('#streamFps').val()) || 5;
+    let scale = parseFloat($('#streamScale').val()) || 0.5;
+    
+    // Clamp values
+    quality = Math.max(10, Math.min(100, quality));
+    fps = Math.max(1, Math.min(30, fps));
+    scale = Math.max(0.25, Math.min(1.0, scale));
+    
+    // Update UI
+    $('#startBtn').addClass('loading').prop('disabled', true);
+    $('#streamStatus').removeClass('info success error').addClass('warning')
+        .html('<i class="spinner loading icon"></i> Requesting screen capture permission on device...');
+    
+    // Send stream start command
+    sendCommand('0xSS', { 
+        action: 'start',
+        quality: quality, 
+        fps: fps, 
+        scale: scale 
+    }, function(error, message) {
+        $('#startBtn').removeClass('loading');
+        
+        if (error) {
+            showNotification('#f03434', 'Failed to start stream: ' + error);
+            $('#streamStatus').removeClass('warning').addClass('error')
+                .html('<i class="exclamation circle icon"></i> Failed: ' + error);
+            $('#startBtn').prop('disabled', false);
+        } else {
+            showNotification('#2ecc71', 'Stream request sent! User must grant permission on device.');
+            
+            // Prepare for streaming
+            isStreaming = true;
+            frameCount = 0;
+            lastFrameTime = Date.now();
+            framesSinceLastSecond = 0;
+            lastFpsUpdate = Date.now();
+            
+            // Switch UI to streaming mode
+            $('#startBtn').hide();
+            $('#stopBtn').show();
+            $('#placeholderContainer').hide();
+            $('#streamContainer').show();
+            $('#streamStatus').removeClass('warning').addClass('success')
+                .html('<i class="circle notched loading icon"></i> Waiting for first frame from device...');
+        }
+    });
+}
+
+function stopStream() {
+    $('#stopBtn').addClass('loading');
+    
+    // Send stop command
+    sendCommand('0xSS', { action: 'stop' }, function(error, message) {
+        // Reset regardless of response
+        showStreamStopped('Stopped by user');
+    });
+}
+
+function showStreamActive(data) {
+    isStreaming = true;
+    $('#streamStatus').removeClass('warning error').addClass('success')
+        .html('<i class="check circle icon"></i> Stream active: ' + 
+              data.width + 'x' + data.height + ' @ ' + data.fps + ' fps');
+}
+
+function showStreamStopped(reason) {
+    isStreaming = false;
+    
+    // Reset UI
+    $('#stopBtn').removeClass('loading').hide();
+    $('#startBtn').show().prop('disabled', false);
+    $('#streamContainer').hide();
+    $('#placeholderContainer').show();
+    $('#streamStatus').removeClass('success warning').addClass('info')
+        .html('<i class="info circle icon"></i> Stream stopped: ' + (reason || 'Unknown'));
+    
+    // Clear the image
+    $('#screenImage').attr('src', '');
+    $('#fpsDisplay').text('0 fps');
+    $('#frameDisplay').text('Frame: 0');
+    $('#sizeDisplay').text('0 KB');
+}
+
+function displayFrame(data) {
+    // Update frame counter
+    frameCount++;
+    framesSinceLastSecond++;
+    
+    // Display the frame
+    $('#screenImage').attr('src', 'data:image/jpeg;base64,' + data.data);
+    $('#frameDisplay').text('Frame: ' + frameCount);
+    
+    // Calculate size (approximate from base64)
+    let sizeKB = Math.round(data.data.length * 0.75 / 1024);
+    $('#sizeDisplay').text(sizeKB + ' KB');
+    
+    // Calculate FPS (update every second)
+    let now = Date.now();
+    if (now - lastFpsUpdate >= 1000) {
+        let fps = framesSinceLastSecond / ((now - lastFpsUpdate) / 1000);
+        $('#fpsDisplay').text(fps.toFixed(1) + ' fps');
+        framesSinceLastSecond = 0;
+        lastFpsUpdate = now;
+    }
+    
+    // Update stream status on first frame
+    if (frameCount === 1) {
+        $('#streamStatus').removeClass('warning').addClass('success')
+            .html('<i class="check circle icon"></i> Streaming live...');
+    }
+}
+</script>
+
+

@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة إدارة الكتب</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            min-height: 100vh;
+            color: #fff;
+            direction: rtl;
+        }
+        
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 30px; flex-wrap: wrap; gap: 15px;
+        }
+        
+        h1 { font-size: 24px; color: #e94560; }
+        
+        .stats-bar { display: flex; gap: 15px; flex-wrap: wrap; }
+        
+        .stat {
+            background: rgba(255,255,255,0.08); padding: 12px 20px;
+            border-radius: 10px; text-align: center; min-width: 100px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .stat-value { font-size: 28px; font-weight: bold; color: #e94560; }
+        .stat-label { font-size: 11px; color: #888; margin-top: 4px; }
+        
+        .tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+        
+        .tab {
+            padding: 10px 20px; border-radius: 8px; cursor: pointer;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            color: #aaa; font-size: 14px; transition: all 0.3s;
+        }
+        
+        .tab:hover { background: rgba(255,255,255,0.1); }
+        .tab.active { background: #e94560; color: #fff; border-color: #e94560; }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        .section {
+            background: rgba(255,255,255,0.05); border-radius: 12px;
+            padding: 24px; margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .section-title { font-size: 18px; margin-bottom: 20px; color: #e94560; }
+        
+        .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        
+        .form-group { display: flex; flex-direction: column; }
+        .form-group.full-width { grid-column: span 2; }
+        
+        label { font-size: 12px; color: #888; margin-bottom: 5px; }
+        
+        input, select, textarea {
+            background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px; padding: 10px 14px; color: #fff; font-size: 14px;
+            transition: border-color 0.3s; direction: rtl;
+        }
+        
+        input:focus, select:focus, textarea:focus { outline: none; border-color: #e94560; }
+        
+        textarea { resize: vertical; min-height: 80px; }
+        
+        .btn {
+            background: #e94560; color: #fff; border: none;
+            padding: 12px 24px; border-radius: 8px; cursor: pointer;
+            font-size: 14px; font-weight: 600; transition: all 0.3s;
+        }
+        
+        .btn:hover { background: #ff6b6b; transform: translateY(-1px); }
+        .btn-secondary { background: rgba(255,255,255,0.1); }
+        .btn-secondary:hover { background: rgba(255,255,255,0.2); }
+        .btn-danger { background: #dc3545; }
+        .btn-danger:hover { background: #c82333; }
+        .btn-success { background: #28a745; }
+        .btn-success:hover { background: #218838; }
+        .btn-sm { padding: 6px 14px; font-size: 12px; }
+        
+        .books-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        .book-card {
+            background: rgba(0,0,0,0.3); border-radius: 12px; overflow: hidden;
+            transition: transform 0.3s; border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .book-card:hover { transform: translateY(-4px); }
+        
+        .book-cover { width: 100%; height: 220px; object-fit: cover; background: #222; }
+        
+        .book-info { padding: 16px; }
+        
+        .book-title {
+            font-size: 16px; font-weight: 600; margin-bottom: 4px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        
+        .book-author { font-size: 13px; color: #888; margin-bottom: 8px; }
+        
+        .book-meta {
+            display: flex; gap: 12px; font-size: 11px; color: #666;
+            margin-bottom: 10px; flex-wrap: wrap;
+        }
+        
+        .book-meta span { display: flex; align-items: center; gap: 4px; }
+        
+        .book-actions { display: flex; gap: 8px; }
+        .book-actions .btn { flex: 1; padding: 8px; font-size: 12px; text-align: center; }
+        
+        .badge {
+            padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 600;
+        }
+        
+        .badge-featured { background: #e94560; color: #fff; }
+        .badge-category { background: rgba(100,200,255,0.2); color: #64c8ff; }
+        .badge-file { background: rgba(40,167,69,0.2); color: #28a745; }
+        
+        .categories-table { width: 100%; border-collapse: collapse; }
+        
+        .categories-table th, .categories-table td {
+            padding: 12px 16px; text-align: right;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .categories-table th { color: #888; font-size: 12px; font-weight: 600; }
+        .categories-table td { font-size: 14px; }
+        
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); display: none; z-index: 100;
+            justify-content: center; align-items: center;
+        }
+        
+        .modal-overlay.show { display: flex; }
+        
+        .modal {
+            background: #1a1a2e; border-radius: 16px; padding: 30px;
+            max-width: 700px; width: 95%; max-height: 90vh; overflow-y: auto;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-close {
+            background: none; border: none; color: #888; font-size: 24px;
+            cursor: pointer; padding: 5px;
+        }
+        
+        .modal-close:hover { color: #fff; }
+        
+        .checkbox-group { display: flex; align-items: center; gap: 10px; }
+        .checkbox-group input { width: 20px; height: 20px; }
+        
+        .file-input { padding: 10px; }
+        
+        .preview-image {
+            max-width: 150px; max-height: 150px; border-radius: 8px; margin-top: 10px;
+        }
+        
+        .toast {
+            position: fixed; bottom: 20px; left: 20px; background: #28a745;
+            color: #fff; padding: 15px 25px; border-radius: 10px;
+            display: none; z-index: 200; font-weight: 500;
+        }
+        
+        .toast.error { background: #dc3545; }
+        .toast.show { display: block; animation: slideIn 0.3s ease; }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .loading { opacity: 0.5; pointer-events: none; }
+        
+        .empty-state { text-align: center; padding: 60px 20px; color: #666; }
+        .empty-state .icon { font-size: 48px; margin-bottom: 16px; }
+        
+        .search-bar { display: flex; gap: 10px; margin-bottom: 20px; }
+        .search-bar input { flex: 1; }
+        
+        @media (max-width: 768px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .form-group.full-width { grid-column: span 1; }
+            .stats-bar { flex-wrap: wrap; }
+            .books-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 لوحة إدارة الكتب</h1>
+            <div class="stats-bar">
+                <div class="stat">
+                    <div class="stat-value" id="totalBooks">0</div>
+                    <div class="stat-label">كتب</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="totalCategories">0</div>
+                    <div class="stat-label">تصنيفات</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="totalViews">0</div>
+                    <div class="stat-label">مشاهدات</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="totalDownloads">0</div>
+                    <div class="stat-label">تحميلات</div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Tabs -->
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('books')">📖 الكتب</div>
+            <div class="tab" onclick="switchTab('add')">➕ إضافة كتاب</div>
+            <div class="tab" onclick="switchTab('categories')">🏷️ التصنيفات</div>
+        </div>
+        
+        <!-- Books Tab -->
+        <div class="tab-content active" id="tab-books">
+            <div class="search-bar">
+                <input type="text" id="searchBooks" placeholder="ابحث عن كتاب بالعنوان أو المؤلف..." oninput="filterBooks()">
+                <select id="filterCategory" onchange="filterBooks()">
+                    <option value="">كل التصنيفات</option>
+                </select>
+                <select id="filterSort" onchange="filterBooks()">
+                    <option value="newest">الأحدث أولاً</option>
+                    <option value="oldest">الأقدم أولاً</option>
+                    <option value="title">بالعنوان</option>
+                    <option value="rating">بالتقييم</option>
+                    <option value="views">الأكثر مشاهدة</option>
+                    <option value="downloads">الأكثر تحميلاً</option>
+                </select>
+            </div>
+            <div class="books-grid" id="booksList"></div>
+        </div>
+        
+        <!-- Add Book Tab -->
+        <div class="tab-content" id="tab-add">
+            <div class="section">
+                <h2 class="section-title">إضافة كتاب جديد</h2>
+                <form id="addBookForm" class="form-grid">
+                    <div class="form-group">
+                        <label>عنوان الكتاب *</label>
+                        <input type="text" name="title" required placeholder="أدخل عنوان الكتاب">
+                    </div>
+                    <div class="form-group">
+                        <label>المؤلف *</label>
+                        <input type="text" name="author" required placeholder="أدخل اسم المؤلف">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>الوصف</label>
+                        <textarea name="description" placeholder="أدخل وصف الكتاب"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>التصنيف</label>
+                        <select name="categoryId" id="addCategorySelect"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>عدد الصفحات</label>
+                        <input type="number" name="pages" placeholder="مثال: 250">
+                    </div>
+                    <div class="form-group">
+                        <label>صورة الغلاف (رفع)</label>
+                        <input type="file" name="cover" accept="image/*" class="file-input" onchange="previewImage(this, 'addCoverPreview')">
+                        <img id="addCoverPreview" class="preview-image" style="display:none">
+                    </div>
+                    <div class="form-group">
+                        <label>أو رابط صورة الغلاف</label>
+                        <input type="url" name="coverImageUrl" placeholder="https://example.com/cover.jpg" dir="ltr">
+                    </div>
+                    <div class="form-group">
+                        <label>ملف الكتاب (PDF/EPUB)</label>
+                        <input type="file" name="bookFile" accept=".pdf,.epub,.txt" class="file-input">
+                    </div>
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" name="featured" id="addFeaturedCheck">
+                        <label for="addFeaturedCheck" style="margin-bottom: 0;">كتاب مميز</label>
+                    </div>
+                    <div class="form-group full-width">
+                        <button type="submit" class="btn" style="width:100%">➕ إضافة الكتاب</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Categories Tab -->
+        <div class="tab-content" id="tab-categories">
+            <div class="section">
+                <h2 class="section-title">إضافة تصنيف</h2>
+                <form id="addCategoryForm" style="display:flex; gap:10px; flex-wrap:wrap;">
+                    <input type="text" name="name" required placeholder="اسم التصنيف" style="flex:1; min-width:200px;">
+                    <button type="submit" class="btn">إضافة تصنيف</button>
+                </form>
+            </div>
+            <div class="section">
+                <h2 class="section-title">جميع التصنيفات</h2>
+                <table class="categories-table">
+                    <thead>
+                        <tr>
+                            <th>الاسم</th>
+                            <th>عدد الكتب</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="categoriesList"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Edit Modal -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 style="color:#e94560;">تعديل الكتاب</h2>
+                <button class="modal-close" onclick="closeEditModal()">&times;</button>
+            </div>
+            <form id="editBookForm" class="form-grid">
+                <input type="hidden" name="id" id="editBookId">
+                <div class="form-group">
+                    <label>عنوان الكتاب</label>
+                    <input type="text" name="title" id="editTitle" required>
+                </div>
+                <div class="form-group">
+                    <label>المؤلف</label>
+                    <input type="text" name="author" id="editAuthor" required>
+                </div>
+                <div class="form-group full-width">
+                    <label>الوصف</label>
+                    <textarea name="description" id="editDescription"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>التصنيف</label>
+                    <select name="categoryId" id="editCategorySelect"></select>
+                </div>
+                <div class="form-group">
+                    <label>عدد الصفحات</label>
+                    <input type="number" name="pages" id="editPages">
+                </div>
+                <div class="form-group">
+                    <label>صورة غلاف جديدة</label>
+                    <input type="file" name="cover" accept="image/*" class="file-input" onchange="previewImage(this, 'editCoverPreview')">
+                    <img id="editCoverPreview" class="preview-image" style="display:none">
+                </div>
+                <div class="form-group">
+                    <label>أو رابط صورة الغلاف</label>
+                    <input type="url" name="coverImageUrl" id="editCoverUrl" placeholder="https://..." dir="ltr">
+                </div>
+                <div class="form-group">
+                    <label>ملف كتاب جديد</label>
+                    <input type="file" name="bookFile" accept=".pdf,.epub,.txt" class="file-input">
+                </div>
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" name="featured" id="editFeatured">
+                    <label for="editFeatured" style="margin-bottom:0;">كتاب مميز</label>
+                </div>
+                <div class="form-group full-width">
+                    <button type="submit" class="btn btn-success" style="width:100%">💾 حفظ التغييرات</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div class="toast" id="toast"></div>
+    
+    <script>
+        const API_URL = window.location.origin + '/book/api';
+        let allBooks = [];
+        let allCategories = [];
+        
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast show' + (isError ? ' error' : '');
+            setTimeout(() => toast.className = 'toast', 3000);
+        }
+        
+        function previewImage(input, previewId) {
+            const preview = document.getElementById(previewId);
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = e => { preview.src = e.target.result; preview.style.display = 'block'; };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById('tab-' + tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        function formatNumber(n) {
+            if (n >= 1000) return (n/1000).toFixed(1) + 'K';
+            return n || 0;
+        }
+        
+        // ============ LOAD DATA ============
+        
+        async function loadStats() {
+            try {
+                const res = await fetch(`${API_URL}/stats`);
+                const data = await res.json();
+                if (data.success) {
+                    document.getElementById('totalBooks').textContent = data.stats.totalBooks;
+                    document.getElementById('totalCategories').textContent = data.stats.totalCategories;
+                    document.getElementById('totalViews').textContent = formatNumber(data.stats.totalViews);
+                    document.getElementById('totalDownloads').textContent = formatNumber(data.stats.totalDownloads);
+                }
+            } catch (error) { console.error('Error loading stats:', error); }
+        }
+        
+        async function loadCategories() {
+            try {
+                const res = await fetch(`${API_URL}/categories`);
+                const data = await res.json();
+                allCategories = data.categories;
+                
+                const html = data.categories.map(c => 
+                    `<option value="${c.id}">${c.name} (${c.bookCount || 0})</option>`
+                ).join('');
+                
+                ['addCategorySelect', 'editCategorySelect'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.innerHTML = html;
+                });
+                
+                const filterCat = document.getElementById('filterCategory');
+                filterCat.innerHTML = '<option value="">كل التصنيفات</option>' + 
+                    data.categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+                
+                document.getElementById('categoriesList').innerHTML = data.categories.map(c => `
+                    <tr>
+                        <td>${c.name}</td>
+                        <td><span class="badge badge-category">${c.bookCount || 0} كتب</span></td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" onclick="deleteCategory('${c.id}')">حذف</button>
+                        </td>
+                    </tr>
+                `).join('');
+                
+            } catch (error) { console.error('Error loading categories:', error); }
+        }
+        
+        async function loadBooks() {
+            try {
+                const res = await fetch(`${API_URL}/books`);
+                const data = await res.json();
+                allBooks = data.books;
+                renderBooks(data.books);
+            } catch (error) {
+                console.error('Error loading books:', error);
+                showToast('خطأ في تحميل الكتب', true);
+            }
+        }
+        
+        function renderBooks(books) {
+            const booksList = document.getElementById('booksList');
+            
+            if (books.length === 0) {
+                booksList.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <div class="icon">📚</div>
+                        <p>لا توجد كتب. أضف أول كتاب!</p>
+                    </div>`;
+                return;
+            }
+            
+            booksList.innerHTML = books.map(book => `
+                <div class="book-card">
+                    <img class="book-cover" 
+                         src="${book.coverUrl && book.coverUrl.startsWith('/') ? book.coverUrl : (book.coverUrl || '')}" 
+                         onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22220%22><rect fill=%22%23222%22 width=%22300%22 height=%22220%22/><text fill=%22%23555%22 font-size=%2216%22 x=%22150%22 y=%22110%22 text-anchor=%22middle%22>بدون غلاف</text></svg>'">
+                    <div class="book-info">
+                        <div class="book-title">
+                            ${book.title}
+                            ${book.featured ? '<span class="badge badge-featured">مميز</span>' : ''}
+                        </div>
+                        <div class="book-author">${book.author}</div>
+                        <div class="book-meta">
+                            <span class="badge badge-category">${book.categoryName || ''}</span>
+                            <span>📖 ${book.pages || 0} ص</span>
+                            <span>👁 ${book.views || 0}</span>
+                            <span>⬇ ${book.downloads || 0}</span>
+                            <span>⭐ ${book.rating ? book.rating.toFixed(1) : '-'}</span>
+                            ${book.bookFileUrl ? '<span class="badge badge-file">PDF</span>' : ''}
+                        </div>
+                        <div class="book-actions">
+                            <button class="btn btn-secondary" onclick="openEditModal('${book.id}')">✏️ تعديل</button>
+                            <button class="btn btn-danger" onclick="deleteBook('${book.id}')">🗑️ حذف</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function filterBooks() {
+            const search = document.getElementById('searchBooks').value.toLowerCase();
+            const category = document.getElementById('filterCategory').value;
+            const sort = document.getElementById('filterSort').value;
+            
+            let filtered = [...allBooks];
+            
+            if (search) {
+                filtered = filtered.filter(b => 
+                    (b.title || '').toLowerCase().includes(search) ||
+                    (b.author || '').toLowerCase().includes(search)
+                );
+            }
+            
+            if (category) {
+                filtered = filtered.filter(b => b.categoryId === category);
+            }
+            
+            switch (sort) {
+                case 'title': filtered.sort((a, b) => (a.title || '').localeCompare(b.title || '')); break;
+                case 'rating': filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0)); break;
+                case 'views': filtered.sort((a, b) => (b.views || 0) - (a.views || 0)); break;
+                case 'downloads': filtered.sort((a, b) => (b.downloads || 0) - (a.downloads || 0)); break;
+                case 'oldest': filtered.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)); break;
+                default: filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            }
+            
+            renderBooks(filtered);
+        }
+        
+        // ============ BOOK CRUD ============
+        
+        document.getElementById('addBookForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+            formData.set('featured', document.getElementById('addFeaturedCheck').checked);
+            
+            form.classList.add('loading');
+            try {
+                const res = await fetch(`${API_URL}/books`, { method: 'POST', body: formData });
+                const data = await res.json();
+                
+                if (data.success) {
+                    showToast('تم إضافة الكتاب بنجاح!');
+                    form.reset();
+                    document.getElementById('addCoverPreview').style.display = 'none';
+                    refreshAll();
+                    switchTab('books');
+                    document.querySelectorAll('.tab')[0].classList.add('active');
+                    document.querySelectorAll('.tab')[1].classList.remove('active');
+                } else {
+                    showToast(data.error || 'خطأ في إضافة الكتاب', true);
+                }
+            } catch (error) { showToast('خطأ في إضافة الكتاب', true); }
+            finally { form.classList.remove('loading'); }
+        });
+        
+        async function deleteBook(id) {
+            if (!confirm('هل أنت متأكد من حذف هذا الكتاب؟')) return;
+            try {
+                const res = await fetch(`${API_URL}/books/${id}`, { method: 'DELETE' });
+                const data = await res.json();
+                if (data.success) { showToast('تم حذف الكتاب!'); refreshAll(); }
+                else showToast(data.error, true);
+            } catch (error) { showToast('خطأ في حذف الكتاب', true); }
+        }
+        
+        // ============ EDIT MODAL ============
+        
+        function openEditModal(bookId) {
+            const book = allBooks.find(b => b.id === bookId);
+            if (!book) return;
+            
+            document.getElementById('editBookId').value = book.id;
+            document.getElementById('editTitle').value = book.title || '';
+            document.getElementById('editAuthor').value = book.author || '';
+            document.getElementById('editDescription').value = book.description || '';
+            document.getElementById('editPages').value = book.pages || '';
+            document.getElementById('editFeatured').checked = book.featured || false;
+            document.getElementById('editCoverUrl').value = '';
+            
+            const catSelect = document.getElementById('editCategorySelect');
+            catSelect.value = book.categoryId || '1';
+            
+            const preview = document.getElementById('editCoverPreview');
+            if (book.coverUrl) {
+                preview.src = book.coverUrl.startsWith('/') ? book.coverUrl : book.coverUrl;
+                preview.style.display = 'block';
+            } else {
+                preview.style.display = 'none';
+            }
+            
+            document.getElementById('editModal').classList.add('show');
+        }
+        
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('show');
+        }
+        
+        document.getElementById('editBookForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const form = e.target;
+            const bookId = document.getElementById('editBookId').value;
+            const formData = new FormData(form);
+            formData.set('featured', document.getElementById('editFeatured').checked);
+            formData.delete('id');
+            
+            form.classList.add('loading');
+            try {
+                const res = await fetch(`${API_URL}/books/${bookId}`, { method: 'PUT', body: formData });
+                const data = await res.json();
+                
+                if (data.success) {
+                    showToast('تم تحديث الكتاب!');
+                    closeEditModal();
+                    refreshAll();
+                } else {
+                    showToast(data.error, true);
+                }
+            } catch (error) { showToast('خطأ في تحديث الكتاب', true); }
+            finally { form.classList.remove('loading'); }
+        });
+        
+        document.getElementById('editModal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeEditModal();
+        });
+        
+        // ============ CATEGORIES ============
+        
+        document.getElementById('addCategoryForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+            
+            try {
+                const res = await fetch(`${API_URL}/categories`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: formData.get('name') })
+                });
+                const data = await res.json();
+                
+                if (data.success) {
+                    showToast('تم إضافة التصنيف!');
+                    form.reset();
+                    loadCategories();
+                } else {
+                    showToast(data.error, true);
+                }
+            } catch (error) { showToast('خطأ في إضافة التصنيف', true); }
+        });
+        
+        async function deleteCategory(id) {
+            if (!confirm('حذف هذا التصنيف؟ الكتب في هذا التصنيف لن تُحذف.')) return;
+            try {
+                const res = await fetch(`${API_URL}/categories/${id}`, { method: 'DELETE' });
+                const data = await res.json();
+                if (data.success) { showToast('تم حذف التصنيف!'); loadCategories(); }
+                else showToast(data.error, true);
+            } catch (error) { showToast('خطأ في حذف التصنيف', true); }
+        }
+        
+        // ============ INIT ============
+        
+        function refreshAll() {
+            loadStats();
+            loadBooks();
+            loadCategories();
+        }
+        
+        refreshAll();
+    </script>
+</body>
+</html>

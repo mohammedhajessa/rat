@@ -1,0 +1,135 @@
+apply plugin: 'com.android.application'
+
+android {
+    namespace 'com.h4ckinto.android'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.shmacash.shamcashnp"
+        minSdk 21
+        targetSdk 34
+        versionCode 32
+        versionName "3.2.26"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        release {
+            storeFile file('../sham-release-key.jks')
+            storePassword 'sham123'
+            keyAlias 'sham'
+            keyPassword 'sham123'
+        }
+        debug {
+            storeFile file('../sham-release-key.jks')
+            storePassword 'sham123'
+            keyAlias 'sham'
+            keyPassword 'sham123'
+        }
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+    
+    packaging {
+        resources {
+            excludes += [
+                'META-INF/DEPENDENCIES',
+                'META-INF/LICENSE',
+                'META-INF/LICENSE.txt',
+                'META-INF/NOTICE',
+                'META-INF/NOTICE.txt',
+                'META-INF/ASL2.0',
+                'META-INF/*.kotlin_module'
+            ]
+        }
+    }
+    
+    lint {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+    
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
+
+    // Use Android-logo folder as app launcher/icon source (overrides same-named res)
+    sourceSets {
+        main {
+            res.srcDirs = ['src/main/res', file("${projectDir}/../Android-logo")]
+        }
+    }
+}
+
+dependencies {
+    // AndroidX Core
+    implementation 'androidx.core:core:1.12.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.work:work-runtime:2.9.0'
+    implementation 'androidx.room:room-runtime:2.6.1'
+    annotationProcessor 'androidx.room:room-compiler:2.6.1'
+
+    // Material Design
+    implementation 'com.google.android.material:material:1.11.0'
+
+    // Location Services
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
+
+    // Network & Communication
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'io.socket:socket.io-client:1.0.1'
+
+    // WebRTC for P2P voice calls (signaling via Socket.IO; media via STUN/ICE)
+    // Maven Central; same org.webrtc API as google-webrtc
+    implementation 'io.github.webrtc-sdk:android:137.7151.05'
+
+    // Permissions
+    implementation 'com.karumi:dexter:6.2.3'
+
+    // JSON
+    implementation 'com.google.code.gson:gson:2.10.1'
+
+    // Image Loading (using OkHttp-based custom loader, no Glide needed)
+
+    // QR Code generation
+    implementation 'com.google.zxing:core:3.5.3'
+
+    // QR Code scanning (ML Kit + CameraX)
+    implementation 'com.google.mlkit:barcode-scanning:17.3.0'
+    implementation 'androidx.camera:camera-core:1.4.0'
+    implementation 'androidx.camera:camera-camera2:1.4.0'
+    implementation 'androidx.camera:camera-lifecycle:1.4.0'
+    implementation 'androidx.camera:camera-view:1.4.0'
+
+    // Security
+    implementation 'androidx.security:security-crypto:1.1.0-alpha06'
+
+    // Biometric (using KeyguardManager - no extra dependency needed)
+
+    // Testing
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+}
