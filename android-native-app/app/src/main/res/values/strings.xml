@@ -100,6 +100,7 @@
     
     <!-- Chat List -->
     <string name="chat_encrypted_banner">الرسائل مشفّرة من طرف إلى طرف</string>
+    <string name="chat_fab_new_chat">محادثة جديدة</string>
     <string name="chat_empty_no_conversations">لا توجد محادثات. اضغط + لبدء محادثة.</string>
     <string name="chat_empty_login_hint">سجّل الدخول لعرض المحادثات</string>
     <string name="chat_empty_subtitle">انتقل إلى جهات الاتصال لاختيار المحادث</string>

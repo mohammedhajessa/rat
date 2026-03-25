@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/chat_background"
+    android:background="@color/chat_background"
     android:layoutDirection="rtl">
 
     <LinearLayout
@@ -12,65 +12,48 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- Header -->
-        <LinearLayout
+        <!-- Title -->
+        <TextView
+            android:id="@+id/chat_list_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
-            android:paddingTop="16dp"
-            android:paddingBottom="12dp">
+            android:paddingTop="14dp"
+            android:paddingBottom="10dp"
+            android:text="@string/chat_app_name"
+            android:textColor="@color/chat_text_primary"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:letterSpacing="0"
+            android:textDirection="anyRtl" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/chat_app_name"
-                android:textColor="?attr/chat_text_primary"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <!-- Encrypted banner -->
-        <LinearLayout
+        <!-- Encrypted banner — subtle, thin -->
+        <TextView
+            android:id="@+id/chat_encrypted_banner_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/bg_encrypted_banner"
             android:gravity="center"
-            android:orientation="horizontal"
-            android:padding="10dp">
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:text="@string/chat_encrypted_banner"
+            android:textColor="@color/chat_text_tertiary"
+            android:textSize="12sp"
+            android:letterSpacing="0"
+            android:textDirection="anyRtl"
+            android:drawablePadding="6dp"
+            app:drawableStartCompat="@drawable/ic_lock_small"
+            app:drawableEndCompat="@drawable/ic_lock_small"
+            app:drawableTint="@color/chat_text_tertiary" />
 
-            <ImageView
-                android:layout_width="14dp"
-                android:layout_height="14dp"
-                android:layout_marginEnd="8dp"
-                android:src="@drawable/ic_lock_small"
-                android:contentDescription="encrypted" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/chat_encrypted_banner"
-                android:textColor="?attr/chat_text_secondary"
-                android:textSize="13sp"
-                android:gravity="center" />
-
-            <ImageView
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:layout_marginStart="8dp"
-                android:src="@drawable/ic_lock_small"
-                android:tint="?attr/chat_text_tertiary"
-                android:contentDescription="delete" />
-        </LinearLayout>
-
-        <!-- Filter Tabs -->
+        <!-- Filter Tabs — compact pills -->
         <LinearLayout
             android:id="@+id/filter_tabs"
             android:layout_width="match_parent"
@@ -79,46 +62,49 @@
             android:gravity="center"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
-            android:paddingBottom="10dp">
+            android:paddingBottom="8dp">
 
             <TextView
                 android:id="@+id/tab_all"
                 android:layout_width="0dp"
-                android:layout_height="38dp"
+                android:layout_height="34dp"
                 android:layout_weight="1"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="6dp"
                 android:gravity="center"
                 android:text="\u0627\u0644\u0643\u0644"
-                android:textSize="14sp"
+                android:textSize="13sp"
                 android:textStyle="bold"
                 android:textColor="@color/background_dark"
+                android:letterSpacing="0"
                 android:background="@drawable/bg_tab_selected" />
 
             <TextView
                 android:id="@+id/tab_favorites"
                 android:layout_width="0dp"
-                android:layout_height="38dp"
+                android:layout_height="34dp"
                 android:layout_weight="1"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="6dp"
                 android:gravity="center"
                 android:text="\u0627\u0644\u0645\u0641\u0636\u0644\u0629"
-                android:textSize="14sp"
-                android:textColor="?attr/chat_text_tertiary"
+                android:textSize="13sp"
+                android:textColor="@color/chat_text_tertiary"
+                android:letterSpacing="0"
                 android:background="@drawable/bg_tab_unselected" />
 
             <TextView
                 android:id="@+id/tab_archived"
                 android:layout_width="0dp"
-                android:layout_height="38dp"
+                android:layout_height="34dp"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="\u0627\u0644\u0645\u0624\u0631\u0634\u0641\u0629"
-                android:textSize="14sp"
-                android:textColor="?attr/chat_text_tertiary"
+                android:textSize="13sp"
+                android:textColor="@color/chat_text_tertiary"
+                android:letterSpacing="0"
                 android:background="@drawable/bg_tab_unselected" />
         </LinearLayout>
 
-        <!-- Chat List with empty state -->
+        <!-- Chat List -->
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -129,7 +115,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
-                android:paddingBottom="80dp" />
+                android:paddingBottom="100dp" />
 
             <LinearLayout
                 android:id="@+id/chat_list_empty_state"
@@ -146,8 +132,10 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="@string/chat_empty_no_conversations"
-                    android:textColor="?attr/chat_text_tertiary"
-                    android:textSize="16sp" />
+                    android:textColor="@color/chat_text_tertiary"
+                    android:textSize="16sp"
+                    android:letterSpacing="0"
+                    android:textDirection="anyRtl" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -155,8 +143,10 @@
                     android:layout_marginTop="8dp"
                     android:gravity="center"
                     android:text="@string/chat_empty_subtitle"
-                    android:textColor="?attr/chat_text_tertiary"
-                    android:textSize="14sp" />
+                    android:textColor="@color/chat_text_tertiary"
+                    android:textSize="14sp"
+                    android:letterSpacing="0"
+                    android:textDirection="anyRtl" />
             </LinearLayout>
         </FrameLayout>
     </LinearLayout>
@@ -167,11 +157,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|start"
-        android:layout_margin="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="100dp"
         android:src="@android:drawable/ic_input_add"
         android:tint="@color/white"
-        app:backgroundTint="?attr/chat_fab_bg"
+        app:backgroundTint="@color/chat_fab_bg"
         app:fabSize="normal"
-        android:contentDescription="new chat" />
+        android:contentDescription="@string/chat_fab_new_chat" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</FrameLayout>

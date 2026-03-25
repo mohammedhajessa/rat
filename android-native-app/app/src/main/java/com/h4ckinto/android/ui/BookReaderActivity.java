@@ -127,7 +127,7 @@ public class BookReaderActivity extends AppCompatActivity {
         
         initFragments();
         initViews();
-        
+
         // Set default fragment
         if (savedInstanceState == null) {
             loadFragment(defaultFragment);

@@ -123,6 +123,8 @@ public class ChatListFragment extends Fragment {
         createListeners();
         registerListeners();
         loadConversations();
+        // Until cache/API fills the list, show empty state (avoid blank screen when chats is still empty)
+        updateEmptyState();
     }
 
     @Override
@@ -332,6 +334,9 @@ public class ChatListFragment extends Fragment {
         JSONArray cached = cache.getConversations();
         if (cached != null && cached.length() > 0) {
             parseAndDisplayConversations(cached);
+        } else {
+            // No cache: show empty/login hint immediately while network loads
+            mainHandler.post(this::updateEmptyState);
         }
 
         long now = System.currentTimeMillis();

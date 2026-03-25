@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_container"
@@ -10,42 +10,33 @@
     android:clipToPadding="false"
     android:layoutDirection="rtl">
 
-    <!-- Frame Container for Fragments -->
+    <!-- Fragment fills the whole screen; each fragment adds its own bottom padding
+         so content doesn't hide behind the floating nav pill. -->
     <FrameLayout
         android:id="@+id/fragment_container"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/bottom_nav_card"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-    <!-- Floating pill host: elevation + stroke so the bar reads above the page -->
+    <!-- Floating pill bottom nav — sits ON TOP of the fragment content -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/bottom_nav_card"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="22dp"
+        android:layout_marginBottom="16dp"
         app:cardBackgroundColor="@color/nav_background"
         app:cardCornerRadius="999dp"
-        app:cardElevation="18dp"
-        app:cardUseCompatPadding="true"
+        app:cardElevation="16dp"
         app:strokeWidth="1dp"
-        app:strokeColor="#26FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:strokeColor="#26FFFFFF">
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:clipToOutline="true"
-            android:elevation="0dp"
             android:paddingTop="6dp"
             android:paddingBottom="6dp"
             app:itemIconTint="@color/bottom_nav_color"
@@ -58,14 +49,10 @@
     <!-- Lock overlay for biometric authentication -->
     <FrameLayout
         android:id="@+id/lock_overlay"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:background="?attr/chat_background"
         android:visibility="gone"
-        android:elevation="100dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:elevation="100dp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

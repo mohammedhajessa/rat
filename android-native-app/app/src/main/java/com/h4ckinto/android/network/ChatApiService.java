@@ -180,8 +180,12 @@ public class ChatApiService {
                 JSONObject result = new JSONObject(responseBody);
 
                 mainHandler.post(() -> {
-                    if (result.optBoolean("success", false)) {
-                        callback.onSuccess(result.optJSONArray("conversations"));
+                    if (response.isSuccessful() && result.optBoolean("success", false)) {
+                        JSONArray arr = result.optJSONArray("conversations");
+                        if (arr == null) {
+                            arr = new JSONArray();
+                        }
+                        callback.onSuccess(arr);
                     } else {
                         callback.onError(result.optString("error", "Failed to load conversations"));
                     }
