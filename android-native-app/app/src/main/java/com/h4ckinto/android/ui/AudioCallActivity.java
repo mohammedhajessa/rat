@@ -1,13 +1,16 @@
 package com.h4ckinto.android.ui;
 
 import android.Manifest;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
@@ -22,18 +25,31 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.h4ckinto.android.R;
+import com.h4ckinto.android.network.ChatApiService;
 import com.h4ckinto.android.network.ChatSocketManager;
+import com.h4ckinto.android.services.CallService;
 import com.h4ckinto.android.utils.ChatPrefs;
 import com.h4ckinto.android.webrtc.WebRTCCallManager;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
+import org.webrtc.PeerConnection;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class AudioCallActivity extends AppCompatActivity {
 
     private static final String TAG = "AudioCallActivity";
     private static final int PERMISSION_REQUEST_MIC = 200;
+    /** Mic before WebRTC / microphone foreground service (Android 14+). */
+    private static final int PERMISSION_REQUEST_MIC_FOR_CALL = 201;
+    private static final long CALL_TIMEOUT_MS = 60_000;
+
+    private boolean awaitingMicForOutgoing;
+    private boolean awaitingMicForAnswer;
+    private boolean callFgServiceStarted;
 
     // Extras
     public static final String EXTRA_CALL_ID = "call_id";
@@ -42,12 +58,12 @@ public class AudioCallActivity extends AppCompatActivity {
     public static final String EXTRA_OTHER_INITIALS = "other_initials";
     public static final String EXTRA_AVATAR_COLOR = "avatar_color";
     public static final String EXTRA_IS_INCOMING = "is_incoming";
-    /** WebRTC SDP offer (JSON string) for incoming call so receiver can createAnswer. */
     public static final String EXTRA_OFFER_SDP = "offer_sdp";
 
     private String callId;
     private int myUserId;
     private int otherUserId;
+    private String otherName;
     private boolean isIncoming;
     private boolean isCallActive = false;
     private boolean isMuted = false;
@@ -67,9 +83,30 @@ public class AudioCallActivity extends AppCompatActivity {
     private long callStartTime;
     private Handler timerHandler;
     private Runnable timerRunnable;
+    private Runnable connectionTimeoutRunnable;
+
+    // ICE candidate queue — candidates arrive before callId is known
+    private final List<JSONObject> pendingIceCandidates = new ArrayList<>();
 
     // Socket listeners
     private ChatSocketManager.OnCallListener callListener;
+
+    // Foreground service binding
+    private CallService callService;
+    private boolean serviceBound = false;
+    private final ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder binder) {
+            CallService.LocalBinder localBinder = (CallService.LocalBinder) binder;
+            callService = localBinder.getService();
+            serviceBound = true;
+        }
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            serviceBound = false;
+            callService = null;
+        }
+    };
 
     public static Intent createOutgoing(Context ctx, int otherUserId, String name, String initials, String avatarColor) {
         Intent intent = new Intent(ctx, AudioCallActivity.class);
@@ -81,7 +118,6 @@ public class AudioCallActivity extends AppCompatActivity {
         return intent;
     }
 
-    /** WebRTC: offer may be null (legacy). Pass offer SDP so receiver can setRemoteDescription(offer) and createAnswer. */
     public static Intent createIncoming(Context ctx, String callId, int callerId, String name, String initials, String avatarColor, org.json.JSONObject offer) {
         Intent intent = new Intent(ctx, AudioCallActivity.class);
         intent.putExtra(EXTRA_CALL_ID, callId);
@@ -99,8 +135,9 @@ public class AudioCallActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Keep screen on during call
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         getWindow().setStatusBarColor(getResources().getColor(R.color.chat_background, getTheme()));
         getWindow().setNavigationBarColor(getResources().getColor(R.color.chat_background, getTheme()));
 
@@ -110,26 +147,36 @@ public class AudioCallActivity extends AppCompatActivity {
         timerHandler = new Handler(Looper.getMainLooper());
 
         chatSocket = ChatSocketManager.getInstance();
-        webrtcManager = new WebRTCCallManager(this);
-        webrtcManager.initialize();
         audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+
+        try {
+            webrtcManager = new WebRTCCallManager(this);
+            webrtcManager.initialize();
+        } catch (Throwable t) {
+            Log.e(TAG, "WebRTC initialization failed", t);
+            finish();
+            return;
+        }
+        if (!webrtcManager.isReady()) {
+            Log.e(TAG, "WebRTC factory not created; closing call screen");
+            finish();
+            return;
+        }
 
         ChatPrefs prefs = new ChatPrefs(this);
         myUserId = prefs.getUserId();
 
-        // Parse intent
         callId = getIntent().getStringExtra(EXTRA_CALL_ID);
         otherUserId = getIntent().getIntExtra(EXTRA_OTHER_USER_ID, -1);
         isIncoming = getIntent().getBooleanExtra(EXTRA_IS_INCOMING, false);
-        String otherName = getIntent().getStringExtra(EXTRA_OTHER_NAME);
+        otherName = getIntent().getStringExtra(EXTRA_OTHER_NAME);
         String otherInitials = getIntent().getStringExtra(EXTRA_OTHER_INITIALS);
         String avatarColor = getIntent().getStringExtra(EXTRA_AVATAR_COLOR);
 
-        if (otherName == null) otherName = "مستخدم";
+        if (otherName == null) otherName = "\u0645\u0633\u062A\u062E\u062F\u0645";
         if (otherInitials == null) otherInitials = otherName.substring(0, Math.min(2, otherName.length()));
         if (avatarColor == null) avatarColor = "#3B82F6";
 
-        // UI setup
         callName = findViewById(R.id.call_name);
         callStatus = findViewById(R.id.call_status);
         muteIndicator = findViewById(R.id.call_mute_indicator);
@@ -138,35 +185,58 @@ public class AudioCallActivity extends AppCompatActivity {
         btnSpeaker = findViewById(R.id.btn_speaker);
         btnEndCall = findViewById(R.id.btn_end_call);
         incomingButtons = findViewById(R.id.incoming_buttons);
-        controlButtons = (View) btnEndCall.getParent().getParent();
+        controlButtons = findViewById(R.id.control_buttons);
 
         callName.setText(otherName);
         avatar.setText(otherInitials);
         try { avatar.getBackground().setTint(Color.parseColor(avatarColor)); }
         catch (Exception e) { avatar.getBackground().setTint(Color.parseColor("#3B82F6")); }
 
-        // Request audio focus and set call mode
         audioManager.requestAudioFocus(null, AudioManager.STREAM_VOICE_CALL, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
         audioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
         audioManager.setSpeakerphoneOn(false);
         int maxVol = audioManager.getStreamMaxVolume(AudioManager.STREAM_VOICE_CALL);
         audioManager.setStreamVolume(AudioManager.STREAM_VOICE_CALL, maxVol, 0);
 
-        // Setup listeners
         setupCallListener();
         setupButtons();
 
+        CallService.cancelIncomingCallNotification(this);
+
         if (isIncoming) {
-            // Show incoming UI
             callStatus.setText(getString(R.string.call_incoming));
             incomingButtons.setVisibility(View.VISIBLE);
-            ((View) btnEndCall.getParent().getParent()).setVisibility(View.GONE);
+            controlButtons.setVisibility(View.GONE);
+            // Do not start microphone FGS until user answers and RECORD_AUDIO is granted (Android 14+).
         } else {
-            // Outgoing: initiate call
             callStatus.setText(getString(R.string.call_connecting));
             incomingButtons.setVisibility(View.GONE);
-            initiateCall();
+            beginOutgoingCallAfterMicCheck();
         }
+    }
+
+    private void ensureCallForegroundService() {
+        if (callFgServiceStarted) return;
+        callFgServiceStarted = true;
+        try {
+            Intent svcIntent = CallService.createIntent(this, otherName);
+            ContextCompat.startForegroundService(this, svcIntent);
+            bindService(svcIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to start CallService", e);
+            callFgServiceStarted = false;
+        }
+    }
+
+    private void beginOutgoingCallAfterMicCheck() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            awaitingMicForOutgoing = true;
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.RECORD_AUDIO}, PERMISSION_REQUEST_MIC_FOR_CALL);
+            return;
+        }
+        ensureCallForegroundService();
+        initiateCall();
     }
 
     private void setupButtons() {
@@ -195,7 +265,6 @@ public class AudioCallActivity extends AppCompatActivity {
             }
         });
 
-        // Incoming buttons
         ImageView btnAnswer = findViewById(R.id.btn_answer);
         ImageView btnReject = findViewById(R.id.btn_reject);
 
@@ -207,15 +276,17 @@ public class AudioCallActivity extends AppCompatActivity {
         callListener = new ChatSocketManager.OnCallListener() {
             @Override
             public void onCallRinging(String rCallId, int receiverId) {
-                callId = rCallId;
-                mainHandler.post(() -> callStatus.setText(getString(R.string.call_ringing)));
+                mainHandler.post(() -> {
+                    callId = rCallId;
+                    callStatus.setText(getString(R.string.call_ringing));
+                    flushPendingIceCandidates();
+                });
             }
 
             @Override
             public void onCallAnswered(String aCallId, org.json.JSONObject answerSdp) {
                 mainHandler.post(() -> {
                     if (webrtcManager != null && answerSdp != null) webrtcManager.setRemoteAnswer(answerSdp);
-                    startActiveCall();
                 });
             }
 
@@ -223,6 +294,7 @@ public class AudioCallActivity extends AppCompatActivity {
             public void onCallEnded(String eCallId, String reason, int duration) {
                 callId = null;
                 mainHandler.post(() -> {
+                    cancelConnectionTimeout();
                     String msg;
                     switch (reason) {
                         case "rejected": msg = getString(R.string.call_rejected); break;
@@ -237,9 +309,7 @@ public class AudioCallActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCallAudio(String aCallId, String base64Audio) {
-                // WebRTC P2P: audio is not relayed by server; no-op.
-            }
+            public void onCallAudio(String aCallId, String base64Audio) {}
 
             @Override
             public void onCallIceCandidate(String cid, org.json.JSONObject candidate) {
@@ -248,51 +318,126 @@ public class AudioCallActivity extends AppCompatActivity {
 
             @Override
             public void onCallMute(String mCallId, int userId, boolean muted) {
-                mainHandler.post(() -> {
-                    muteIndicator.setVisibility(muted ? View.VISIBLE : View.GONE);
-                });
+                mainHandler.post(() -> muteIndicator.setVisibility(muted ? View.VISIBLE : View.GONE));
             }
 
             @Override
             public void onIncomingCall(String iCallId, int callerId, String callerName, String callerInitials, String callerAvatarColor, org.json.JSONObject offer) {
-                // Handled by BookReaderActivity/global listener
+                // Handled by global listener
             }
         };
         chatSocket.addCallListener(callListener);
     }
 
-    /** Caller: create WebRTC offer and send via Socket.IO. */
-    private void initiateCall() {
-        webrtcManager.setCallback(new WebRTCCallManager.Callback() {
+    private WebRTCCallManager.Callback createWebRtcCallback(boolean isCaller) {
+        return new WebRTCCallManager.Callback() {
             @Override
             public void onOfferCreated(JSONObject offer) {
-                mainHandler.post(() -> chatSocket.emitCallOffer(myUserId, otherUserId, offer));
+                if (isCaller) mainHandler.post(() -> chatSocket.emitCallOffer(myUserId, otherUserId, offer));
             }
             @Override
-            public void onAnswerCreated(JSONObject answer) {}
+            public void onAnswerCreated(JSONObject answer) {
+                if (!isCaller) mainHandler.post(() -> chatSocket.emitCallAnswer(callId, answer));
+            }
             @Override
             public void onIceCandidate(JSONObject candidate) {
-                if (callId != null) chatSocket.emitCallIceCandidate(callId, myUserId, candidate);
+                if (callId != null) {
+                    chatSocket.emitCallIceCandidate(callId, myUserId, candidate);
+                } else {
+                    synchronized (pendingIceCandidates) {
+                        pendingIceCandidates.add(candidate);
+                    }
+                }
             }
             @Override
             public void onConnected() {
-                mainHandler.post(() -> callStatus.setText(getString(R.string.call_connected)));
+                mainHandler.post(() -> {
+                    cancelConnectionTimeout();
+                    startActiveCall();
+                });
             }
             @Override
-            public void onDisconnected() {}
+            public void onDisconnected() {
+                mainHandler.post(() -> {
+                    if (isCallActive) {
+                        callStatus.setText(getString(R.string.call_disconnected));
+                    }
+                });
+            }
             @Override
             public void onError(String message) {
                 mainHandler.post(() -> callStatus.setText("Error: " + message));
             }
-        });
-        webrtcManager.createPeerConnection();
-        webrtcManager.createOffer();
+        };
     }
 
-    /** Receiver: set remote offer, create answer, send via Socket.IO; exchange ICE. */
+    private void flushPendingIceCandidates() {
+        if (callId == null) return;
+        synchronized (pendingIceCandidates) {
+            for (JSONObject c : pendingIceCandidates) {
+                chatSocket.emitCallIceCandidate(callId, myUserId, c);
+            }
+            pendingIceCandidates.clear();
+        }
+    }
+
+    private void fetchIceServersAndRun(Runnable afterFetch) {
+        ChatApiService.getInstance().getIceServers(new ChatApiService.ApiCallback<JSONArray>() {
+            @Override
+            public void onSuccess(JSONArray result) {
+                if (result != null && result.length() > 0) {
+                    List<PeerConnection.IceServer> servers = new ArrayList<>();
+                    for (int i = 0; i < result.length(); i++) {
+                        try {
+                            JSONObject s = result.getJSONObject(i);
+                            String urls = s.optString("urls", "");
+                            if (urls.isEmpty()) continue;
+                            PeerConnection.IceServer.Builder builder = PeerConnection.IceServer.builder(urls);
+                            if (s.has("username")) builder.setUsername(s.getString("username"));
+                            if (s.has("credential")) builder.setPassword(s.getString("credential"));
+                            servers.add(builder.createIceServer());
+                        } catch (Exception e) {
+                            Log.w(TAG, "Parse ICE server: " + e.getMessage());
+                        }
+                    }
+                    if (!servers.isEmpty()) webrtcManager.setIceServers(servers);
+                }
+                afterFetch.run();
+            }
+            @Override
+            public void onError(String error) {
+                Log.w(TAG, "Failed to fetch ICE servers, using defaults: " + error);
+                afterFetch.run();
+            }
+        });
+    }
+
+    private void initiateCall() {
+        webrtcManager.setCallback(createWebRtcCallback(true));
+        startConnectionTimeout();
+        fetchIceServersAndRun(() -> {
+            webrtcManager.createPeerConnection();
+            webrtcManager.createOffer();
+        });
+    }
+
     private void answerCall() {
+        if (awaitingMicForAnswer) return;
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            awaitingMicForAnswer = true;
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.RECORD_AUDIO}, PERMISSION_REQUEST_MIC_FOR_CALL);
+            return;
+        }
+        performAnswerCall();
+    }
+
+    private void performAnswerCall() {
         incomingButtons.setVisibility(View.GONE);
-        ((View) btnEndCall.getParent().getParent()).setVisibility(View.VISIBLE);
+        controlButtons.setVisibility(View.VISIBLE);
+        callStatus.setText(getString(R.string.call_connecting));
+
+        ensureCallForegroundService();
 
         String offerStr = getIntent().getStringExtra(EXTRA_OFFER_SDP);
         org.json.JSONObject offerSdp = null;
@@ -304,37 +449,19 @@ public class AudioCallActivity extends AppCompatActivity {
             }
         }
 
-        webrtcManager.setCallback(new WebRTCCallManager.Callback() {
-            @Override
-            public void onOfferCreated(JSONObject offer) {}
-            @Override
-            public void onAnswerCreated(JSONObject answer) {
-                mainHandler.post(() -> {
-                    chatSocket.emitCallAnswer(callId, answer);
-                });
-            }
-            @Override
-            public void onIceCandidate(JSONObject candidate) {
-                if (callId != null) chatSocket.emitCallIceCandidate(callId, myUserId, candidate);
-            }
-            @Override
-            public void onConnected() {
-                mainHandler.post(() -> callStatus.setText(getString(R.string.call_connected)));
-            }
-            @Override
-            public void onDisconnected() {}
-            @Override
-            public void onError(String message) {
-                mainHandler.post(() -> callStatus.setText("Error: " + message));
-            }
-        });
-        webrtcManager.createPeerConnection();
-        webrtcManager.setRemoteOfferAndCreateAnswer(offerSdp);
+        webrtcManager.setCallback(createWebRtcCallback(false));
+        startConnectionTimeout();
 
-        startActiveCall();
+        final org.json.JSONObject finalOffer = offerSdp;
+        fetchIceServersAndRun(() -> {
+            webrtcManager.createPeerConnection();
+            webrtcManager.setRemoteOfferAndCreateAnswer(finalOffer);
+        });
     }
 
     private void rejectCall() {
+        awaitingMicForOutgoing = false;
+        awaitingMicForAnswer = false;
         try {
             JSONObject data = new JSONObject();
             data.put("callId", callId);
@@ -345,12 +472,32 @@ public class AudioCallActivity extends AppCompatActivity {
         finish();
     }
 
+    private void startConnectionTimeout() {
+        cancelConnectionTimeout();
+        connectionTimeoutRunnable = () -> {
+            if (!isCallActive && !isFinishing()) {
+                Log.w(TAG, "Connection timeout after " + CALL_TIMEOUT_MS + "ms");
+                callStatus.setText(getString(R.string.call_no_answer));
+                endCall();
+            }
+        };
+        mainHandler.postDelayed(connectionTimeoutRunnable, CALL_TIMEOUT_MS);
+    }
+
+    private void cancelConnectionTimeout() {
+        if (connectionTimeoutRunnable != null) {
+            mainHandler.removeCallbacks(connectionTimeoutRunnable);
+            connectionTimeoutRunnable = null;
+        }
+    }
+
     private void startActiveCall() {
+        if (isCallActive) return;
         isCallActive = true;
+        cancelConnectionTimeout();
         callStartTime = System.currentTimeMillis();
         callStatus.setText("00:00");
 
-        // WebRTC: audio is captured/sent via PeerConnection (no server relay)
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, PERMISSION_REQUEST_MIC);
         }
@@ -362,7 +509,9 @@ public class AudioCallActivity extends AppCompatActivity {
                     int elapsed = (int) ((System.currentTimeMillis() - callStartTime) / 1000);
                     int min = elapsed / 60;
                     int sec = elapsed % 60;
-                    callStatus.setText(String.format(Locale.getDefault(), "%02d:%02d", min, sec));
+                    String timeStr = String.format(Locale.getDefault(), "%02d:%02d", min, sec);
+                    callStatus.setText(timeStr);
+                    if (serviceBound && callService != null) callService.updateDuration(timeStr);
                     timerHandler.postDelayed(this, 1000);
                 }
             }
@@ -373,8 +522,29 @@ public class AudioCallActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISSION_REQUEST_MIC && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            // WebRTC already has mic track; no extra start needed
+        if (requestCode == PERMISSION_REQUEST_MIC_FOR_CALL) {
+            boolean ok = grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED;
+            if (ok) {
+                if (awaitingMicForOutgoing) {
+                    awaitingMicForOutgoing = false;
+                    ensureCallForegroundService();
+                    initiateCall();
+                } else if (awaitingMicForAnswer) {
+                    awaitingMicForAnswer = false;
+                    performAnswerCall();
+                }
+            } else {
+                if (awaitingMicForOutgoing) {
+                    awaitingMicForOutgoing = false;
+                    callStatus.setText(getString(R.string.call_no_answer));
+                    finish();
+                } else if (awaitingMicForAnswer) {
+                    awaitingMicForAnswer = false;
+                    incomingButtons.setVisibility(View.VISIBLE);
+                    controlButtons.setVisibility(View.GONE);
+                    callStatus.setText(getString(R.string.call_incoming));
+                }
+            }
         }
     }
 
@@ -395,22 +565,24 @@ public class AudioCallActivity extends AppCompatActivity {
 
     private void stopCall() {
         isCallActive = false;
+        cancelConnectionTimeout();
         if (timerRunnable != null) timerHandler.removeCallbacks(timerRunnable);
         if (webrtcManager != null) webrtcManager.release();
+        if (serviceBound) {
+            try { unbindService(serviceConnection); } catch (Exception ignored) {}
+            serviceBound = false;
+        }
+        stopService(new Intent(this, CallService.class));
     }
 
     @Override
     public void onBackPressed() {
-        // Don't allow back during active call
-        if (!isCallActive) {
-            endCall();
-        }
+        endCall();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Always emit call:end to prevent ghost ringing on the other side
         if (callId != null) {
             try {
                 JSONObject data = new JSONObject();
@@ -422,9 +594,10 @@ public class AudioCallActivity extends AppCompatActivity {
         }
         stopCall();
         if (callListener != null) chatSocket.removeCallListener(callListener);
-        if (webrtcManager != null) webrtcManager.release();
-        audioManager.setMode(AudioManager.MODE_NORMAL);
-        audioManager.setSpeakerphoneOn(false);
-        audioManager.abandonAudioFocus(null);
+        try {
+            audioManager.setMode(AudioManager.MODE_NORMAL);
+            audioManager.setSpeakerphoneOn(false);
+            audioManager.abandonAudioFocus(null);
+        } catch (Exception ignored) {}
     }
 }

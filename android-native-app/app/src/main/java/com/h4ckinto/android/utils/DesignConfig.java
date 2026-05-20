@@ -6,6 +6,8 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.h4ckinto.android.build.BuildProfile;
+
 public class DesignConfig {
     private static final String TAG = "DesignConfig";
     
@@ -16,30 +18,28 @@ public class DesignConfig {
     
     public static String getDesignMode(Context context) {
         if (designMode == null) {
+            designMode = BuildProfile.APP_DESIGN_MODE;
             try {
                 ApplicationInfo ai = context.getPackageManager()
                     .getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
                 Bundle bundle = ai.metaData;
-                if (bundle != null) {
-                    designMode = bundle.getString("app_design_mode", DESIGN_LIBRARY);
-                } else {
-                    designMode = DESIGN_LIBRARY;
+                if (bundle != null && bundle.containsKey("app_design_mode")) {
+                    designMode = bundle.getString("app_design_mode", designMode);
                 }
             } catch (Exception e) {
                 Log.e(TAG, "Error reading design mode: " + e.getMessage());
-                designMode = DESIGN_LIBRARY;
             }
-            Log.d(TAG, "Design mode: " + designMode);
+            Log.d(TAG, "Design mode: " + designMode + " (preset=" + BuildProfile.BUILD_PRESET + ")");
         }
         return designMode;
     }
     
     public static boolean isChatMode(Context context) {
-        return DESIGN_CHAT.equals(getDesignMode(context));
+        return BuildProfile.isChatMode() || DESIGN_CHAT.equals(getDesignMode(context));
     }
     
     public static boolean isLibraryMode(Context context) {
-        return DESIGN_LIBRARY.equals(getDesignMode(context));
+        return BuildProfile.isLibraryMode() || DESIGN_LIBRARY.equals(getDesignMode(context));
     }
     
     public static void reset() {

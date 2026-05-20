@@ -6,16 +6,17 @@ import android.util.Log;
 import org.json.JSONObject;
 import org.webrtc.AudioSource;
 import org.webrtc.AudioTrack;
-import org.webrtc.EglBase;
 import org.webrtc.IceCandidate;
 import org.webrtc.MediaConstraints;
 import org.webrtc.PeerConnection;
 import org.webrtc.PeerConnectionFactory;
 import org.webrtc.RtpReceiver;
 import org.webrtc.SessionDescription;
-import org.webrtc.SurfaceTextureHelper;
+import org.webrtc.audio.AudioDeviceModule;
+import org.webrtc.audio.JavaAudioDeviceModule;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -34,7 +35,7 @@ public class WebRTCCallManager {
     private PeerConnection peerConnection;
     private AudioTrack localAudioTrack;
     private AudioSource audioSource;
-    private EglBase rootEglBase;
+    private AudioDeviceModule audioDeviceModule;
     private boolean isMuted;
 
     private List<PeerConnection.IceServer> iceServers;
@@ -59,29 +60,67 @@ public class WebRTCCallManager {
         this.callback = callback;
     }
 
+    /** True after {@link #initialize()} built a factory successfully. */
+    public boolean isReady() {
+        return peerConnectionFactory != null;
+    }
+
     /**
      * Initialize PeerConnectionFactory (audio only, Opus).
      */
     public void initialize() {
         if (peerConnectionFactory != null) return;
 
-        PeerConnectionFactory.InitializationOptions initOptions = PeerConnectionFactory
-                .InitializationOptions.builder(context)
-                .setEnableInternalTracer(true)
-                .createInitializationOptions();
-        PeerConnectionFactory.initialize(initOptions);
+        try {
+            WebRtcInitialization.ensureInitialized(context);
 
-        PeerConnectionFactory.Options options = new PeerConnectionFactory.Options();
-        rootEglBase = EglBase.create();
+            PeerConnectionFactory.Options options = new PeerConnectionFactory.Options();
+            audioDeviceModule = JavaAudioDeviceModule.builder(context)
+                    .setUseHardwareAcousticEchoCanceler(
+                            JavaAudioDeviceModule.isBuiltInAcousticEchoCancelerSupported())
+                    .setUseHardwareNoiseSuppressor(
+                            JavaAudioDeviceModule.isBuiltInNoiseSuppressorSupported())
+                    .createAudioDeviceModule();
 
-        peerConnectionFactory = PeerConnectionFactory.builder()
-                .setOptions(options)
-                .createPeerConnectionFactory();
+            peerConnectionFactory = PeerConnectionFactory.builder()
+                    .setOptions(options)
+                    .setAudioDeviceModule(audioDeviceModule)
+                    .createPeerConnectionFactory();
 
-        iceServers = new ArrayList<>();
-        iceServers.add(PeerConnection.IceServer.builder(STUN_URL).createIceServer());
+            iceServers = new ArrayList<>();
+            iceServers.add(PeerConnection.IceServer.builder(STUN_URL).createIceServer());
 
-        Log.d(TAG, "PeerConnectionFactory initialized (audio only, STUN)");
+            Log.d(TAG, "PeerConnectionFactory created (audio, JavaAudioDeviceModule)");
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to create PeerConnectionFactory", e);
+            disposeFactoryAndAudio();
+        }
+    }
+
+    private void disposeFactoryAndAudio() {
+        if (peerConnectionFactory != null) {
+            try {
+                peerConnectionFactory.dispose();
+            } catch (Exception ignored) { }
+            peerConnectionFactory = null;
+        }
+        if (audioDeviceModule != null) {
+            try {
+                audioDeviceModule.release();
+            } catch (Exception ignored) { }
+            audioDeviceModule = null;
+        }
+    }
+
+    /**
+     * Replace the default ICE servers with a list fetched from the signaling server.
+     * Must be called before createPeerConnection().
+     */
+    public void setIceServers(List<PeerConnection.IceServer> servers) {
+        if (servers != null && !servers.isEmpty()) {
+            iceServers = new ArrayList<>(servers);
+            Log.d(TAG, "ICE servers updated: " + servers.size() + " server(s)");
+        }
     }
 
     /**
@@ -89,10 +128,15 @@ public class WebRTCCallManager {
      */
     public void createPeerConnection() {
         if (peerConnectionFactory == null) initialize();
+        if (peerConnectionFactory == null) {
+            Log.e(TAG, "PeerConnectionFactory is null – cannot create peer connection");
+            if (callback != null) callback.onError("WebRTC not available");
+            return;
+        }
         if (peerConnection != null) return;
 
-        MediaConstraints pcConstraints = new MediaConstraints();
-        pcConstraints.mandatory.add(new MediaConstraints.KeyValuePair("OfferToReceiveAudio", "true"));
+        PeerConnection.RTCConfiguration rtcConfig = new PeerConnection.RTCConfiguration(iceServers);
+        rtcConfig.sdpSemantics = PeerConnection.SdpSemantics.UNIFIED_PLAN;
 
         pcObserver = new PeerConnection.Observer() {
             @Override
@@ -156,18 +200,21 @@ public class WebRTCCallManager {
             }
         };
 
-        peerConnection = peerConnectionFactory.createPeerConnection(iceServers, pcConstraints, pcObserver);
+        peerConnection = peerConnectionFactory.createPeerConnection(rtcConfig, pcObserver);
         if (peerConnection == null) {
             if (callback != null) callback.onError("Failed to create PeerConnection");
             return;
         }
 
-        // Create and add local audio track (Opus)
         MediaConstraints audioConstraints = new MediaConstraints();
+        audioConstraints.mandatory.add(new MediaConstraints.KeyValuePair("googEchoCancellation", "true"));
+        audioConstraints.mandatory.add(new MediaConstraints.KeyValuePair("googNoiseSuppression", "true"));
+        audioConstraints.mandatory.add(new MediaConstraints.KeyValuePair("googAutoGainControl", "true"));
+        audioConstraints.mandatory.add(new MediaConstraints.KeyValuePair("googHighpassFilter", "true"));
         audioSource = peerConnectionFactory.createAudioSource(audioConstraints);
         localAudioTrack = peerConnectionFactory.createAudioTrack("audio0", audioSource);
         localAudioTrack.setEnabled(!isMuted);
-        peerConnection.addTrack(localAudioTrack, List.of("stream0"));
+        peerConnection.addTrack(localAudioTrack, Collections.singletonList("stream0"));
 
         Log.d(TAG, "PeerConnection created, local audio track added");
     }
@@ -367,23 +414,31 @@ public class WebRTCCallManager {
     }
 
     public void release() {
-        if (peerConnection != null) {
-            peerConnection.dispose();
-            peerConnection = null;
+        try {
+            if (peerConnection != null) {
+                peerConnection.dispose();
+                peerConnection = null;
+            }
+            if (localAudioTrack != null) {
+                localAudioTrack.dispose();
+                localAudioTrack = null;
+            }
+            if (audioSource != null) {
+                audioSource.dispose();
+                audioSource = null;
+            }
+            if (peerConnectionFactory != null) {
+                peerConnectionFactory.dispose();
+                peerConnectionFactory = null;
+            }
+            if (audioDeviceModule != null) {
+                audioDeviceModule.release();
+                audioDeviceModule = null;
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error during WebRTC release", e);
         }
-        if (localAudioTrack != null) {
-            localAudioTrack.dispose();
-            localAudioTrack = null;
-        }
-        if (audioSource != null) {
-            audioSource.dispose();
-            audioSource = null;
-        }
-        if (rootEglBase != null) {
-            rootEglBase.release();
-            rootEglBase = null;
-        }
-        peerConnectionFactory = null;
+        callback = null;
         Log.d(TAG, "WebRTC released");
     }
 }

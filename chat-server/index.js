@@ -59,7 +59,7 @@ var io = new Server(server, {
     cors: { origin: '*' },
     pingTimeout: 30000,
     pingInterval: 15000,
-    maxHttpBufferSize: 10e6,
+    maxHttpBufferSize: 5e6,
     transports: ['websocket', 'polling'],
     allowEIO3: true,
     perMessageDeflate: { threshold: 2048 },
@@ -100,9 +100,25 @@ app.use('/api/files', filesRoutes);
 var uploadsDir = path.join(__dirname, 'uploads');
 app.use('/uploads', express.static(uploadsDir));
 
-app.get('/health', function(req, res) {
+app.get('/health/live', function(req, res) {
+    res.json({ status: 'ok' });
+});
+
+app.get('/health/ready', async function(req, res) {
+    var checks = { db: false, redis: false };
+    try { getDb().prepare('SELECT 1').get(); checks.db = true; } catch (e) {}
+    try { if (redisService.available()) { await redisService.getRedis().ping(); checks.redis = true; } } catch (e) {}
+    var allOk = checks.db;
+    res.status(allOk ? 200 : 503).json({ status: allOk ? 'ready' : 'degraded', checks: checks });
+});
+
+app.get('/health', async function(req, res) {
+    var dbOk = false;
+    try { getDb().prepare('SELECT 1').get(); dbOk = true; } catch (e) {}
+    var redisOk = false;
+    try { if (redisService.available()) { await redisService.getRedis().ping(); redisOk = true; } } catch (e) {}
     res.json({
-        status: 'ok',
+        status: dbOk ? 'ok' : 'degraded',
         server: 'secure-chat',
         version: '2.1.0',
         uptime: process.uptime(),
@@ -110,7 +126,8 @@ app.get('/health', function(req, res) {
         connections: io.engine.clientsCount,
         memory: Math.round(process.memoryUsage().heapUsed / 1024 / 1024) + 'MB',
         storage: 's3',
-        redis: redisService.available() ? 'connected' : 'unavailable'
+        db: dbOk ? 'connected' : 'error',
+        redis: redisOk ? 'connected' : 'unavailable'
     });
 });
 
@@ -236,6 +253,10 @@ process.on('uncaughtException', function(err) {
 process.on('unhandledRejection', function(reason) {
     console.error('[FATAL] Unhandled rejection:', reason);
 });
+
+server.timeout = 30000;
+server.headersTimeout = 10000;
+server.keepAliveTimeout = 65000;
 
 // Start server
 server.listen(PORT, '0.0.0.0', function() {

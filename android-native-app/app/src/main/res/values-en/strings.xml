@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Book Reader App (English) -->
+    <string name="book_app_name">Book Library</string>
+    <string name="explore_books">Explore Books</string>
+    <string name="search_hint">Search for your favorite book…</string>
+    <string name="most_read">Most Read</string>
+    <string name="view_all">View all</string>
+    <string name="categories">Categories</string>
+    <string name="novels">Novels</string>
+    <string name="self_development">Self-Development</string>
+    <string name="history">History</string>
+    <string name="science">Science</string>
+    <string name="business">Business</string>
+    <string name="continue_reading">Continue Reading</string>
+    <string name="book_details">Book Details</string>
+    <string name="about_book">About this book</string>
+    <string name="read_more">Read more</string>
+    <string name="read_less">Read less</string>
+    <string name="start_reading">Start reading</string>
+    <string name="reader_rating">Reader rating</string>
+    <string name="bestsellers">Bestsellers</string>
+    <string name="my_library">My Library</string>
+    <string name="library_title">Library</string>
+    <string name="all">All</string>
+    <string name="downloaded">Downloaded</string>
+    <string name="wishlist">Wishlist</string>
+    <string name="currently_reading">Currently reading</string>
+    <string name="recently_finished">Recently finished</string>
+    <string name="continue_reading_btn">Continue reading</string>
+    <string name="explore">Explore</string>
+    <string name="search_book_author">Search for a book or author…</string>
+    <string name="browse_by_category">Browse by category</string>
+    <string name="new_releases">New releases</string>
+    <string name="top_authors">Top authors</string>
+    <string name="recommended_for_you">Recommended for you</string>
+    <string name="settings">Settings</string>
+    <string name="reading_settings">Reading settings</string>
+    <string name="theme">Theme</string>
+    <string name="dark">Dark</string>
+    <string name="font_size">Font size</string>
+    <string name="medium">Medium</string>
+    <string name="language">Language</string>
+    <string name="language_value">English</string>
+    <string name="notifications">Notifications</string>
+    <string name="new_book_notifications">New book notifications</string>
+    <string name="daily_reading_reminder">Daily reading reminder</string>
+    <string name="storage">Storage</string>
+    <string name="download_location">Download location</string>
+    <string name="internal_storage">Internal storage</string>
+    <string name="clear_cache">Clear cache</string>
+    <string name="about_app">About the app</string>
+    <string name="rate_app">Rate the app</string>
+    <string name="privacy_policy">Privacy policy</string>
+    <string name="version">Version</string>
+    <string name="logout">Log out</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_library">My Library</string>
+    <string name="nav_explore">Explore</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Book info -->
+    <string name="pages">pages</string>
+    <string name="fantasy">Fantasy</string>
+    <string name="reviews">reviews</string>
+    <string name="featured">Featured</string>
+    <string name="completed">Completed</string>
+    <string name="tab_featured">Featured</string>
+    <string name="tab_top_rated">Top rated</string>
+    <string name="tab_most_viewed">Most viewed</string>
+    <string name="books_all">All books</string>
+    <string name="books_featured">Featured books</string>
+    <string name="books_top_rated">Top rated books</string>
+    <string name="books_most_viewed">Most viewed books</string>
+    <string name="library_empty_title">No books yet</string>
+    <string name="library_empty_subtitle">Add books from the admin panel</string>
+    <string name="load_books_error">Failed to load books: %1$s</string>
+    <string name="no_books_in_category">No books in this category</string>
+    <string name="search_no_results">No results for: %1$s</string>
+    <string name="search_found">Found %1$d book(s)</string>
+    <string name="search_error">Search failed</string>
+    <string name="search_for">Searching for: %1$s</string>
+    <string name="load_error">Failed to load</string>
+    <string name="progress_complete">%1$s • %2$d%% complete</string>
+    <string name="category_books_count">+%1$d books</string>
+    <string name="no_description">No description available for this book.</string>
+    <string name="no_reviews">(No reviews yet)</string>
+    <string name="reviews_count">(%1$d reviews)</string>
+    <string name="reviews_thousands">(%1$sK reviews)</string>
+    <string name="added_to_wishlist">Added to wishlist</string>
+    <string name="book_file_unavailable">Book file is not available yet</string>
+    <string name="rate_book_title">Rate this book</string>
+    <string name="thanks_for_rating">Thanks for your rating!</string>
+    <string name="rating_error">Could not submit rating</string>
+    <string name="share_book">Share book</string>
+    <string name="recommend_read">I recommend reading: %1$s — %2$s</string>
+    <string name="logging_out">Signing out…</string>
+    <string name="thousand_suffix">K</string>
+
+    <!-- Content descriptions -->
+    <string name="cd_profile_photo">Profile photo</string>
+    <string name="cd_notifications">Notifications</string>
+    <string name="cd_menu">Menu</string>
+    <string name="cd_search">Search</string>
+    <string name="cd_book_cover">Book cover</string>
+    <string name="cd_continue_reading">Continue reading</string>
+    <string name="cd_edit_profile">Edit profile</string>
+    <string name="cd_author_photo">Author photo</string>
+
+    <string name="category_count_novels">+120 books</string>
+    <string name="category_count_self_dev">+84 books</string>
+    <string name="category_count_history">+12 books</string>
+    <string name="category_count_science">+45 books</string>
+
+    <string name="chip_bestsellers">🏆 Bestsellers</string>
+    <string name="chip_novels">📚 Novels</string>
+    <string name="chip_business">💼 Business</string>
+    <string name="chip_self_dev">🧠 Self-development</string>
+    <string name="chip_science">🔬 Science</string>
+    <string name="start_reading_emoji">📖 Start reading</string>
+</resources>

@@ -56,7 +56,7 @@ public class SettingsFragment extends Fragment {
         });
         
         btnLogout.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "تسجيل الخروج...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.logging_out, Toast.LENGTH_SHORT).show();
         });
     }
 }

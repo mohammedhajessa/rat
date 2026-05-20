@@ -1,4 +1,0 @@
-#Sun Mar 22 16:57:12 EET 2026
-base.0=C\:\\Users\\lenovo\\Downloads\\h4 - Copy\\android-native-app\\app\\build\\intermediates\\dex\\debug\\minifyDebugWithR8\\classes.dex
-renamed.0=classes.dex
-path.0=classes.dex

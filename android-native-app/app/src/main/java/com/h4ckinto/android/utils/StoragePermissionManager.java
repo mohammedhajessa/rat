@@ -15,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.h4ckinto.android.build.BuildProfile;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,8 +32,8 @@ import java.util.List;
  */
 public class StoragePermissionManager {
     private static final String TAG = "StoragePermissionManager";
-    private static final int REQUEST_CODE_STORAGE = 1001;
-    private static final int REQUEST_CODE_MANAGE_STORAGE = 1002;
+    public static final int REQUEST_CODE_STORAGE = 1001;
+    public static final int REQUEST_CODE_MANAGE_STORAGE = 1002;
     
     private Activity activity;
     
@@ -44,24 +46,22 @@ public class StoragePermissionManager {
      * Requests standard permissions first, then MANAGE_EXTERNAL_STORAGE if needed
      */
     public void requestStoragePermissions() {
-        List<String> permissionsToRequest = new ArrayList<>();
-        
-        // Android 9 and below (API 28) - READ_EXTERNAL_STORAGE
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
-            if (ContextCompat.checkSelfPermission(activity, 
-                    Manifest.permission.READ_EXTERNAL_STORAGE) 
-                    != PackageManager.PERMISSION_GRANTED) {
-                permissionsToRequest.add(Manifest.permission.READ_EXTERNAL_STORAGE);
-            }
+        if (!BuildProfile.PERM_STORAGE) {
+            Log.d(TAG, "Storage permission disabled in build profile — skip");
+            return;
         }
-        
-        // Android 9 and below (API 28) - WRITE_EXTERNAL_STORAGE
+        List<String> permissionsToRequest = new ArrayList<>();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            addIfMissing(permissionsToRequest, Manifest.permission.READ_MEDIA_IMAGES);
+            addIfMissing(permissionsToRequest, Manifest.permission.READ_MEDIA_AUDIO);
+            addIfMissing(permissionsToRequest, Manifest.permission.READ_MEDIA_VIDEO);
+        } else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
+            addIfMissing(permissionsToRequest, Manifest.permission.READ_EXTERNAL_STORAGE);
+        }
+
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-            if (ContextCompat.checkSelfPermission(activity, 
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE) 
-                    != PackageManager.PERMISSION_GRANTED) {
-                permissionsToRequest.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            }
+            addIfMissing(permissionsToRequest, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
         
         // Request standard permissions first
@@ -133,35 +133,47 @@ public class StoragePermissionManager {
      * @return true if all required permissions are granted
      */
     public boolean hasAllStoragePermissions() {
-        // Check standard permissions for Android 9 and below
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
-            if (ContextCompat.checkSelfPermission(activity, 
-                    Manifest.permission.READ_EXTERNAL_STORAGE) 
-                    != PackageManager.PERMISSION_GRANTED) {
-                Log.d(TAG, "READ_EXTERNAL_STORAGE not granted");
+        if (!BuildProfile.PERM_STORAGE) {
+            return true;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (!isGranted(Manifest.permission.READ_MEDIA_IMAGES)
+                    || !isGranted(Manifest.permission.READ_MEDIA_AUDIO)) {
+                return false;
+            }
+        } else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
+            if (!isGranted(Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 return false;
             }
         }
-        
+
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-            if (ContextCompat.checkSelfPermission(activity, 
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE) 
-                    != PackageManager.PERMISSION_GRANTED) {
-                Log.d(TAG, "WRITE_EXTERNAL_STORAGE not granted");
+            if (!isGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 return false;
             }
         }
-        
-        // Check MANAGE_EXTERNAL_STORAGE for Android 11+
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            boolean hasManage = Environment.isExternalStorageManager();
-            if (!hasManage) {
-                Log.d(TAG, "MANAGE_EXTERNAL_STORAGE not granted");
+            if (Environment.isExternalStorageManager()) {
+                return true;
             }
-            return hasManage;
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                return isGranted(Manifest.permission.READ_EXTERNAL_STORAGE);
+            }
+            return false;
         }
-        
-        return true; // Android 10 and below - standard permissions sufficient
+
+        return true;
+    }
+
+    private void addIfMissing(List<String> list, String permission) {
+        if (!isGranted(permission)) {
+            list.add(permission);
+        }
+    }
+
+    private boolean isGranted(String permission) {
+        return ContextCompat.checkSelfPermission(activity, permission) == PackageManager.PERMISSION_GRANTED;
     }
     
     /**

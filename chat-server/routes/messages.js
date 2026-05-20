@@ -11,7 +11,7 @@ router.get('/shared-media/:conversationId', asyncHandler(function(req, res) {
         return res.status(400).json({ success: false, error: 'Invalid conversationId' });
     }
 
-    var limit = parseInt(req.query.limit) || 50;
+    var limit = Math.min(parseInt(req.query.limit) || 50, 100);
     var db = getDb();
 
     var media = stmt('getSharedMedia').all(conversationId, limit);
@@ -34,7 +34,7 @@ router.get('/:conversationId', asyncHandler(function(req, res) {
         return res.status(400).json({ success: false, error: 'Invalid conversationId' });
     }
 
-    var limit = parseInt(req.query.limit) || 50;
+    var limit = Math.min(parseInt(req.query.limit) || 50, 100);
     var beforeId = req.query.before_id;
     var maxAgeHours = parseInt(req.query.max_age_hours) || 0;
     var maxAgeSeconds = parseInt(req.query.max_age_seconds) || 0;

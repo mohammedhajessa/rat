@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.h4ckinto.android.app-mergeReleaseResources-47:/values-ka/values-ka.xml",
+            "outputFile": "com.h4ckinto.android.app-mergeReleaseResources-48:/values-ka/values-ka.xml",
             "map": [
                 {
                     "source": "C:\\Users\\lenovo\\.gradle\\caches\\transforms-3\\61db953c789b1b6bc50c10423a46e903\\transformed\\play-services-base-18.5.0\\res\\values-ka\\values.xml",

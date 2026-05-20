@@ -10,10 +10,12 @@ var presenceSyncTimer = null;
 var clientMessageIds = new Map(); // In-memory cache for clientMessageId deduplication (fallback if Redis unavailable)
 
 var TYPING_TIMEOUT_MS = 4000;
-var TYPING_RATE_LIMIT_MS = 2000; // Max 1 typing event per 2 seconds
+var TYPING_RATE_LIMIT_MS = 2000;
 var PRESENCE_SYNC_INTERVAL_MS = 60000;
-var PRESENCE_HEARTBEAT_TTL = 60; // Redis TTL for presence heartbeat
-var CLIENT_MSG_ID_TTL = 300; // Keep clientMessageId in Redis for 5 minutes
+var PRESENCE_HEARTBEAT_TTL = 60;
+var CLIENT_MSG_ID_TTL = 300;
+var PRESENCE_BROADCAST_THROTTLE_MS = 30000;
+var presenceLastBroadcast = new Map();
 
 function parseData(data) {
     if (!data) return {};
@@ -50,9 +52,16 @@ async function getContactIds(userId) {
     return ids;
 }
 
-async function broadcastPresence(io, userId, isOnline, lastSeen) {
-    var payload = { userId: userId, isOnline: isOnline, lastSeen: lastSeen };
+async function broadcastPresence(io, userId, isOnline, lastSeen, force) {
+    var now = Date.now();
+    var key = userId + ':' + (isOnline ? '1' : '0');
+    if (!force) {
+        var lastTime = presenceLastBroadcast.get(key);
+        if (lastTime && (now - lastTime) < PRESENCE_BROADCAST_THROTTLE_MS) return;
+    }
+    presenceLastBroadcast.set(key, now);
 
+    var payload = { userId: userId, isOnline: isOnline, lastSeen: lastSeen };
     var contactIds = await getContactIds(userId);
 
     for (var i = 0; i < contactIds.length; i++) {
@@ -193,7 +202,7 @@ function setupChatSocket(io) {
 
                 var now = messageService.nowISO();
                 setPresence(userId, true, now);
-                broadcastPresence(io, userId, true, now);
+                broadcastPresence(io, userId, true, now, true);
 
                 var onlineList = Array.from(onlineUsers.keys());
                 socket.emit('chat:online_list', { users: onlineList });
@@ -269,11 +278,11 @@ function setupChatSocket(io) {
                 if (active) {
                     awayUsers.delete(userId);
                     setPresence(userId, true, now);
-                    broadcastPresence(io, userId, true, now);
+                    broadcastPresence(io, userId, true, now, true);
                 } else {
                     awayUsers.add(userId);
                     setPresence(userId, false, now);
-                    broadcastPresence(io, userId, false, now);
+                    broadcastPresence(io, userId, false, now, true);
                 }
 
                 logEvent('chat:set_status', { userId: userId, isOnline: active });
@@ -573,7 +582,13 @@ function setupChatSocket(io) {
 
                         var lastSeen = messageService.nowISO();
                         setPresence(userId, false, lastSeen);
-                        broadcastPresence(io, userId, false, lastSeen);
+                        broadcastPresence(io, userId, false, lastSeen, true);
+
+                        typingLastSent.forEach(function(val, key) {
+                            if (key.endsWith('_' + userId)) typingLastSent.delete(key);
+                        });
+                        presenceLastBroadcast.delete(userId + ':1');
+                        presenceLastBroadcast.delete(userId + ':0');
 
                         logEvent('chat:disconnect', { userId: userId });
                     }

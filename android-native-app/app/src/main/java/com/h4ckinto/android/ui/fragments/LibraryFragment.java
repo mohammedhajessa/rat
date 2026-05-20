@@ -150,7 +150,7 @@ public class LibraryFragment extends Fragment {
                 if (allBooks.isEmpty()) {
                     showEmpty(true);
                 }
-                Toast.makeText(getContext(), "خطأ في تحميل الكتب: " + error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.load_books_error, error), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -186,7 +186,7 @@ public class LibraryFragment extends Fragment {
         }
 
         if (adapter != null) {
-            adapter.notifyDataSetChanged();
+            adapter.updateBooks(displayedBooks);
         }
 
         updateBooksCount();
@@ -194,21 +194,22 @@ public class LibraryFragment extends Fragment {
     }
 
     private void updateBooksCount() {
-        String tabLabel;
+        int labelRes;
         switch (currentTab) {
             case "featured":
-                tabLabel = "الكتب المميزة";
+                labelRes = R.string.books_featured;
                 break;
             case "top_rated":
-                tabLabel = "الأعلى تقييماً";
+                labelRes = R.string.books_top_rated;
                 break;
             case "most_viewed":
-                tabLabel = "الأكثر مشاهدة";
+                labelRes = R.string.books_most_viewed;
                 break;
             default:
-                tabLabel = "جميع الكتب";
+                labelRes = R.string.books_all;
                 break;
         }
+        String tabLabel = getString(labelRes);
         booksCount.setText(String.format(Locale.getDefault(), "%s (%d)", tabLabel, displayedBooks.size()));
     }
 

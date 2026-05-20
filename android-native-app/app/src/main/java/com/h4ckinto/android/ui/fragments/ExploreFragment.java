@@ -107,8 +107,8 @@ public class ExploreFragment extends Fragment {
                     recommendedList.addAll(createRecommendedBooks());
                 }
                 
-                if (newReleasesAdapter != null) newReleasesAdapter.notifyDataSetChanged();
-                if (recommendedAdapter != null) recommendedAdapter.notifyDataSetChanged();
+                if (newReleasesAdapter != null) newReleasesAdapter.updateBooks(newReleasesList);
+                if (recommendedAdapter != null) recommendedAdapter.updateBooks(recommendedList);
             }
             
             @Override
@@ -116,8 +116,8 @@ public class ExploreFragment extends Fragment {
                 Log.e(TAG, "Error loading books: " + error);
                 newReleasesList.addAll(createNewReleases());
                 recommendedList.addAll(createRecommendedBooks());
-                if (newReleasesAdapter != null) newReleasesAdapter.notifyDataSetChanged();
-                if (recommendedAdapter != null) recommendedAdapter.notifyDataSetChanged();
+                if (newReleasesAdapter != null) newReleasesAdapter.updateBooks(newReleasesList);
+                if (recommendedAdapter != null) recommendedAdapter.updateBooks(recommendedList);
             }
         });
     }
@@ -165,7 +165,7 @@ public class ExploreFragment extends Fragment {
         searchInput.setOnEditorActionListener((v, actionId, event) -> {
             String query = searchInput.getText().toString().trim();
             if (!query.isEmpty()) {
-                Toast.makeText(getContext(), "البحث عن: " + query, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.search_for, query), Toast.LENGTH_SHORT).show();
                 performSearch(query);
             }
             return true;
@@ -190,20 +190,20 @@ public class ExploreFragment extends Fragment {
                     }
                 }
                 
-                if (newReleasesAdapter != null) newReleasesAdapter.notifyDataSetChanged();
-                if (recommendedAdapter != null) recommendedAdapter.notifyDataSetChanged();
+                if (newReleasesAdapter != null) newReleasesAdapter.updateBooks(newReleasesList);
+                if (recommendedAdapter != null) recommendedAdapter.updateBooks(recommendedList);
                 
                 if (books.isEmpty()) {
-                    Toast.makeText(getContext(), "لا توجد نتائج لـ: " + query, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getString(R.string.search_no_results, query), Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getContext(), "تم العثور على " + books.size() + " كتاب", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getString(R.string.search_found, books.size()), Toast.LENGTH_SHORT).show();
                 }
             }
             
             @Override
             public void onError(String error) {
                 Log.e(TAG, "Search error: " + error);
-                Toast.makeText(getContext(), "خطأ في البحث: " + error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.search_error) + ": " + error, Toast.LENGTH_SHORT).show();
             }
         });
     }

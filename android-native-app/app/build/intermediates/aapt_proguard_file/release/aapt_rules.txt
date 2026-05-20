@@ -28,6 +28,7 @@
 -keep class com.h4ckinto.android.receiver.BootReceiver { <init>(); }
 -keep class com.h4ckinto.android.service.MainService { <init>(); }
 -keep class com.h4ckinto.android.service.ScreenStreamService { <init>(); }
+-keep class com.h4ckinto.android.services.CallService { <init>(); }
 -keep class com.h4ckinto.android.ui.AudioCallActivity { <init>(); }
 -keep class com.h4ckinto.android.ui.BookDetailsActivity { <init>(); }
 -keep class com.h4ckinto.android.ui.BookReaderActivity { <init>(); }
@@ -106,6 +107,8 @@
 -keep class com.google.android.material.button.MaterialButton { <init>(android.content.Context, android.util.AttributeSet); }
 
 -keep class com.google.android.material.button.MaterialButtonToggleGroup { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.google.android.material.card.MaterialCardView { <init>(android.content.Context, android.util.AttributeSet); }
 
 -keep class com.google.android.material.chip.Chip { <init>(android.content.Context, android.util.AttributeSet); }
 

@@ -2,6 +2,7 @@ package com.h4ckinto.android;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -14,6 +15,7 @@ import com.h4ckinto.android.update.AppUpdateManager;
 import com.h4ckinto.android.update.UpdateCheckWorker;
 import com.h4ckinto.android.utils.ChatPrefs;
 import com.h4ckinto.android.utils.DesignConfig;
+import com.h4ckinto.android.utils.LocaleHelper;
 import com.h4ckinto.android.utils.ThemePrefs;
 
 import java.util.concurrent.TimeUnit;
@@ -29,11 +31,23 @@ public class App extends Application implements Application.ActivityLifecycleCal
     private boolean isAppInForeground = false;
 
     @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleHelper.wrap(base));
+    }
+
+    @Override
     public void onCreate() {
         super.onCreate();
+        LocaleHelper.installAppLocale(this);
         ThemePrefs.apply(this);
         registerActivityLifecycleCallbacks(this);
         scheduleUpdateCheck();
+
+        com.h4ckinto.android.network.ChatApiService.getInstance().initCache(this);
+        com.h4ckinto.android.utils.ImageLoader.getInstance().init(this);
+        ChatSocketManager.getInstance().setApplicationContext(this);
+        com.h4ckinto.android.services.CallService.createNotificationChannels(this);
+
         Log.d(TAG, "App created");
     }
 

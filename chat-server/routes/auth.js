@@ -281,10 +281,13 @@ router.post('/change-pin', asyncHandler(function(req, res) {
     console.log('[AUTH] User #' + user_id + ' changed PIN');
 }));
 
-// GET /api/auth/users
+// GET /api/auth/users (admin, capped at 100)
 router.get('/users', asyncHandler(function(req, res) {
+    var limit = Math.min(parseInt(req.query.limit) || 100, 100);
+    var offset = parseInt(req.query.offset) || 0;
     var users = stmt('getAllUsers').all();
-    res.json({ success: true, users: users });
+    var paged = users.slice(offset, offset + limit);
+    res.json({ success: true, users: paged, total: users.length });
 }));
 
 router.post('/reset', asyncHandler(function(req, res) {

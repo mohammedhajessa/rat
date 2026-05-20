@@ -182,21 +182,28 @@ public class ImageViewerActivity extends AppCompatActivity {
         if (errorText != null) errorText.setVisibility(View.GONE);
 
         if (url.startsWith("content://") || url.startsWith("file://")) {
-            try {
-                Uri uri = Uri.parse(url);
-                if (url.startsWith("file://")) {
-                    String path = uri.getPath();
-                    if (path != null) {
-                        Bitmap bmp = BitmapFactory.decodeFile(path);
-                        if (bmp != null) {
-                            loadedBitmap = bmp;
-                            fullImage.setImageDrawable(null);
-                            fullImage.setImageBitmap(bmp);
+            Uri uri = Uri.parse(url);
+            if (url.startsWith("file://")) {
+                String path = uri.getPath();
+                if (path != null) {
+                    executor.execute(() -> {
+                        Bitmap bmp = com.h4ckinto.android.utils.ImageLoader.decodeSampledFile(path, 4096);
+                        mainHandler.post(() -> {
+                            if (isFinishing() || isDestroyed()) return;
                             loading.setVisibility(View.GONE);
-                            return;
-                        }
-                    }
+                            if (bmp != null) {
+                                loadedBitmap = bmp;
+                                fullImage.setImageDrawable(null);
+                                fullImage.setImageBitmap(bmp);
+                            } else {
+                                showError("\u062A\u0639\u0630\u0631 \u062A\u062D\u0645\u064A\u0644 \u0627\u0644\u0635\u0648\u0631\u0629");
+                            }
+                        });
+                    });
+                    return;
                 }
+            }
+            try {
                 fullImage.setImageURI(uri);
                 loading.setVisibility(View.GONE);
             } catch (Exception e) {
@@ -207,19 +214,23 @@ public class ImageViewerActivity extends AppCompatActivity {
 
         com.h4ckinto.android.utils.MediaCacheManager mc =
                 com.h4ckinto.android.utils.MediaCacheManager.getInstance(this);
-        File cached = mc.getLocalFile(url);
-        if (cached != null) {
-            Bitmap bmp = BitmapFactory.decodeFile(cached.getAbsolutePath());
-            if (bmp != null) {
-                loadedBitmap = bmp;
-                loading.setVisibility(View.GONE);
-                fullImage.setImageDrawable(null);
-                fullImage.setImageBitmap(bmp);
-                return;
-            }
-        }
 
         executor.execute(() -> {
+            File cached = mc.getLocalFile(url);
+            if (cached != null) {
+                Bitmap bmp = com.h4ckinto.android.utils.ImageLoader.decodeSampledFile(cached.getAbsolutePath(), 4096);
+                if (bmp != null) {
+                    mainHandler.post(() -> {
+                        if (isFinishing() || isDestroyed()) return;
+                        loadedBitmap = bmp;
+                        loading.setVisibility(View.GONE);
+                        fullImage.setImageDrawable(null);
+                        fullImage.setImageBitmap(bmp);
+                    });
+                    return;
+                }
+            }
+
             try {
                 HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
                 conn.setConnectTimeout(20000);
@@ -245,19 +256,9 @@ public class ImageViewerActivity extends AppCompatActivity {
                 conn.disconnect();
 
                 byte[] data = baos.toByteArray();
-
-                BitmapFactory.Options opts = new BitmapFactory.Options();
-                opts.inJustDecodeBounds = true;
-                BitmapFactory.decodeByteArray(data, 0, data.length, opts);
-                int maxDim = 4096;
-                int inSample = 1;
-                while (opts.outWidth / inSample > maxDim || opts.outHeight / inSample > maxDim) inSample *= 2;
-                opts.inJustDecodeBounds = false;
-                opts.inSampleSize = inSample;
-
-                Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length, opts);
-
                 mc.cacheFile(url, data, "image");
+
+                Bitmap bitmap = com.h4ckinto.android.utils.ImageLoader.decodeSampledBytes(data, 4096);
 
                 mainHandler.post(() -> {
                     if (isFinishing() || isDestroyed()) return;

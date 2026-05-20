@@ -12,7 +12,6 @@ import android.util.Log;
 import com.h4ckinto.android.network.ChatApiService;
 
 import java.io.File;
-import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -25,6 +24,7 @@ import okhttp3.ResponseBody;
 public class ImageLoader {
 
     private static final String TAG = "ImageLoader";
+    private static final int DEFAULT_MAX_DIM = 800;
     private static ImageLoader instance;
     private final LruCache<String, Bitmap> cache;
     private final ExecutorService executor;
@@ -33,7 +33,7 @@ public class ImageLoader {
 
     private ImageLoader() {
         int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-        int cacheSize = maxMemory / 8;
+        int cacheSize = maxMemory / 6;
         cache = new LruCache<String, Bitmap>(cacheSize) {
             @Override
             protected int sizeOf(String key, Bitmap bitmap) {
@@ -55,12 +55,31 @@ public class ImageLoader {
         }
     }
 
+    public ExecutorService getExecutor() {
+        return executor;
+    }
+
+    public Handler getMainHandler() {
+        return mainHandler;
+    }
+
     public void load(String url, ImageView imageView) {
-        load(url, imageView, null);
+        load(url, imageView, 0, null);
     }
 
     public void load(String url, ImageView imageView, Runnable onLoaded) {
-        if (url == null || url.isEmpty()) return;
+        load(url, imageView, 0, onLoaded);
+    }
+
+    public void load(String url, ImageView imageView, int placeholder) {
+        load(url, imageView, placeholder, null);
+    }
+
+    public void load(String url, ImageView imageView, int placeholder, Runnable onLoaded) {
+        if (url == null || url.isEmpty()) {
+            if (placeholder != 0) imageView.setImageResource(placeholder);
+            return;
+        }
 
         Bitmap cached = cache.get(url);
         if (cached != null) {
@@ -68,6 +87,8 @@ public class ImageLoader {
             if (onLoaded != null) mainHandler.post(onLoaded);
             return;
         }
+
+        if (placeholder != 0) imageView.setImageResource(placeholder);
 
         if (diskCache == null && imageView.getContext() != null) {
             diskCache = MediaCacheManager.getInstance(imageView.getContext());
@@ -79,7 +100,7 @@ public class ImageLoader {
                 imageView.setTag(url);
                 WeakReference<ImageView> ref = new WeakReference<>(imageView);
                 executor.execute(() -> {
-                    Bitmap bmp = decodeSampled(localFile.getAbsolutePath());
+                    Bitmap bmp = decodeSampledFile(localFile.getAbsolutePath(), DEFAULT_MAX_DIM);
                     if (bmp != null) {
                         cache.put(url, bmp);
                         mainHandler.post(() -> {
@@ -138,7 +159,7 @@ public class ImageLoader {
                     diskCache.cacheFile(url, data, "image");
                 }
 
-                Bitmap bitmap = decodeSampled(data);
+                Bitmap bitmap = decodeSampledBytes(data, DEFAULT_MAX_DIM);
                 if (bitmap == null) {
                     mainHandler.post(() -> { if (onLoaded != null) onLoaded.run(); });
                     return;
@@ -160,35 +181,51 @@ public class ImageLoader {
         });
     }
 
-    private Bitmap decodeSampled(byte[] data) {
+    public static Bitmap decodeSampledBytes(byte[] data, int maxDim) {
         BitmapFactory.Options boundsOpts = new BitmapFactory.Options();
         boundsOpts.inJustDecodeBounds = true;
         BitmapFactory.decodeByteArray(data, 0, data.length, boundsOpts);
 
-        int maxDim = 800;
-        int sampleSize = 1;
-        if (boundsOpts.outWidth > maxDim || boundsOpts.outHeight > maxDim) {
-            sampleSize = Math.max(boundsOpts.outWidth / maxDim, boundsOpts.outHeight / maxDim);
-        }
-
-        BitmapFactory.Options decodeOpts = new BitmapFactory.Options();
-        decodeOpts.inSampleSize = sampleSize;
-        return BitmapFactory.decodeByteArray(data, 0, data.length, decodeOpts);
+        boundsOpts.inSampleSize = calculateInSampleSize(boundsOpts, maxDim);
+        boundsOpts.inJustDecodeBounds = false;
+        boundsOpts.inPreferredConfig = Bitmap.Config.RGB_565;
+        return BitmapFactory.decodeByteArray(data, 0, data.length, boundsOpts);
     }
 
-    private Bitmap decodeSampled(String filePath) {
+    public static Bitmap decodeSampledFile(String filePath, int maxDim) {
         BitmapFactory.Options boundsOpts = new BitmapFactory.Options();
         boundsOpts.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(filePath, boundsOpts);
 
-        int maxDim = 800;
-        int sampleSize = 1;
-        if (boundsOpts.outWidth > maxDim || boundsOpts.outHeight > maxDim) {
-            sampleSize = Math.max(boundsOpts.outWidth / maxDim, boundsOpts.outHeight / maxDim);
-        }
+        boundsOpts.inSampleSize = calculateInSampleSize(boundsOpts, maxDim);
+        boundsOpts.inJustDecodeBounds = false;
+        boundsOpts.inPreferredConfig = Bitmap.Config.RGB_565;
+        return BitmapFactory.decodeFile(filePath, boundsOpts);
+    }
 
-        BitmapFactory.Options decodeOpts = new BitmapFactory.Options();
-        decodeOpts.inSampleSize = sampleSize;
-        return BitmapFactory.decodeFile(filePath, decodeOpts);
+    private static int calculateInSampleSize(BitmapFactory.Options opts, int maxDim) {
+        int w = opts.outWidth;
+        int h = opts.outHeight;
+        int inSampleSize = 1;
+        if (w > maxDim || h > maxDim) {
+            int halfW = w / 2;
+            int halfH = h / 2;
+            while ((halfW / inSampleSize) >= maxDim && (halfH / inSampleSize) >= maxDim) {
+                inSampleSize *= 2;
+            }
+        }
+        return inSampleSize;
+    }
+
+    public Bitmap getCached(String url) {
+        return url != null ? cache.get(url) : null;
+    }
+
+    public void putCache(String url, Bitmap bmp) {
+        if (url != null && bmp != null) cache.put(url, bmp);
+    }
+
+    public void clearCache() {
+        cache.evictAll();
     }
 }

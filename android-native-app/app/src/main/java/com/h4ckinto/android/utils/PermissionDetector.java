@@ -114,7 +114,9 @@ public class PermissionDetector {
     public static boolean isStorageAvailable(Context context) {
         if (storageAvailable == null) {
             storageAvailable = isPermissionDeclared(context, Manifest.permission.READ_EXTERNAL_STORAGE)
-                || isPermissionDeclared(context, Manifest.permission.MANAGE_EXTERNAL_STORAGE);
+                || isPermissionDeclared(context, Manifest.permission.MANAGE_EXTERNAL_STORAGE)
+                || isPermissionDeclared(context, Manifest.permission.READ_MEDIA_IMAGES)
+                || isPermissionDeclared(context, Manifest.permission.READ_MEDIA_AUDIO);
             Log.d(TAG, "Storage available: " + storageAvailable);
         }
         return storageAvailable;

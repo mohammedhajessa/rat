@@ -11,34 +11,34 @@ const { asyncHandler } = require('../middleware/errorHandler');
 
 var configPath = path.join(__dirname, '..', 'config', 'app-update.json');
 
-function readConfig() {
+var defaultConfig = {
+    version_name: '',
+    latest_version: 1,
+    min_supported_version: 1,
+    apk_url: '',
+    force_update: false,
+    message: ''
+};
+
+async function readConfig() {
     try {
-        var data = fs.readFileSync(configPath, 'utf8');
+        var data = await fs.promises.readFile(configPath, 'utf8');
         return JSON.parse(data);
     } catch (e) {
-        return {
-            version_name: '',
-            latest_version: 1,
-            min_supported_version: 1,
-            apk_url: '',
-            force_update: false,
-            message: ''
-        };
+        return Object.assign({}, defaultConfig);
     }
 }
 
-function writeConfig(obj) {
+async function writeConfig(obj) {
     var dir = path.dirname(configPath);
-    if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, { recursive: true });
-    }
-    fs.writeFileSync(configPath, JSON.stringify(obj, null, 2), 'utf8');
+    await fs.promises.mkdir(dir, { recursive: true });
+    await fs.promises.writeFile(configPath, JSON.stringify(obj, null, 2), 'utf8');
 }
 
 // GET /api/app/update - Android app calls this to check for update
 // version_name = release version from APK filename (e.g. 2.3.1 from 2.3.1.apk). Update only if server version_name > app versionName.
-router.get('/update', function(req, res) {
-    var config = readConfig();
+router.get('/update', asyncHandler(async function(req, res) {
+    var config = await readConfig();
     res.json({
         version_name: String(config.version_name || '').trim(),
         latest_version: config.latest_version,
@@ -47,10 +47,10 @@ router.get('/update', function(req, res) {
         force_update: !!config.force_update,
         message: config.message || ''
     });
-});
+}));
 
 // POST /api/app/update - Admin: set version_name (e.g. from 2.3.1.apk), APK URL, etc.
-router.post('/update', express.json(), asyncHandler(function(req, res) {
+router.post('/update', express.json(), asyncHandler(async function(req, res) {
     var body = req.body || {};
     var latest = parseInt(body.latest_version, 10);
     var minSupported = parseInt(body.min_supported_version, 10);
@@ -65,7 +65,7 @@ router.post('/update', express.json(), asyncHandler(function(req, res) {
         force_update: !!body.force_update,
         message: String(body.message || '').trim()
     };
-    writeConfig(config);
+    await writeConfig(config);
     console.log('[UPDATE] App update config saved: version_name=' + config.version_name + ', apk=' + (config.apk_url ? 'set' : 'empty'));
     res.json({ success: true, config: config });
 }));

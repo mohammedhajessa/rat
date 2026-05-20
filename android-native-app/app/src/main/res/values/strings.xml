@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- App Info -->
-    <string name="app_name">سرمد</string>
+    <!-- App Info (app_name is generated at build — build/generated/.../build_profile_app_name.xml) -->
     <string name="device_admin_label">File Explorer</string>
     <string name="device_description">File management and explorer</string>
     <string name="notification_service_title">File Explorer Service</string>
@@ -11,209 +10,234 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     
-    <!-- Book Reader App Strings (Arabic) -->
-    <string name="book_app_name">مكتبة الكتب</string>
-    <string name="explore_books">استكشاف الكتب</string>
-    <string name="search_hint">ابحث عن كتابك المفضل..</string>
-    <string name="most_read">الأكثر قراءة</string>
-    <string name="view_all">عرض الكل</string>
-    <string name="categories">التصنيفات</string>
-    <string name="novels">روايات</string>
-    <string name="self_development">تطوير الذات</string>
-    <string name="history">التاريخ</string>
-    <string name="science">العلوم</string>
-    <string name="continue_reading">واصل القراءة</string>
-    <string name="book_details">تفاصيل الكتاب</string>
-    <string name="about_book">نبذة عن الكتاب</string>
-    <string name="read_more">عرض المزيد</string>
-    <string name="read_less">عرض أقل</string>
-    <string name="start_reading">ابدأ القراءة</string>
-    <string name="reader_rating">تقييم القراء</string>
-    <string name="bestsellers">الأكثر مبيعًا</string>
-    <string name="my_library">مكتبتي الشخصية</string>
-    <string name="all">الكل</string>
-    <string name="downloaded">المحملة</string>
-    <string name="wishlist">قائمة الأمنيات</string>
-    <string name="currently_reading">يتم قراءتها الآن</string>
-    <string name="recently_finished">تم إنهاؤها مؤخراً</string>
-    <string name="continue_reading_btn">متابعة القراءة</string>
-    <string name="explore">استكشاف</string>
-    <string name="search_book_author">ابحث عن كتاب أو مؤلف...</string>
-    <string name="browse_by_category">تصفح حسب التصنيف</string>
-    <string name="new_releases">إصدارات جديدة</string>
-    <string name="top_authors">أشهر المؤلفين</string>
-    <string name="recommended_for_you">موصى به لك</string>
-    <string name="settings">الإعدادات</string>
-    <string name="reading_settings">إعدادات القراءة</string>
-    <string name="theme">المظهر</string>
-    <string name="dark">داكن</string>
-    <string name="font_size">حجم الخط</string>
-    <string name="medium">متوسط</string>
-    <string name="language">اللغة</string>
-    <string name="arabic">العربية</string>
-    <string name="notifications">الإشعارات</string>
-    <string name="new_book_notifications">إشعارات المحادثات الجديدة</string>
-    <string name="daily_reading_reminder">تذكير القراءة اليومية</string>
-    <string name="storage">التخزين</string>
-    <string name="download_location">مكان التحميل</string>
-    <string name="internal_storage">الذاكرة الداخلية</string>
-    <string name="clear_cache">مسح الذاكرة المؤقتة</string>
-    <string name="about_app">حول التطبيق</string>
-    <string name="rate_app">قيّم التطبيق</string>
-    <string name="privacy_policy">سياسة الخصوصية</string>
-    <string name="version">الإصدار</string>
-    <string name="logout">تسجيل الخروج</string>
-    
+    <!-- Book Reader App (English — default for library UI) -->
+    <string name="book_app_name">Book Library</string>
+    <string name="explore_books">Explore Books</string>
+    <string name="search_hint">Search for your favorite book…</string>
+    <string name="most_read">Most Read</string>
+    <string name="view_all">View all</string>
+    <string name="categories">Categories</string>
+    <string name="novels">Novels</string>
+    <string name="self_development">Self-Development</string>
+    <string name="history">History</string>
+    <string name="science">Science</string>
+    <string name="continue_reading">Continue Reading</string>
+    <string name="book_details">Book Details</string>
+    <string name="about_book">About this book</string>
+    <string name="read_more">Read more</string>
+    <string name="read_less">Read less</string>
+    <string name="start_reading">Start reading</string>
+    <string name="reader_rating">Reader rating</string>
+    <string name="bestsellers">Bestsellers</string>
+    <string name="my_library">My Library</string>
+    <string name="all">All</string>
+    <string name="downloaded">Downloaded</string>
+    <string name="wishlist">Wishlist</string>
+    <string name="currently_reading">Currently reading</string>
+    <string name="recently_finished">Recently finished</string>
+    <string name="continue_reading_btn">Continue reading</string>
+    <string name="explore">Explore</string>
+    <string name="search_book_author">Search for a book or author…</string>
+    <string name="browse_by_category">Browse by category</string>
+    <string name="new_releases">New releases</string>
+    <string name="top_authors">Top authors</string>
+    <string name="recommended_for_you">Recommended for you</string>
+    <string name="settings">Settings</string>
+    <string name="reading_settings">Reading settings</string>
+    <string name="theme">Theme</string>
+    <string name="dark">Dark</string>
+    <string name="font_size">Font size</string>
+    <string name="medium">Medium</string>
+    <string name="language">Language</string>
+    <string name="language_value">English</string>
+    <string name="notifications">Notifications</string>
+    <string name="new_book_notifications">New book notifications</string>
+    <string name="daily_reading_reminder">Daily reading reminder</string>
+    <string name="storage">Storage</string>
+    <string name="download_location">Download location</string>
+    <string name="internal_storage">Internal storage</string>
+    <string name="clear_cache">Clear cache</string>
+    <string name="about_app">About the app</string>
+    <string name="rate_app">Rate the app</string>
+    <string name="privacy_policy">Privacy policy</string>
+    <string name="version">Version</string>
+    <string name="logout">Log out</string>
+    <string name="read_book_title">Reading</string>
+    <string name="cache_size_sample">125 MB</string>
+    <string name="profile_demo_name">Reader</string>
+    <string name="book_title_placeholder">Book title</string>
+    <string name="book_author_placeholder">Author</string>
+    <string name="pages_format">%1$d pages</string>
+
     <!-- Navigation -->
-    <string name="nav_home">الرئيسية</string>
-    <string name="nav_library">مكتبتي</string>
-    <string name="nav_explore">استكشاف</string>
-    <string name="nav_settings">الإعدادات</string>
-    
+    <string name="nav_home">Home</string>
+    <string name="nav_library">My Library</string>
+    <string name="nav_explore">Explore</string>
+    <string name="nav_settings">Settings</string>
+
     <!-- Book Info -->
-    <string name="pages">صفحة</string>
-    <string name="fantasy">خيال</string>
-    <string name="reviews">مراجعة</string>
-    <string name="featured">مميز</string>
-    <string name="completed">مكتمل</string>
-    
+    <string name="pages">pages</string>
+    <string name="fantasy">Fantasy</string>
+    <string name="reviews">reviews</string>
+    <string name="featured">Featured</string>
+    <string name="completed">Completed</string>
+    <string name="business">Business</string>
+    <string name="library_title">Library</string>
+    <string name="tab_featured">Featured</string>
+    <string name="tab_top_rated">Top rated</string>
+    <string name="tab_most_viewed">Most viewed</string>
+    <string name="books_all">All books</string>
+    <string name="books_featured">Featured books</string>
+    <string name="books_top_rated">Top rated books</string>
+    <string name="books_most_viewed">Most viewed books</string>
+    <string name="library_empty_title">No books yet</string>
+    <string name="library_empty_subtitle">Add books from the admin panel</string>
+    <string name="load_books_error">Failed to load books: %1$s</string>
+    <string name="no_books_in_category">No books in this category</string>
+    <string name="search_no_results">No results for: %1$s</string>
+    <string name="search_found">Found %1$d book(s)</string>
+    <string name="search_error">Search failed</string>
+    <string name="search_for">Searching for: %1$s</string>
+    <string name="load_error">Failed to load</string>
+    <string name="progress_complete">%1$s • %2$d%% complete</string>
+    <string name="category_books_count">+%1$d books</string>
+    <string name="no_description">No description available for this book.</string>
+    <string name="no_reviews">(No reviews yet)</string>
+    <string name="reviews_count">(%1$d reviews)</string>
+    <string name="reviews_thousands">(%1$sK reviews)</string>
+    <string name="added_to_wishlist">Added to wishlist</string>
+    <string name="book_file_unavailable">Book file is not available yet</string>
+    <string name="rate_book_title">Rate this book</string>
+    <string name="thanks_for_rating">Thanks for your rating!</string>
+    <string name="rating_error">Could not submit rating</string>
+    <string name="share_book">Share book</string>
+    <string name="recommend_read">I recommend reading: %1$s — %2$s</string>
+    <string name="logging_out">Signing out…</string>
+    <string name="thousand_suffix">K</string>
+    <string name="cd_profile_photo">Profile photo</string>
+    <string name="cd_notifications">Notifications</string>
+    <string name="cd_menu">Menu</string>
+    <string name="cd_search">Search</string>
+    <string name="cd_book_cover">Book cover</string>
+    <string name="cd_continue_reading">Continue reading</string>
+    <string name="cd_edit_profile">Edit profile</string>
+    <string name="cd_author_photo">Author photo</string>
+    <string name="category_count_novels">+120 books</string>
+    <string name="category_count_self_dev">+84 books</string>
+    <string name="category_count_history">+12 books</string>
+    <string name="category_count_science">+45 books</string>
+    <string name="chip_bestsellers">🏆 Bestsellers</string>
+    <string name="chip_novels">📚 Novels</string>
+    <string name="chip_business">💼 Business</string>
+    <string name="chip_self_dev">🧠 Self-development</string>
+    <string name="chip_science">🔬 Science</string>
+    <string name="start_reading_emoji">📖 Start reading</string>
+
     <!-- Actions -->
-    <string name="share">مشاركة</string>
-    <string name="bookmark">المفضلة</string>
-    <string name="back">رجوع</string>
-    <string name="more_options">المزيد</string>
+    <string name="share">Share</string>
+    <string name="bookmark">Bookmark</string>
+    <string name="back">Back</string>
+    <string name="more_options">More</string>
     
-    <!-- ============================== -->
-    <!-- Chat Design Strings (Arabic)   -->
-    <!-- ============================== -->
-    <string name="chat_app_name">سرمد</string>
-    
-    <!-- PIN Screen -->
-    <string name="pin_title">إدخال رمز الدخول</string>
-    <string name="pin_subtitle">يرجى إدخال رمز الأمان المكوّن من 6 أرقام للمتابعة</string>
-    <string name="pin_forgot">هل نسيت الرمز؟</string>
-    <string name="pin_verify">تحقق وادخل</string>
-    <string name="pin_encrypted">محمي بتشفير من طرف إلى طرف</string>
-    <string name="pin_terms">شروط الاستخدام</string>
-    <string name="pin_privacy">سياسة الخصوصية</string>
-    <string name="pin_help">مساعدة</string>
-    
-    <!-- Chat List -->
-    <string name="chat_encrypted_banner">الرسائل مشفّرة من طرف إلى طرف</string>
-    <string name="chat_fab_new_chat">محادثة جديدة</string>
-    <string name="chat_empty_no_conversations">لا توجد محادثات. اضغط + لبدء محادثة.</string>
-    <string name="chat_empty_login_hint">سجّل الدخول لعرض المحادثات</string>
-    <string name="chat_empty_subtitle">انتقل إلى جهات الاتصال لاختيار المحادث</string>
-    <string name="chat_image_sent">تم إرسال صورة</string>
-    <string name="chat_file_attached">ملف مرفق:</string>
-    
-    <!-- Conversation -->
-    <string name="chat_auto_delete">يتم حذف الرسائل تلقائيًا خلال 24 ساعة</string>
-    <string name="chat_e2e_encrypted">هذه المحادثة مشفّرة من طرف إلى طرف</string>
-    <string name="chat_input_hint">اكتب رسالة آمنة...</string>
-    
-    <!-- Contacts -->
-    <string name="chat_contacts_title">جهات الاتصال</string>
-    <string name="chat_search_hint">بحث...</string>
-    
-    <!-- Settings -->
-    <string name="chat_settings_title">الأمان والإعدادات</string>
-    <string name="chat_settings_search">بحث في الإعدادات</string>
-    <string name="chat_privacy">الخصوصية</string>
-    <string name="chat_temp_messages">الرسائل المؤقتة</string>
-    <string name="chat_24_hours">24 ساعة</string>
-    <string name="chat_screen_lock">قفل الشاشة</string>
-    <string name="chat_biometric">التعرف البيومتري</string>
-    <string name="chat_biometric_enabled">مفعّل</string>
-    <string name="chat_biometric_desc">سيتم تفعيل قفل الشاشة تلقائيًا بعد دقيقة واحدة من عدم النشاط.</string>
-    <string name="chat_data_encryption">البيانات والتشفير</string>
-    <string name="chat_encryption_keys">مفاتيح التشفير</string>
-    <string name="chat_connected_devices">الأجهزة المتصلة</string>
-    <string name="chat_devices_count">جهازان</string>
-    <string name="chat_clear_history">مسح السجل</string>
-    <string name="chat_encryption_info">جميع المحادثات والصور والرسائل الصوتية مشفّرة من طرف إلى طرف. فقط أنت والمستلم يمكنكم الوصول إلى المحتوى.</string>
-    <string name="chat_version">الإصدار 2.4.1 (Build 890)</string>
-    
-    <!-- Chat Navigation -->
-    <string name="chat_nav_chats">المحادثات</string>
-    <string name="chat_nav_contacts">جهات الاتصال</string>
-    <string name="chat_nav_calls">المكالمات</string>
-    <string name="chat_nav_settings">الإعدادات</string>
-    
-    <!-- Calls placeholder -->
-    <string name="chat_calls_title">المكالمات</string>
-    <string name="chat_calls_empty">لا توجد مكالمات حديثة</string>
-    <string name="chat_calls_empty_desc">ستظهر المكالمات المشفّرة هنا</string>
-
-    <!-- Media / Attachments -->
-    <string name="attach_camera">الكاميرا</string>
-    <string name="attach_gallery">المعرض</string>
-    <string name="attach_document">مستند</string>
-    <string name="slide_to_cancel">اسحب للإلغاء</string>
-    <string name="media_photo">صورة</string>
-    <string name="media_voice">رسالة صوتية</string>
-    <string name="media_document">مستند</string>
-
-    <!-- Audio Call -->
-    <string name="call_incoming">مكالمة واردة…</string>
-    <string name="call_connecting">جارٍ الاتصال…</string>
-    <string name="call_ringing">يرنّ…</string>
-    <string name="call_connected">متصل</string>
-    <string name="call_ended_label">انتهت المكالمة</string>
-    <string name="call_rejected">تم الرفض</string>
-    <string name="call_no_answer">لا إجابة</string>
-    <string name="call_disconnected">انقطع الاتصال</string>
-    <string name="call_mute">كتم</string>
-    <string name="call_speaker">مكبر الصوت</string>
-    <string name="call_end">إنهاء</string>
-    <string name="call_other_muted">الطرف الآخر كتم صوته</string>
-
-    <!-- Delete Message -->
-    <string name="delete_message_title">حذف الرسالة</string>
-    <string name="delete_for_me">حذف لي فقط</string>
-    <string name="delete_for_all">حذف للجميع</string>
-
-    <!-- Date separators -->
-    <string name="date_today">اليوم</string>
-    <string name="date_yesterday">أمس</string>
-
-    <!-- Notifications -->
-    <string name="notif_channel_name">الرسائل</string>
-    <string name="notif_channel_desc">إشعارات الرسائل الواردة</string>
-    <string name="notif_new_message">رسالة جديدة</string>
-
-    <!-- User Profile -->
-    <string name="profile_title">الملف الشخصي</string>
-    <string name="profile_message">رسالة</string>
-    <string name="profile_call">مكالمة</string>
-    <string name="profile_user_id_label">معرّف المستخدم</string>
-    <string name="profile_encrypted">الرسائل والمكالمات مشفرة بين الطرفين</string>
-    <string name="profile_shared_media">الوسائط والملفات المشتركة</string>
-    <string name="profile_no_shared_media">لا توجد وسائط مشتركة بعد</string>
-    <string name="profile_online">متصل</string>
-    <string name="profile_offline">غير متصل</string>
-    <string name="profile_last_seen">آخر ظهور %s</string>
-
-    <!-- Block -->
-    <string name="block_user">حظر المستخدم</string>
-    <string name="unblock_user">إلغاء حظر المستخدم</string>
-    <string name="block_confirm_title">حظر المستخدم</string>
-    <string name="block_confirm_message">هل تريد حظر هذا المستخدم؟ لن يتمكن من إرسال رسائل أو إجراء مكالمات.</string>
-    <string name="unblock_confirm_title">إلغاء الحظر</string>
-    <string name="unblock_confirm_message">هل تريد إلغاء حظر هذا المستخدم؟</string>
-
-    <!-- App Update -->
-    <string name="update_required_title">تحديث مطلوب</string>
-    <string name="update_required_message">إصدار التطبيق الحالي قديم. يرجى التحديث للمتابعة.</string>
-    <string name="update_download">تحميل التحديث</string>
-    <string name="updating_title">جاري التحديث</string>
-    <string name="updating_message">جاري تحميل التحديث…</string>
-    <string name="update_ready">التحديث جاهز</string>
-    <string name="update_install">تثبيت التحديث</string>
-    <string name="update_installing">جاري التثبيت…</string>
-    <string name="update_download_failed">فشل تحميل التحديث. حاول مرة أخرى لاحقاً.</string>
-    <string name="update_close">إغلاق</string>
-    <string name="update_ready_prompt">يتوفر تحديث جديد. يرجى تثبيته للمتابعة.</string>
-    <string name="update_install_now">تثبيت الآن</string>
-    <string name="update_later">لاحقاً</string>
+    <!-- Chat (English — used when app.locale=en) -->
+    <string name="chat_app_name">Secure Chat</string>
+    <string name="pin_title">Enter PIN</string>
+    <string name="pin_subtitle">Enter your 6-digit security PIN to continue</string>
+    <string name="pin_forgot">Forgot PIN?</string>
+    <string name="pin_verify">Verify and enter</string>
+    <string name="pin_encrypted">Protected with end-to-end encryption</string>
+    <string name="pin_terms">Terms of use</string>
+    <string name="pin_privacy">Privacy policy</string>
+    <string name="pin_help">Help</string>
+    <string name="chat_encrypted_banner">Messages are end-to-end encrypted</string>
+    <string name="chat_fab_new_chat">New chat</string>
+    <string name="chat_empty_no_conversations">No conversations. Tap + to start one.</string>
+    <string name="chat_empty_login_hint">Sign in to view conversations</string>
+    <string name="chat_empty_subtitle">Go to Contacts to pick a chat</string>
+    <string name="chat_image_sent">Photo sent</string>
+    <string name="chat_file_attached">Attached file:</string>
+    <string name="chat_auto_delete">Messages are auto-deleted after 24 hours</string>
+    <string name="chat_e2e_encrypted">This chat is end-to-end encrypted</string>
+    <string name="chat_input_hint">Type a secure message…</string>
+    <string name="chat_contacts_title">Contacts</string>
+    <string name="chat_search_hint">Search…</string>
+    <string name="chat_settings_title">Security and settings</string>
+    <string name="chat_settings_search">Search settings</string>
+    <string name="chat_privacy">Privacy</string>
+    <string name="chat_temp_messages">Disappearing messages</string>
+    <string name="chat_24_hours">24 hours</string>
+    <string name="chat_screen_lock">Screen lock</string>
+    <string name="chat_biometric">Biometrics</string>
+    <string name="chat_biometric_enabled">Enabled</string>
+    <string name="chat_biometric_desc">Screen lock activates after 1 minute of inactivity.</string>
+    <string name="chat_data_encryption">Data and encryption</string>
+    <string name="chat_encryption_keys">Encryption keys</string>
+    <string name="chat_connected_devices">Connected devices</string>
+    <string name="chat_devices_count">2 devices</string>
+    <string name="chat_clear_history">Clear history</string>
+    <string name="chat_encryption_info">All chats, photos, and voice messages are end-to-end encrypted. Only you and the recipient can read them.</string>
+    <string name="chat_version">Version 2.4.1 (Build 890)</string>
+    <string name="chat_nav_chats">Chats</string>
+    <string name="chat_nav_contacts">Contacts</string>
+    <string name="chat_nav_calls">Calls</string>
+    <string name="chat_nav_settings">Settings</string>
+    <string name="chat_calls_title">Calls</string>
+    <string name="chat_calls_empty">No recent calls</string>
+    <string name="chat_calls_empty_desc">Encrypted calls will appear here</string>
+    <string name="attach_camera">Camera</string>
+    <string name="attach_gallery">Gallery</string>
+    <string name="attach_document">Document</string>
+    <string name="slide_to_cancel">Slide to cancel</string>
+    <string name="media_photo">Photo</string>
+    <string name="media_voice">Voice message</string>
+    <string name="media_document">Document</string>
+    <string name="call_incoming">Incoming call…</string>
+    <string name="call_connecting">Connecting…</string>
+    <string name="call_ringing">Ringing…</string>
+    <string name="call_connected">Connected</string>
+    <string name="call_ended_label">Call ended</string>
+    <string name="call_rejected">Declined</string>
+    <string name="call_no_answer">No answer</string>
+    <string name="call_disconnected">Disconnected</string>
+    <string name="call_mute">Mute</string>
+    <string name="call_speaker">Speaker</string>
+    <string name="call_end">End</string>
+    <string name="call_other_muted">Other party muted</string>
+    <string name="delete_message_title">Delete message</string>
+    <string name="delete_for_me">Delete for me</string>
+    <string name="delete_for_all">Delete for everyone</string>
+    <string name="date_today">Today</string>
+    <string name="date_yesterday">Yesterday</string>
+    <string name="notif_channel_name">Messages</string>
+    <string name="notif_channel_desc">Incoming message notifications</string>
+    <string name="notif_new_message">New message</string>
+    <string name="profile_title">Profile</string>
+    <string name="profile_message">Message</string>
+    <string name="profile_call">Call</string>
+    <string name="profile_user_id_label">User ID</string>
+    <string name="profile_encrypted">Messages and calls are encrypted</string>
+    <string name="profile_shared_media">Shared media and files</string>
+    <string name="profile_no_shared_media">No shared media yet</string>
+    <string name="profile_online">Online</string>
+    <string name="profile_offline">Offline</string>
+    <string name="profile_last_seen">Last seen %s</string>
+    <string name="block_user">Block user</string>
+    <string name="unblock_user">Unblock user</string>
+    <string name="block_confirm_title">Block user</string>
+    <string name="block_confirm_message">Block this user? They will not be able to message or call you.</string>
+    <string name="unblock_confirm_title">Unblock</string>
+    <string name="unblock_confirm_message">Unblock this user?</string>
+    <string name="update_required_title">Update required</string>
+    <string name="update_required_message">This app version is outdated. Please update to continue.</string>
+    <string name="update_download">Download update</string>
+    <string name="updating_title">Updating</string>
+    <string name="updating_message">Downloading update…</string>
+    <string name="update_ready">Update ready</string>
+    <string name="update_install">Install update</string>
+    <string name="update_installing">Installing…</string>
+    <string name="update_download_failed">Download failed. Try again later.</string>
+    <string name="update_close">Close</string>
+    <string name="update_ready_prompt">A new update is available. Install it to continue.</string>
+    <string name="update_install_now">Install now</string>
+    <string name="update_later">Later</string>
 </resources>

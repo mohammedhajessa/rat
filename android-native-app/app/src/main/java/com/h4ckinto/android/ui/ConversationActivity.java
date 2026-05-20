@@ -127,6 +127,8 @@ public class ConversationActivity extends AppCompatActivity {
     private boolean historyLoaded = false;
     private long lastMessageFetchMs = 0;
     private boolean isMuted = false;
+    private boolean isLoadingOlderMessages = false;
+    private boolean hasOlderMessages = true;
     private static final int REQ_PROFILE = 1001;
 
     // Voice recording
@@ -237,6 +239,18 @@ public class ConversationActivity extends AppCompatActivity {
         adapter = new MessagesAdapter(messages);
         adapter.setOnMessageLongClickListener((msg, position) -> showDeleteDialog(msg, position));
         messagesRecycler.setAdapter(adapter);
+
+        messagesRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if (dy < 0 && hasOlderMessages && !isLoadingOlderMessages && historyLoaded) {
+                    LinearLayoutManager lm = (LinearLayoutManager) recyclerView.getLayoutManager();
+                    if (lm != null && lm.findFirstVisibleItemPosition() <= 3) {
+                        loadOlderMessages();
+                    }
+                }
+            }
+        });
 
         messageInput = findViewById(R.id.message_input);
         ImageView btnSend = findViewById(R.id.btn_send);
@@ -1063,6 +1077,64 @@ public class ConversationActivity extends AppCompatActivity {
         });
     }
 
+    private void loadOlderMessages() {
+        if (isLoadingOlderMessages || !hasOlderMessages) return;
+        int oldestId = -1;
+        for (MessagesAdapter.Message m : messages) {
+            if (!m.isDateSeparator && m.id > 0) {
+                oldestId = m.id;
+                break;
+            }
+        }
+        if (oldestId <= 0) return;
+        isLoadingOlderMessages = true;
+
+        int perConvSeconds = AppLockManager.getInstance(this).getAutoDeleteSeconds(conversationId);
+        int globalHours = AppLockManager.getInstance(this).getAutoDeleteHours();
+
+        ChatApiService.getInstance().getMessages(conversationId, Integer.valueOf(oldestId), 50, globalHours, perConvSeconds, new ChatApiService.ApiCallback<JSONArray>() {
+            @Override
+            public void onSuccess(JSONArray result) {
+                isLoadingOlderMessages = false;
+                if (result.length() == 0) {
+                    hasOlderMessages = false;
+                    return;
+                }
+                if (result.length() < 50) hasOlderMessages = false;
+                try {
+                    java.util.List<MessagesAdapter.Message> olderList = new java.util.ArrayList<>();
+                    String lastDateLabel = "";
+                    for (int i = 0; i < result.length(); i++) {
+                        MessagesAdapter.Message msg = parseMessage(result.getJSONObject(i));
+                        String dateLabel = getDateLabel(msg.rawDate);
+                        if (!dateLabel.isEmpty() && !dateLabel.equals(lastDateLabel)) {
+                            olderList.add(MessagesAdapter.Message.createDateSeparator(dateLabel));
+                            lastDateLabel = dateLabel;
+                        }
+                        olderList.add(msg);
+                    }
+                    java.util.List<MessagesAdapter.Message> combined = new java.util.ArrayList<>(olderList);
+                    combined.addAll(messages);
+                    int insertCount = olderList.size();
+
+                    messages.clear();
+                    messages.addAll(combined);
+                    adapter.notifyItemRangeInserted(0, insertCount);
+
+                    LinearLayoutManager lm = (LinearLayoutManager) messagesRecycler.getLayoutManager();
+                    if (lm != null) lm.scrollToPositionWithOffset(insertCount, 0);
+                } catch (Exception e) {
+                    Log.e(TAG, "Error loading older messages: " + e.getMessage());
+                }
+            }
+            @Override
+            public void onError(String error) {
+                isLoadingOlderMessages = false;
+                Log.e(TAG, "Error loading older messages: " + error);
+            }
+        });
+    }
+
     private void displayMessages(JSONArray result) {
         try {
             java.util.List<MessagesAdapter.Message> newList = new java.util.ArrayList<>();
@@ -1144,7 +1216,7 @@ public class ConversationActivity extends AppCompatActivity {
         final int msgId = msgObj.optInt("id", -1);
         final String cacheType = "image".equals(type) ? "image" : "voice".equals(type) ? "voice" : "document";
         final ConversationCache cache = ConversationCache.getInstance(this);
-        new Thread(() -> {
+        com.h4ckinto.android.utils.AppExecutors.get().io().execute(() -> {
             try {
                 java.net.HttpURLConnection conn = (java.net.HttpURLConnection) new java.net.URL(url).openConnection();
                 conn.setConnectTimeout(15000);
@@ -1160,13 +1232,13 @@ public class ConversationActivity extends AppCompatActivity {
                 }
                 conn.disconnect();
             } catch (Exception e) { /* skip */ }
-        }).start();
+        });
     }
 
     private void preCacheMedia(JSONArray result) {
         MediaCacheManager mc = MediaCacheManager.getInstance(this);
         ConversationCache cache = ConversationCache.getInstance(this);
-        java.util.concurrent.ExecutorService cacheExecutor = java.util.concurrent.Executors.newFixedThreadPool(3);
+        java.util.concurrent.ExecutorService cacheExecutor = com.h4ckinto.android.utils.AppExecutors.get().io();
 
         for (int i = 0; i < result.length(); i++) {
             try {

@@ -34,10 +34,11 @@ public class ChatApiService {
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
     private static ChatApiService instance;
-    private final OkHttpClient client;
+    private OkHttpClient client;
     private final ExecutorService executor;
     private final Handler mainHandler;
     private final String baseUrl;
+    private boolean cacheInitialized = false;
 
     public interface ApiCallback<T> {
         void onSuccess(T result);
@@ -86,6 +87,14 @@ public class ChatApiService {
             instance = new ChatApiService();
         }
         return instance;
+    }
+
+    public void initCache(android.content.Context ctx) {
+        if (cacheInitialized) return;
+        cacheInitialized = true;
+        File cacheDir = new File(ctx.getCacheDir(), "http_cache");
+        okhttp3.Cache cache = new okhttp3.Cache(cacheDir, 20 * 1024 * 1024);
+        client = client.newBuilder().cache(cache).build();
     }
 
     public OkHttpClient getClient() {
@@ -396,6 +405,34 @@ public class ChatApiService {
             } catch (Exception e) {
                 Log.e(TAG, "addContactByUserId error: " + e.getMessage());
                 mainHandler.post(() -> callback.onError("\u062E\u0637\u0623 \u0641\u064A \u0627\u0644\u0627\u062A\u0635\u0627\u0644"));
+            }
+        });
+    }
+
+    // ===================== ICE SERVERS =====================
+
+    public void getIceServers(ApiCallback<JSONArray> callback) {
+        executor.execute(() -> {
+            try {
+                Request request = new Request.Builder()
+                        .url(baseUrl + "/api/calls/ice-servers")
+                        .get()
+                        .build();
+
+                Response response = client.newCall(request).execute();
+                String responseBody = response.body() != null ? response.body().string() : "{}";
+                JSONObject result = new JSONObject(responseBody);
+
+                mainHandler.post(() -> {
+                    if (result.optBoolean("success", false)) {
+                        callback.onSuccess(result.optJSONArray("iceServers"));
+                    } else {
+                        callback.onSuccess(new JSONArray());
+                    }
+                });
+            } catch (Exception e) {
+                Log.e(TAG, "getIceServers error: " + e.getMessage());
+                mainHandler.post(() -> callback.onSuccess(new JSONArray()));
             }
         });
     }

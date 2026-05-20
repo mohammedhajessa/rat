@@ -96,11 +96,12 @@ public class HomeFragment extends Fragment {
             public void onSuccess(List<Book> books) {
                 Log.d(TAG, "Loaded " + books.size() + " books from API");
                 
+                List<Book> oldBooks = new ArrayList<>(booksList);
                 booksList.clear();
                 booksList.addAll(books);
                 
                 if (adapter != null) {
-                    adapter.notifyDataSetChanged();
+                    adapter.updateBooks(booksList);
                 }
                 
                 if (books.isEmpty()) {
@@ -133,10 +134,10 @@ public class HomeFragment extends Fragment {
             titleView.setText(book.getTitle());
         }
         if (authorView != null) {
-            authorView.setText(book.getAuthor() + " • أكملت ٢١٪");
+            authorView.setText(getString(R.string.progress_complete, book.getAuthor(), 21));
         }
         if (coverView != null && book.getCoverUrl() != null) {
-            com.h4ckinto.android.ui.utils.ImageLoader.getInstance().load(
+            com.h4ckinto.android.utils.ImageLoader.getInstance().load(
                 book.getCoverUrl(), coverView, R.drawable.bg_book_cover_placeholder
             );
         }
@@ -147,7 +148,7 @@ public class HomeFragment extends Fragment {
         booksList.addAll(createSampleBooks());
         
         if (adapter != null) {
-            adapter.notifyDataSetChanged();
+            adapter.updateBooks(booksList);
         }
     }
     
@@ -175,10 +176,10 @@ public class HomeFragment extends Fragment {
         });
         
         // Category cards — search by category
-        categoryNovels.setOnClickListener(v -> searchByCategory("روايات"));
-        categorySelfDev.setOnClickListener(v -> searchByCategory("تطوير ذاتي"));
-        categoryHistory.setOnClickListener(v -> searchByCategory("تاريخ"));
-        categoryScience.setOnClickListener(v -> searchByCategory("علوم"));
+        categoryNovels.setOnClickListener(v -> searchByCategory(getString(R.string.novels)));
+        categorySelfDev.setOnClickListener(v -> searchByCategory(getString(R.string.self_development)));
+        categoryHistory.setOnClickListener(v -> searchByCategory(getString(R.string.history)));
+        categoryScience.setOnClickListener(v -> searchByCategory(getString(R.string.science)));
         
         // Search — connect to API
         searchInput.setOnEditorActionListener((v, actionId, event) -> {
@@ -199,16 +200,16 @@ public class HomeFragment extends Fragment {
             public void onSuccess(List<Book> books) {
                 booksList.clear();
                 booksList.addAll(books);
-                if (adapter != null) adapter.notifyDataSetChanged();
+                if (adapter != null) adapter.updateBooks(booksList);
                 
                 if (books.isEmpty()) {
-                    Toast.makeText(getContext(), "لا توجد كتب في هذا التصنيف", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.no_books_in_category, Toast.LENGTH_SHORT).show();
                 }
             }
             
             @Override
             public void onError(String error) {
-                Toast.makeText(getContext(), "خطأ في التحميل", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.load_error, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -219,18 +220,18 @@ public class HomeFragment extends Fragment {
             public void onSuccess(List<Book> books) {
                 booksList.clear();
                 booksList.addAll(books);
-                if (adapter != null) adapter.notifyDataSetChanged();
+                if (adapter != null) adapter.updateBooks(booksList);
                 
                 if (books.isEmpty()) {
-                    Toast.makeText(getContext(), "لا توجد نتائج لـ: " + query, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getString(R.string.search_no_results, query), Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getContext(), "تم العثور على " + books.size() + " كتاب", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getString(R.string.search_found, books.size()), Toast.LENGTH_SHORT).show();
                 }
             }
             
             @Override
             public void onError(String error) {
-                Toast.makeText(getContext(), "خطأ في البحث", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.search_error, Toast.LENGTH_SHORT).show();
             }
         });
     }

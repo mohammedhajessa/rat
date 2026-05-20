@@ -98,6 +98,10 @@
     <!-- App Icon -->
     <color name="ic_launcher_background">#FFFFFF</color>
 
+    <!-- Skeleton loading animation -->
+    <color name="skeleton_light">#164D43</color>
+    <color name="skeleton_dark">#0F3D35</color>
+
     <!-- Legacy colors (keep for compatibility) -->
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>

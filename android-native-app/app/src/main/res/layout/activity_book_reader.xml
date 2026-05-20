@@ -8,7 +8,7 @@
     android:background="@color/background_dark"
     android:clipChildren="false"
     android:clipToPadding="false"
-    android:layoutDirection="rtl">
+    android:layoutDirection="locale">
 
     <!-- Fragment fills the whole screen; each fragment adds its own bottom padding
          so content doesn't hide behind the floating nav pill. -->

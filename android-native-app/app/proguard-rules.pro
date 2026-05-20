@@ -14,7 +14,7 @@
 
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+-keepattributes SourceFile,LineNumberTable
 
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
@@ -49,3 +49,8 @@
 # Keep CameraX classes
 -keep class androidx.camera.** { *; }
 -dontwarn androidx.camera.**
+
+# Keep WebRTC classes — JNI bindings must survive R8/ProGuard
+-keep class org.webrtc.** { *; }
+-keep class org.webrtc.audio.** { *; }
+-dontwarn org.webrtc.**

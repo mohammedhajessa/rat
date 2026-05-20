@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/background_dark"
-    android:layoutDirection="rtl">
+    android:layoutDirection="locale">
 
     <!-- Top Bar -->
     <LinearLayout
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginHorizontal="12dp"
-            android:text="قراءة الكتاب"
+            android:text="@string/read_book_title"
             android:textSize="18sp"
             android:textColor="@color/text_primary"
             android:fontFamily="sans-serif-medium"

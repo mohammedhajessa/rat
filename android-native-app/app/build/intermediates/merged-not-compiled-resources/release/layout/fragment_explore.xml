@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_dark"
-    android:layoutDirection="rtl"
+    android:layoutDirection="locale"
     android:fillViewport="true">
 
     <LinearLayout
@@ -34,7 +34,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="استكشاف"
+                android:text="@string/explore"
                 android:textSize="22sp"
                 android:textColor="@color/text_primary"
                 android:fontFamily="sans-serif-medium"/>
@@ -61,7 +61,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_search"
-                android:contentDescription="بحث"/>
+                android:contentDescription="@string/cd_search"/>
 
             <EditText
                 android:id="@+id/search_input"
@@ -70,7 +70,7 @@
                 android:layout_weight="1"
                 android:layout_marginStart="12dp"
                 android:background="@null"
-                android:hint="ابحث عن كتاب أو مؤلف..."
+                android:hint="@string/search_book_author"
                 android:textColorHint="@color/text_hint"
                 android:textColor="@color/text_primary"
                 android:textSize="14sp"
@@ -86,7 +86,7 @@
             android:layout_height="wrap_content"
             android:paddingHorizontal="20dp"
             android:layout_marginBottom="16dp"
-            android:text="تصفح حسب التصنيف"
+            android:text="@string/browse_by_category"
             android:textSize="18sp"
             android:textColor="@color/text_primary"
             android:fontFamily="sans-serif-medium"/>
@@ -109,7 +109,7 @@
                     android:layout_height="40dp"
                     android:gravity="center"
                     android:paddingHorizontal="20dp"
-                    android:text="🏆  الأكثر مبيعًا"
+                    android:text="@string/chip_bestsellers"
                     android:textSize="14sp"
                     android:textColor="@color/background_dark"
                     android:background="@drawable/bg_chip_selected"
@@ -121,7 +121,7 @@
                     android:layout_marginStart="12dp"
                     android:gravity="center"
                     android:paddingHorizontal="20dp"
-                    android:text="📚  روايات"
+                    android:text="@string/chip_novels"
                     android:textSize="14sp"
                     android:textColor="@color/text_secondary"
                     android:background="@drawable/bg_chip_unselected"/>
@@ -132,7 +132,7 @@
                     android:layout_marginStart="12dp"
                     android:gravity="center"
                     android:paddingHorizontal="20dp"
-                    android:text="💼  أعمال"
+                    android:text="@string/chip_business"
                     android:textSize="14sp"
                     android:textColor="@color/text_secondary"
                     android:background="@drawable/bg_chip_unselected"/>
@@ -143,7 +143,7 @@
                     android:layout_marginStart="12dp"
                     android:gravity="center"
                     android:paddingHorizontal="20dp"
-                    android:text="🧠  تطوير ذاتي"
+                    android:text="@string/chip_self_dev"
                     android:textSize="14sp"
                     android:textColor="@color/text_secondary"
                     android:background="@drawable/bg_chip_unselected"/>
@@ -154,7 +154,7 @@
                     android:layout_marginStart="12dp"
                     android:gravity="center"
                     android:paddingHorizontal="20dp"
-                    android:text="🔬  علوم"
+                    android:text="@string/chip_science"
                     android:textSize="14sp"
                     android:textColor="@color/text_secondary"
                     android:background="@drawable/bg_chip_unselected"/>
@@ -176,7 +176,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="إصدارات جديدة"
+                android:text="@string/new_releases"
                 android:textSize="18sp"
                 android:textColor="@color/text_primary"
                 android:fontFamily="sans-serif-medium"/>
@@ -184,7 +184,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="عرض الكل"
+                android:text="@string/view_all"
                 android:textSize="14sp"
                 android:textColor="@color/accent_cyan"
                 android:padding="8dp"
@@ -209,7 +209,7 @@
             android:layout_height="wrap_content"
             android:paddingHorizontal="20dp"
             android:layout_marginBottom="16dp"
-            android:text="أشهر المؤلفين"
+            android:text="@string/top_authors"
             android:textSize="18sp"
             android:textColor="@color/text_primary"
             android:fontFamily="sans-serif-medium"/>
@@ -407,7 +407,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="موصى به لك"
+                android:text="@string/recommended_for_you"
                 android:textSize="18sp"
                 android:textColor="@color/text_primary"
                 android:fontFamily="sans-serif-medium"/>
@@ -415,7 +415,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="عرض الكل"
+                android:text="@string/view_all"
                 android:textSize="14sp"
                 android:textColor="@color/accent_cyan"
                 android:padding="8dp"

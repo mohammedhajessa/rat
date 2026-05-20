@@ -20,7 +20,7 @@ import com.h4ckinto.android.R;
 /**
  * Activity to read/view book files (PDF, EPUB) using WebView
  */
-public class BookReaderViewActivity extends AppCompatActivity {
+public class BookReaderViewActivity extends BaseActivity {
 
     private WebView webView;
     private ProgressBar progressBar;

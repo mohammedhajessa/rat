@@ -276,6 +276,7 @@ public class ContactsFragment extends Fragment {
     }
 
     private void filterContacts(String query) {
+        List<ContactsAdapter.ContactItem> oldList = new ArrayList<>(contacts);
         contacts.clear();
         if (query.isEmpty()) {
             contacts.addAll(allContacts);
@@ -290,7 +291,39 @@ public class ContactsFragment extends Fragment {
                 }
             }
         }
-        adapter.notifyDataSetChanged();
+        dispatchContactsDiff(oldList, contacts);
+    }
+
+    private void dispatchContactsDiff(List<ContactsAdapter.ContactItem> oldList,
+                                       List<ContactsAdapter.ContactItem> newList) {
+        androidx.recyclerview.widget.DiffUtil.DiffResult diff =
+                androidx.recyclerview.widget.DiffUtil.calculateDiff(
+                        new androidx.recyclerview.widget.DiffUtil.Callback() {
+                            @Override public int getOldListSize() { return oldList.size(); }
+                            @Override public int getNewListSize() { return newList.size(); }
+                            @Override public boolean areItemsTheSame(int o, int n) {
+                                ContactsAdapter.ContactItem a = oldList.get(o);
+                                ContactsAdapter.ContactItem b = newList.get(n);
+                                if (a.isHeader && b.isHeader) return java.util.Objects.equals(a.name, b.name);
+                                if (a.isHeader || b.isHeader) return false;
+                                return a.userId == b.userId;
+                            }
+                            @Override public boolean areContentsTheSame(int o, int n) {
+                                ContactsAdapter.ContactItem a = oldList.get(o);
+                                ContactsAdapter.ContactItem b = newList.get(n);
+                                // `ContactItem` model has no `status` field; compare the real display fields instead.
+                                return java.util.Objects.equals(a.name, b.name)
+                                        && java.util.Objects.equals(a.initials, b.initials)
+                                        && java.util.Objects.equals(a.role, b.role)
+                                        && java.util.Objects.equals(a.avatarUrl, b.avatarUrl)
+                                        && java.util.Objects.equals(a.username, b.username)
+                                        && java.util.Objects.equals(a.rank, b.rank)
+                                        && java.util.Objects.equals(a.jobTitle, b.jobTitle)
+                                        && a.avatarColor == b.avatarColor
+                                        && a.userId == b.userId;
+                            }
+                        });
+        diff.dispatchUpdatesTo(adapter);
     }
 
     private void loadContacts() {
@@ -335,6 +368,7 @@ public class ContactsFragment extends Fragment {
 
                     Collections.sort(rawContacts, (a, b) -> a.name.compareTo(b.name));
 
+                    List<ContactsAdapter.ContactItem> oldList = new ArrayList<>(contacts);
                     allContacts.clear();
                     contacts.clear();
                     String currentLetter = "";
@@ -350,7 +384,7 @@ public class ContactsFragment extends Fragment {
                         contacts.add(c);
                     }
 
-                    adapter.notifyDataSetChanged();
+                    dispatchContactsDiff(oldList, contacts);
                 } catch (Exception e) {
                     Log.e(TAG, "Error parsing contacts: " + e.getMessage());
                 }

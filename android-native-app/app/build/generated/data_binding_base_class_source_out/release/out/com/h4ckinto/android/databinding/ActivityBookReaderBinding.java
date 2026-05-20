@@ -7,10 +7,10 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.card.MaterialCardView;
 import com.h4ckinto.android.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -18,7 +18,10 @@ import java.lang.String;
 
 public final class ActivityBookReaderBinding implements ViewBinding {
   @NonNull
-  private final ConstraintLayout rootView;
+  private final FrameLayout rootView;
+
+  @NonNull
+  public final MaterialCardView bottomNavCard;
 
   @NonNull
   public final BottomNavigationView bottomNavigation;
@@ -30,12 +33,14 @@ public final class ActivityBookReaderBinding implements ViewBinding {
   public final FrameLayout lockOverlay;
 
   @NonNull
-  public final ConstraintLayout mainContainer;
+  public final FrameLayout mainContainer;
 
-  private ActivityBookReaderBinding(@NonNull ConstraintLayout rootView,
-      @NonNull BottomNavigationView bottomNavigation, @NonNull FrameLayout fragmentContainer,
-      @NonNull FrameLayout lockOverlay, @NonNull ConstraintLayout mainContainer) {
+  private ActivityBookReaderBinding(@NonNull FrameLayout rootView,
+      @NonNull MaterialCardView bottomNavCard, @NonNull BottomNavigationView bottomNavigation,
+      @NonNull FrameLayout fragmentContainer, @NonNull FrameLayout lockOverlay,
+      @NonNull FrameLayout mainContainer) {
     this.rootView = rootView;
+    this.bottomNavCard = bottomNavCard;
     this.bottomNavigation = bottomNavigation;
     this.fragmentContainer = fragmentContainer;
     this.lockOverlay = lockOverlay;
@@ -44,7 +49,7 @@ public final class ActivityBookReaderBinding implements ViewBinding {
 
   @Override
   @NonNull
-  public ConstraintLayout getRoot() {
+  public FrameLayout getRoot() {
     return rootView;
   }
 
@@ -69,6 +74,12 @@ public final class ActivityBookReaderBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.bottom_nav_card;
+      MaterialCardView bottomNavCard = ViewBindings.findChildViewById(rootView, id);
+      if (bottomNavCard == null) {
+        break missingId;
+      }
+
       id = R.id.bottom_navigation;
       BottomNavigationView bottomNavigation = ViewBindings.findChildViewById(rootView, id);
       if (bottomNavigation == null) {
@@ -87,9 +98,9 @@ public final class ActivityBookReaderBinding implements ViewBinding {
         break missingId;
       }
 
-      ConstraintLayout mainContainer = (ConstraintLayout) rootView;
+      FrameLayout mainContainer = (FrameLayout) rootView;
 
-      return new ActivityBookReaderBinding((ConstraintLayout) rootView, bottomNavigation,
+      return new ActivityBookReaderBinding((FrameLayout) rootView, bottomNavCard, bottomNavigation,
           fragmentContainer, lockOverlay, mainContainer);
     }
     String missingId = rootView.getResources().getResourceName(id);

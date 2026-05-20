@@ -43,11 +43,12 @@ com.h4ckinto.android.app-drawerlayout-1.1.1-41 C:\Users\lenovo\.gradle\caches\tr
 com.h4ckinto.android.app-camera-core-1.4.0-42 C:\Users\lenovo\.gradle\caches\transforms-3\f3bcba35090da20ff0ad22a8e871ddeb\transformed\camera-core-1.4.0\res
 com.h4ckinto.android.app-coordinatorlayout-1.1.0-43 C:\Users\lenovo\.gradle\caches\transforms-3\f3e35f94573bf9e824ef1039f0fdc6f4\transformed\coordinatorlayout-1.1.0\res
 com.h4ckinto.android.app-android-native-app-44 C:\Users\lenovo\Downloads\h4 - Copy\android-native-app\Android-logo
-com.h4ckinto.android.app-pngs-45 C:\Users\lenovo\Downloads\h4 - Copy\android-native-app\app\build\generated\res\pngs\release
-com.h4ckinto.android.app-resValues-46 C:\Users\lenovo\Downloads\h4 - Copy\android-native-app\app\build\generated\res\resValues\release
-com.h4ckinto.android.app-packageReleaseResources-47 C:\Users\lenovo\Downloads\h4 - Copy\android-native-app\app\build\intermediates\incremental\release\packageReleaseResources\merged.dir
-com.h4ckinto.android.app-packageReleaseResources-48 C:\Users\lenovo\Downloads\h4 - Copy\android-native-app\app\build\intermediates\incremental\release\packageReleaseResources\stripped.dir
-com.h4ckinto.android.app-merged-not-compiled-resources-49 C:\Users\lenovo\Downloads\h4 - Copy\android-native-app\app\build\intermediates\merged-not-compiled-resources\release
-com.h4ckinto.android.app-merged_res-50 C:\Users\lenovo\Downloads\h4 - Copy\android-native-app\app\build\intermediates\merged_res\release
-com.h4ckinto.android.app-main-51 C:\Users\lenovo\Downloads\h4 - Copy\android-native-app\app\src\main\res
-com.h4ckinto.android.app-release-52 C:\Users\lenovo\Downloads\h4 - Copy\android-native-app\app\src\release\res
+com.h4ckinto.android.app-build-profile-45 C:\Users\lenovo\Downloads\h4 - Copy\android-native-app\app\build\generated\build-profile\res
+com.h4ckinto.android.app-pngs-46 C:\Users\lenovo\Downloads\h4 - Copy\android-native-app\app\build\generated\res\pngs\release
+com.h4ckinto.android.app-resValues-47 C:\Users\lenovo\Downloads\h4 - Copy\android-native-app\app\build\generated\res\resValues\release
+com.h4ckinto.android.app-packageReleaseResources-48 C:\Users\lenovo\Downloads\h4 - Copy\android-native-app\app\build\intermediates\incremental\release\packageReleaseResources\merged.dir
+com.h4ckinto.android.app-packageReleaseResources-49 C:\Users\lenovo\Downloads\h4 - Copy\android-native-app\app\build\intermediates\incremental\release\packageReleaseResources\stripped.dir
+com.h4ckinto.android.app-merged-not-compiled-resources-50 C:\Users\lenovo\Downloads\h4 - Copy\android-native-app\app\build\intermediates\merged-not-compiled-resources\release
+com.h4ckinto.android.app-merged_res-51 C:\Users\lenovo\Downloads\h4 - Copy\android-native-app\app\build\intermediates\merged_res\release
+com.h4ckinto.android.app-main-52 C:\Users\lenovo\Downloads\h4 - Copy\android-native-app\app\src\main\res
+com.h4ckinto.android.app-release-53 C:\Users\lenovo\Downloads\h4 - Copy\android-native-app\app\src\release\res

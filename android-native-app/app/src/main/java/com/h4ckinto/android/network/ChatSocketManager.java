@@ -126,6 +126,9 @@ public class ChatSocketManager {
         void onForceLogout(String deviceId, String reason);
     }
 
+    private android.content.Context appContext;
+    private volatile boolean appInForeground = false;
+
     private ChatSocketManager() {}
 
     public static synchronized ChatSocketManager getInstance() {
@@ -133,6 +136,10 @@ public class ChatSocketManager {
             instance = new ChatSocketManager();
         }
         return instance;
+    }
+
+    public void setApplicationContext(android.content.Context ctx) {
+        this.appContext = ctx.getApplicationContext();
     }
 
     public void connect(int userId) {
@@ -159,9 +166,9 @@ public class ChatSocketManager {
             IO.Options options = new IO.Options();
             options.forceNew = false;
             options.reconnection = true;
-            options.reconnectionAttempts = Integer.MAX_VALUE;
-            options.reconnectionDelay = 500;
-            options.reconnectionDelayMax = 15000;
+            options.reconnectionAttempts = 30;
+            options.reconnectionDelay = 1000;
+            options.reconnectionDelayMax = 30000;
             options.randomizationFactor = 0.5;
             options.timeout = 15000;
             options.path = socketPath;
@@ -344,6 +351,15 @@ public class ChatSocketManager {
                 String color = data.optString("callerAvatarColor", "#3B82F6");
                 JSONObject offer = data.has("offer") ? data.optJSONObject("offer") : null;
                 for (OnCallListener l : callListeners) l.onIncomingCall(cid, callerId, name, initials, color, offer);
+
+                // If no listener handled it (app backgrounded), show system notification
+                if (callListeners.isEmpty() || !isAppInForeground()) {
+                    if (appContext != null) {
+                        String offerStr = offer != null ? offer.toString() : null;
+                        com.h4ckinto.android.services.CallService.showIncomingCallNotification(
+                                appContext, cid, callerId, name, initials, color, offerStr);
+                    }
+                }
             } catch (Exception e) { Log.e(TAG, "call:incoming error: " + e.getMessage()); }
         });
 
@@ -535,6 +551,7 @@ public class ChatSocketManager {
     }
 
     public void setAppForeground(boolean foreground) {
+        this.appInForeground = foreground;
         if (!isConnected || socket == null) return;
         try {
             JSONObject data = new JSONObject();
@@ -544,6 +561,10 @@ public class ChatSocketManager {
         } catch (Exception e) {
             Log.e(TAG, "Error setting status: " + e.getMessage());
         }
+    }
+
+    public boolean isAppInForeground() {
+        return appInForeground;
     }
 
     /**

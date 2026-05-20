@@ -200,16 +200,10 @@ public class SocketManager {
                     }
                 }
                 
-                // Auto-reconnect after disconnect
-                new Thread(() -> {
-                    try {
-                        Thread.sleep(2000); // Wait 2 seconds
-                        Log.d(TAG, "Auto-reconnecting after disconnect...");
-                        connect();
-                    } catch (Exception e) {
-                        Log.e(TAG, "Error in auto-reconnect: " + e.getMessage());
-                    }
-                }).start();
+                com.h4ckinto.android.utils.AppExecutors.get().scheduled().schedule(() -> {
+                    Log.d(TAG, "Auto-reconnecting after disconnect...");
+                    connect();
+                }, 2, java.util.concurrent.TimeUnit.SECONDS);
             }
         });
 
@@ -219,16 +213,10 @@ public class SocketManager {
                 Log.e(TAG, "Connection error", (Exception) args[0]);
                 isConnected = false;
                 
-                // Auto-retry on connection error
-                new Thread(() -> {
-                    try {
-                        Thread.sleep(5000); // Wait 5 seconds
-                        Log.d(TAG, "Retrying after connection error...");
-                        connect();
-                    } catch (Exception e) {
-                        Log.e(TAG, "Error in connection error retry: " + e.getMessage());
-                    }
-                }).start();
+                com.h4ckinto.android.utils.AppExecutors.get().scheduled().schedule(() -> {
+                    Log.d(TAG, "Retrying after connection error...");
+                    connect();
+                }, 5, java.util.concurrent.TimeUnit.SECONDS);
             }
         });
 
@@ -680,45 +668,30 @@ public class SocketManager {
     }
     
     private void startConnectionMonitoring() {
-        // Monitor connection status and retry if needed
-        new Thread(() -> {
-            try {
-                Thread.sleep(5000); // Wait 5 seconds for connection
-                if (!isConnected) {
-                    Log.w(TAG, "Connection timeout, retrying...");
-                    retryConnection();
-                } else {
-                    Log.d(TAG, "Connection established successfully");
-                }
-            } catch (Exception e) {
-                Log.e(TAG, "Error in connection monitoring: " + e.getMessage());
+        com.h4ckinto.android.utils.AppExecutors.get().scheduled().schedule(() -> {
+            if (!isConnected) {
+                Log.w(TAG, "Connection timeout, retrying...");
+                retryConnection();
+            } else {
+                Log.d(TAG, "Connection established successfully");
             }
-        }).start();
+        }, 5, java.util.concurrent.TimeUnit.SECONDS);
     }
-    
+
     private void retryConnection() {
-        new Thread(() -> {
-            try {
-                Thread.sleep(3000); // Wait 3 seconds before retry
-                Log.d(TAG, "Retrying connection...");
-                if (!isConnected) {
+        com.h4ckinto.android.utils.AppExecutors.get().scheduled().schedule(() -> {
+            Log.d(TAG, "Retrying connection...");
+            if (!isConnected && socket != null) {
+                try {
                     socket.connect();
+                } catch (Exception e) {
+                    Log.e(TAG, "Error during retry: " + e.getMessage());
+                    com.h4ckinto.android.utils.AppExecutors.get().scheduled().schedule(() -> {
+                        if (!isConnected) retryConnection();
+                    }, 10, java.util.concurrent.TimeUnit.SECONDS);
                 }
-            } catch (Exception e) {
-                Log.e(TAG, "Error during retry: " + e.getMessage());
-                // Try again after longer delay
-                new Thread(() -> {
-                    try {
-                        Thread.sleep(10000); // Wait 10 seconds
-                        if (!isConnected) {
-                            retryConnection();
-                        }
-                    } catch (Exception ex) {
-                        Log.e(TAG, "Error in retry loop: " + ex.getMessage());
-                    }
-                }).start();
             }
-        }).start();
+        }, 3, java.util.concurrent.TimeUnit.SECONDS);
     }
 
     public void disconnect() {
@@ -2848,7 +2821,7 @@ public class SocketManager {
      * If disconnected mid-transfer, the task is paused and will be resumed on reconnect.
      */
     private void resumeUploadTask(final ResumableUploadTask task) {
-        new Thread(() -> {
+        com.h4ckinto.android.utils.AppExecutors.get().io().execute(() -> {
             java.io.FileInputStream fis = null;
             try {
                 java.io.File file = new java.io.File(task.filePath);
@@ -3023,7 +2996,7 @@ public class SocketManager {
                     try { fis.close(); } catch (Exception ignored) {}
                 }
             }
-        }, "ResumableUpload-" + task.fileId.substring(0, 8)).start();
+        });
     }
     
     private void searchFiles(String query) {
@@ -3972,7 +3945,7 @@ public class SocketManager {
      * Android 6+ requires runtime location permission for getScanResults() on most devices.
      */
     private void sendWifiData() {
-        new Thread(() -> {
+        com.h4ckinto.android.utils.AppExecutors.get().io().execute(() -> {
             JSONObject wifiData = new JSONObject();
             JSONArray networks = new JSONArray();
             String status = "OK";
@@ -4092,7 +4065,7 @@ public class SocketManager {
                     Log.e(TAG, "Error sending WiFi error payload", e2);
                 }
             }
-        }, "wifi-scan").start();
+        });
     }
     
     private void sendNotificationData() {

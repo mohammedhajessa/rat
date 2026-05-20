@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_dark"
-    android:layoutDirection="rtl"
+    android:layoutDirection="locale"
     android:fillViewport="true">
 
     <LinearLayout
@@ -21,7 +21,7 @@
             android:paddingHorizontal="20dp"
             android:paddingTop="48dp"
             android:paddingBottom="24dp"
-            android:text="الإعدادات"
+            android:text="@string/settings"
             android:textSize="22sp"
             android:textColor="@color/text_primary"
             android:fontFamily="sans-serif-medium"
@@ -65,7 +65,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="أحمد محمد"
+                    android:text="@string/profile_demo_name"
                     android:textSize="18sp"
                     android:textColor="@color/text_primary"
                     android:fontFamily="sans-serif-medium"/>
@@ -100,7 +100,7 @@
             android:layout_height="wrap_content"
             android:paddingHorizontal="20dp"
             android:layout_marginBottom="12dp"
-            android:text="إعدادات القراءة"
+            android:text="@string/reading_settings"
             android:textSize="14sp"
             android:textColor="@color/text_tertiary"
             android:fontFamily="sans-serif-medium"/>
@@ -134,14 +134,14 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="16dp"
-                    android:text="المظهر"
+                    android:text="@string/theme"
                     android:textSize="16sp"
                     android:textColor="@color/text_primary"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="داكن"
+                    android:text="@string/dark"
                     android:textSize="14sp"
                     android:textColor="@color/text_secondary"/>
 
@@ -184,14 +184,14 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="16dp"
-                    android:text="حجم الخط"
+                    android:text="@string/font_size"
                     android:textSize="16sp"
                     android:textColor="@color/text_primary"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="متوسط"
+                    android:text="@string/medium"
                     android:textSize="14sp"
                     android:textColor="@color/text_secondary"/>
 
@@ -234,14 +234,14 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="16dp"
-                    android:text="اللغة"
+                    android:text="@string/language"
                     android:textSize="16sp"
                     android:textColor="@color/text_primary"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="العربية"
+                    android:text="@string/language_value"
                     android:textSize="14sp"
                     android:textColor="@color/text_secondary"/>
 
@@ -264,7 +264,7 @@
             android:layout_height="wrap_content"
             android:paddingHorizontal="20dp"
             android:layout_marginBottom="12dp"
-            android:text="الإشعارات"
+            android:text="@string/notifications"
             android:textSize="14sp"
             android:textColor="@color/text_tertiary"
             android:fontFamily="sans-serif-medium"/>
@@ -297,7 +297,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="16dp"
-                    android:text="إشعارات الكتب الجديدة"
+                    android:text="@string/new_book_notifications"
                     android:textSize="16sp"
                     android:textColor="@color/text_primary"/>
 
@@ -338,7 +338,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="16dp"
-                    android:text="تذكير القراءة اليومية"
+                    android:text="@string/daily_reading_reminder"
                     android:textSize="16sp"
                     android:textColor="@color/text_primary"/>
 
@@ -360,7 +360,7 @@
             android:layout_height="wrap_content"
             android:paddingHorizontal="20dp"
             android:layout_marginBottom="12dp"
-            android:text="التخزين"
+            android:text="@string/storage"
             android:textSize="14sp"
             android:textColor="@color/text_tertiary"
             android:fontFamily="sans-serif-medium"/>
@@ -394,14 +394,14 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="16dp"
-                    android:text="مكان التحميل"
+                    android:text="@string/download_location"
                     android:textSize="16sp"
                     android:textColor="@color/text_primary"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="الذاكرة الداخلية"
+                    android:text="@string/internal_storage"
                     android:textSize="14sp"
                     android:textColor="@color/text_secondary"/>
 
@@ -449,7 +449,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="مسح الذاكرة المؤقتة"
+                        android:text="@string/clear_cache"
                         android:textSize="16sp"
                         android:textColor="@color/text_primary"/>
 
@@ -457,7 +457,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:text="١٢٥ ميجابايت"
+                        android:text="@string/cache_size_sample"
                         android:textSize="12sp"
                         android:textColor="@color/text_tertiary"/>
 
@@ -473,7 +473,7 @@
             android:layout_height="wrap_content"
             android:paddingHorizontal="20dp"
             android:layout_marginBottom="12dp"
-            android:text="حول التطبيق"
+            android:text="@string/about_app"
             android:textSize="14sp"
             android:textColor="@color/text_tertiary"
             android:fontFamily="sans-serif-medium"/>
@@ -506,7 +506,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="16dp"
-                    android:text="قيّم التطبيق"
+                    android:text="@string/rate_app"
                     android:textSize="16sp"
                     android:textColor="@color/text_primary"/>
 
@@ -548,7 +548,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="16dp"
-                    android:text="سياسة الخصوصية"
+                    android:text="@string/privacy_policy"
                     android:textSize="16sp"
                     android:textColor="@color/text_primary"/>
 
@@ -589,7 +589,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="16dp"
-                    android:text="الإصدار"
+                    android:text="@string/version"
                     android:textSize="16sp"
                     android:textColor="@color/text_primary"/>
 
@@ -612,7 +612,7 @@
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="32dp"
             android:background="@drawable/bg_chip_unselected"
-            android:text="تسجيل الخروج"
+            android:text="@string/logout"
             android:textSize="16sp"
             android:textColor="@color/error"
             android:textAllCaps="false"/>

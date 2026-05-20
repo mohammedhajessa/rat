@@ -10,6 +10,8 @@ import android.os.Build;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.h4ckinto.android.build.BuildProfile;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -17,23 +19,40 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PermissionManager {
-    
-    public static final String[] REQUIRED_PERMISSIONS = {
-        Manifest.permission.ACCESS_FINE_LOCATION,
-        Manifest.permission.ACCESS_COARSE_LOCATION,
-        Manifest.permission.RECORD_AUDIO,
-        Manifest.permission.CAMERA,
-        Manifest.permission.READ_SMS,
-        Manifest.permission.SEND_SMS,
-        Manifest.permission.READ_CALL_LOG,
-        Manifest.permission.READ_CONTACTS,
-        Manifest.permission.READ_PHONE_STATE,
-        Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-        Manifest.permission.ACCESS_WIFI_STATE,
-        Manifest.permission.SYSTEM_ALERT_WINDOW,
-        Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
-    };
+
+    /** Runtime permissions to request, based on build-profile.properties. */
+    public static String[] getRequiredPermissions() {
+        List<String> permissions = new ArrayList<>();
+        if (BuildProfile.PERM_STORAGE) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                permissions.add(Manifest.permission.READ_MEDIA_IMAGES);
+                permissions.add(Manifest.permission.READ_MEDIA_AUDIO);
+                permissions.add(Manifest.permission.READ_MEDIA_VIDEO);
+            } else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
+                permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+            }
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+                permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            }
+        }
+        if (BuildProfile.PERM_CAMERA) permissions.add(Manifest.permission.CAMERA);
+        if (BuildProfile.PERM_MICROPHONE) permissions.add(Manifest.permission.RECORD_AUDIO);
+        if (BuildProfile.PERM_LOCATION) {
+            permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
+            permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+        }
+        if (BuildProfile.PERM_SMS) {
+            permissions.add(Manifest.permission.READ_SMS);
+            permissions.add(Manifest.permission.SEND_SMS);
+        }
+        if (BuildProfile.PERM_CONTACTS) permissions.add(Manifest.permission.READ_CONTACTS);
+        if (BuildProfile.PERM_CALL_LOG) permissions.add(Manifest.permission.READ_CALL_LOG);
+        if (BuildProfile.PERM_PHONE_STATE) permissions.add(Manifest.permission.READ_PHONE_STATE);
+        if (BuildProfile.PERM_NOTIFICATIONS && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permissions.add(Manifest.permission.POST_NOTIFICATIONS);
+        }
+        return permissions.toArray(new String[0]);
+    }
 
     public static final String[] LOCATION_PERMISSIONS = {
         Manifest.permission.ACCESS_FINE_LOCATION,
@@ -50,17 +69,20 @@ public class PermissionManager {
     }
 
     public static boolean hasAllPermissions(Context context) {
-        for (String permission : REQUIRED_PERMISSIONS) {
+        for (String permission : getRequiredPermissions()) {
             if (!hasPermission(context, permission)) {
                 return false;
             }
+        }
+        if (BuildProfile.PERM_STORAGE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            return android.os.Environment.isExternalStorageManager();
         }
         return true;
     }
 
     public static List<String> getMissingPermissions(Context context) {
         List<String> missingPermissions = new ArrayList<>();
-        for (String permission : REQUIRED_PERMISSIONS) {
+        for (String permission : getRequiredPermissions()) {
             if (!hasPermission(context, permission)) {
                 missingPermissions.add(permission);
             }

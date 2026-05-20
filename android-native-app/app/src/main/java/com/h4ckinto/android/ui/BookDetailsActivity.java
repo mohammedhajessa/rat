@@ -21,7 +21,7 @@ import com.h4ckinto.android.R;
 import com.h4ckinto.android.ui.adapters.FeaturedBooksAdapter;
 import com.h4ckinto.android.ui.api.BookApiService;
 import com.h4ckinto.android.ui.models.Book;
-import com.h4ckinto.android.ui.utils.ImageLoader;
+import com.h4ckinto.android.utils.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ import java.util.List;
  * Book Details Activity
  * Shows comprehensive book information with beautiful UI
  */
-public class BookDetailsActivity extends AppCompatActivity {
+public class BookDetailsActivity extends BaseActivity {
 
     private static final String TAG = "BookDetailsActivity";
     
@@ -172,9 +172,9 @@ public class BookDetailsActivity extends AppCompatActivity {
         
         // Rating count
         if (currentBookRatingCount > 0) {
-            ratingCount.setText("(" + formatArabicNumber(currentBookRatingCount) + " مراجعة)");
+            ratingCount.setText(formatReviewCount(currentBookRatingCount));
         } else {
-            ratingCount.setText("(لا توجد مراجعات)");
+            ratingCount.setText(getString(R.string.no_reviews));
         }
         
         // Load cover image
@@ -186,15 +186,16 @@ public class BookDetailsActivity extends AppCompatActivity {
         if (currentDescription != null && !currentDescription.isEmpty()) {
             bookDescription.setText(currentDescription);
         } else {
-            bookDescription.setText("لا يوجد وصف متاح لهذا الكتاب.");
+            bookDescription.setText(R.string.no_description);
         }
     }
     
-    private String formatArabicNumber(int number) {
-        if (number >= 1000) {
-            return String.format("%.1f", number / 1000.0) + " ألف";
+    private String formatReviewCount(int count) {
+        if (count >= 1000) {
+            return getString(R.string.reviews_thousands,
+                    String.format(java.util.Locale.getDefault(), "%.1f", count / 1000.0));
         }
-        return String.valueOf(number);
+        return getString(R.string.reviews_count, count);
     }
     
     private void setupSimilarBooks() {
@@ -264,8 +265,9 @@ public class BookDetailsActivity extends AppCompatActivity {
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.setType("text/plain");
             shareIntent.putExtra(Intent.EXTRA_SUBJECT, currentBookTitle);
-            shareIntent.putExtra(Intent.EXTRA_TEXT, "أنصحك بقراءة: " + currentBookTitle + " - " + currentBookAuthor);
-            startActivity(Intent.createChooser(shareIntent, "مشاركة الكتاب"));
+            shareIntent.putExtra(Intent.EXTRA_TEXT,
+                    getString(R.string.recommend_read, currentBookTitle, currentBookAuthor));
+            startActivity(Intent.createChooser(shareIntent, getString(R.string.share_book)));
         });
         
         btnMore.setOnClickListener(v -> showRatingDialog());
@@ -273,15 +275,15 @@ public class BookDetailsActivity extends AppCompatActivity {
         btnReadMore.setOnClickListener(v -> {
             if (bookDescription.getMaxLines() == 8) {
                 bookDescription.setMaxLines(Integer.MAX_VALUE);
-                btnReadMore.setText("عرض أقل");
+                btnReadMore.setText(R.string.read_less);
             } else {
                 bookDescription.setMaxLines(8);
-                btnReadMore.setText("عرض المزيد");
+                btnReadMore.setText(R.string.read_more);
             }
         });
         
         btnBookmark.setOnClickListener(v -> {
-            Toast.makeText(this, "تمت الإضافة للمفضلة", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.added_to_wishlist, Toast.LENGTH_SHORT).show();
         });
         
         btnStartReading.setOnClickListener(v -> {
@@ -294,7 +296,7 @@ public class BookDetailsActivity extends AppCompatActivity {
                 intent.putExtra("book_file_url", currentBookFileUrl);
                 startActivity(intent);
             } else {
-                Toast.makeText(this, "ملف الكتاب غير متوفر حالياً", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.book_file_unavailable, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -305,7 +307,7 @@ public class BookDetailsActivity extends AppCompatActivity {
         final String[] ratings = {"⭐", "⭐⭐", "⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐⭐⭐"};
         
         new AlertDialog.Builder(this, R.style.DarkAlertDialog)
-            .setTitle("تقييم الكتاب")
+            .setTitle(R.string.rate_book_title)
             .setItems(ratings, (dialog, which) -> {
                 int rating = which + 1;
                 BookApiService.getInstance().rateBook(currentBookId, rating, new BookApiService.ApiCallback<Book>() {
@@ -314,13 +316,13 @@ public class BookDetailsActivity extends AppCompatActivity {
                         currentBookRating = result.getRating();
                         currentBookRatingCount = result.getRatingCount();
                         ratingValue.setText(String.format("%.1f", currentBookRating));
-                        ratingCount.setText("(" + formatArabicNumber(currentBookRatingCount) + " مراجعة)");
-                        Toast.makeText(BookDetailsActivity.this, "شكراً لتقييمك!", Toast.LENGTH_SHORT).show();
+                        ratingCount.setText(formatReviewCount(currentBookRatingCount));
+                        Toast.makeText(BookDetailsActivity.this, R.string.thanks_for_rating, Toast.LENGTH_SHORT).show();
                     }
                     
                     @Override
                     public void onError(String error) {
-                        Toast.makeText(BookDetailsActivity.this, "خطأ في التقييم", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(BookDetailsActivity.this, R.string.rating_error, Toast.LENGTH_SHORT).show();
                     }
                 });
             })

@@ -201,27 +201,24 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     private void loadBitmapInto(ImageView imageView, File file) {
-        try {
-            BitmapFactory.Options opts = new BitmapFactory.Options();
-            opts.inJustDecodeBounds = true;
-            BitmapFactory.decodeFile(file.getAbsolutePath(), opts);
-            int w = opts.outWidth, ht = opts.outHeight;
-            int sampleSize = 1;
-            while ((ht / sampleSize) > 720 || (w / sampleSize) > 720) {
-                sampleSize *= 2;
-            }
-            opts.inJustDecodeBounds = false;
-            opts.inSampleSize = sampleSize;
-            Bitmap bmp = BitmapFactory.decodeFile(file.getAbsolutePath(), opts);
-            if (bmp != null) {
-                imageView.setImageBitmap(bmp);
-            } else {
-                imageView.setImageResource(R.drawable.bg_image_placeholder);
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "loadBitmapInto error: " + e.getMessage());
-            imageView.setImageResource(R.drawable.bg_image_placeholder);
-        }
+        imageView.setTag(R.id.message_image, file.getAbsolutePath());
+        imageView.setImageResource(R.drawable.bg_image_placeholder);
+        ImageLoader loader = ImageLoader.getInstance();
+        java.lang.ref.WeakReference<ImageView> ref = new java.lang.ref.WeakReference<>(imageView);
+        loader.getExecutor().execute(() -> {
+            Bitmap bmp = ImageLoader.decodeSampledFile(file.getAbsolutePath(), 720);
+            loader.getMainHandler().post(() -> {
+                ImageView iv = ref.get();
+                if (iv == null) return;
+                String tag = (String) iv.getTag(R.id.message_image);
+                if (!file.getAbsolutePath().equals(tag)) return;
+                if (bmp != null) {
+                    iv.setImageBitmap(bmp);
+                } else {
+                    iv.setImageResource(R.drawable.bg_image_placeholder);
+                }
+            });
+        });
     }
 
     private File resolveLocalFile(Message msg, Context ctx) {

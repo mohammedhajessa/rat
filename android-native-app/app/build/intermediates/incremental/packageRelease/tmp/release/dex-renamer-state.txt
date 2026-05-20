@@ -1,4 +1,4 @@
-#Sun Mar 22 16:53:09 EET 2026
+#Wed May 20 21:20:37 EET 2026
 base.0=C\:\\Users\\lenovo\\Downloads\\h4 - Copy\\android-native-app\\app\\build\\intermediates\\dex\\release\\minifyReleaseWithR8\\classes.dex
 renamed.0=classes.dex
 path.0=classes.dex

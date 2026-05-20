@@ -79,36 +79,34 @@ router.post('/upload', function(req, res, next) {
     res.json({ success: true, files: results });
 }));
 
-// GET /api/files - list files in uploads folder
-router.get('/', function(req, res) {
-    try {
-        var names = fs.readdirSync(uploadsDir);
-        var baseUrl = (req.protocol + '://' + req.get('host')) + (process.env.BASE_PATH || '');
-        var files = names.filter(function(n) {
-            var p = path.join(uploadsDir, n);
-            return fs.statSync(p).isFile();
-        }).map(function(n) {
-            var p = path.join(uploadsDir, n);
-            var stat = fs.statSync(p);
-            return {
-                name: n,
-                url: baseUrl + '/uploads/' + encodeURIComponent(n),
+// GET /api/files - list files in uploads folder (async, paginated)
+router.get('/', asyncHandler(async function(req, res) {
+    var limit = Math.min(parseInt(req.query.limit) || 50, 100);
+    var offset = parseInt(req.query.offset) || 0;
+    var names = await fs.promises.readdir(uploadsDir);
+    var baseUrl = (req.protocol + '://' + req.get('host')) + (process.env.BASE_PATH || '');
+    var fileInfos = [];
+    for (var i = 0; i < names.length; i++) {
+        var p = path.join(uploadsDir, names[i]);
+        var stat = await fs.promises.stat(p);
+        if (stat.isFile()) {
+            fileInfos.push({
+                name: names[i],
+                url: baseUrl + '/uploads/' + encodeURIComponent(names[i]),
                 size: stat.size,
                 mtime: stat.mtime
-            };
-        });
-        res.json({ success: true, files: files });
-    } catch (e) {
-        res.status(500).json({ success: false, error: e.message });
+            });
+        }
     }
-});
+    var total = fileInfos.length;
+    var paged = fileInfos.slice(offset, offset + limit);
+    res.json({ success: true, files: paged, total: total });
+}));
 
-// If app-update.json apk_url points to this file, clear it so app doesn't see an update
-function clearAppUpdateIfUrlMatches(deletedFileName) {
+async function clearAppUpdateIfUrlMatches(deletedFileName) {
     var configPath = path.join(__dirname, '..', 'config', 'app-update.json');
     try {
-        if (!fs.existsSync(configPath)) return;
-        var data = fs.readFileSync(configPath, 'utf8');
+        var data = await fs.promises.readFile(configPath, 'utf8');
         var config = JSON.parse(data);
         var url = (config.apk_url || '').trim();
         if (!url) return;
@@ -118,30 +116,29 @@ function clearAppUpdateIfUrlMatches(deletedFileName) {
         config.apk_url = '';
         config.version_name = '';
         var dir = path.dirname(configPath);
-        if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-        fs.writeFileSync(configPath, JSON.stringify(config, null, 2), 'utf8');
+        await fs.promises.mkdir(dir, { recursive: true });
+        await fs.promises.writeFile(configPath, JSON.stringify(config, null, 2), 'utf8');
         console.log('[FILES] Cleared app-update.json apk_url and version_name (deleted file was in use)');
     } catch (e) {
-        console.warn('[FILES] Could not clear app-update config:', e.message);
+        if (e.code !== 'ENOENT') console.warn('[FILES] Could not clear app-update config:', e.message);
     }
 }
 
 // DELETE /api/files/:name - delete one file
-router.delete('/:name', function(req, res) {
+router.delete('/:name', asyncHandler(async function(req, res) {
     var name = (req.params.name || '').replace(/\.\./g, '').replace(/[\/\\]/g, '');
     if (!name) return res.status(400).json({ success: false, error: 'Invalid name' });
     var filePath = path.join(uploadsDir, name);
-    if (!fs.existsSync(filePath) || !fs.statSync(filePath).isFile()) {
+    try {
+        var stat = await fs.promises.stat(filePath);
+        if (!stat.isFile()) return res.status(404).json({ success: false, error: 'File not found' });
+    } catch (e) {
         return res.status(404).json({ success: false, error: 'File not found' });
     }
-    try {
-        fs.unlinkSync(filePath);
-        clearAppUpdateIfUrlMatches(name);
-        console.log('[FILES] Deleted ' + name);
-        res.json({ success: true });
-    } catch (e) {
-        res.status(500).json({ success: false, error: e.message });
-    }
-});
+    await fs.promises.unlink(filePath);
+    clearAppUpdateIfUrlMatches(name);
+    console.log('[FILES] Deleted ' + name);
+    res.json({ success: true });
+}));
 
 module.exports = router;

@@ -48,6 +48,9 @@ public final class ActivityAudioCallBinding implements ViewBinding {
   public final TextView callStatus;
 
   @NonNull
+  public final LinearLayout controlButtons;
+
+  @NonNull
   public final LinearLayout incomingButtons;
 
   @NonNull
@@ -60,8 +63,8 @@ public final class ActivityAudioCallBinding implements ViewBinding {
       @NonNull ImageView btnEndCall, @NonNull ImageView btnMute, @NonNull ImageView btnReject,
       @NonNull ImageView btnSpeaker, @NonNull TextView callAvatar,
       @NonNull TextView callMuteIndicator, @NonNull TextView callName, @NonNull TextView callStatus,
-      @NonNull LinearLayout incomingButtons, @NonNull TextView labelMute,
-      @NonNull TextView labelSpeaker) {
+      @NonNull LinearLayout controlButtons, @NonNull LinearLayout incomingButtons,
+      @NonNull TextView labelMute, @NonNull TextView labelSpeaker) {
     this.rootView = rootView;
     this.btnAnswer = btnAnswer;
     this.btnEndCall = btnEndCall;
@@ -72,6 +75,7 @@ public final class ActivityAudioCallBinding implements ViewBinding {
     this.callMuteIndicator = callMuteIndicator;
     this.callName = callName;
     this.callStatus = callStatus;
+    this.controlButtons = controlButtons;
     this.incomingButtons = incomingButtons;
     this.labelMute = labelMute;
     this.labelSpeaker = labelSpeaker;
@@ -158,6 +162,12 @@ public final class ActivityAudioCallBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.control_buttons;
+      LinearLayout controlButtons = ViewBindings.findChildViewById(rootView, id);
+      if (controlButtons == null) {
+        break missingId;
+      }
+
       id = R.id.incoming_buttons;
       LinearLayout incomingButtons = ViewBindings.findChildViewById(rootView, id);
       if (incomingButtons == null) {
@@ -178,7 +188,7 @@ public final class ActivityAudioCallBinding implements ViewBinding {
 
       return new ActivityAudioCallBinding((LinearLayout) rootView, btnAnswer, btnEndCall, btnMute,
           btnReject, btnSpeaker, callAvatar, callMuteIndicator, callName, callStatus,
-          incomingButtons, labelMute, labelSpeaker);
+          controlButtons, incomingButtons, labelMute, labelSpeaker);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

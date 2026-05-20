@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_dark"
-    android:layoutDirection="rtl"
+    android:layoutDirection="locale"
     android:fitsSystemWindows="true">
 
     <androidx.core.widget.NestedScrollView
@@ -49,7 +49,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="تفاصيل الكتاب"
+                    android:text="@string/book_details"
                     android:textSize="18sp"
                     android:textColor="@color/text_primary"
                     android:fontFamily="sans-serif-medium"/>
@@ -139,7 +139,7 @@
                     android:id="@+id/rating_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="تقييم القراء"
+                    android:text="@string/reader_rating"
                     android:textSize="12sp"
                     android:textColor="@color/text_tertiary"
                     android:layout_marginEnd="8dp"/>
@@ -250,7 +250,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:paddingHorizontal="24dp"
-                android:text="نبذة عن الكتاب"
+                android:text="@string/about_book"
                 android:textSize="18sp"
                 android:textColor="@color/text_primary"
                 android:fontFamily="sans-serif-medium"/>
@@ -274,7 +274,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:paddingHorizontal="24dp"
-                android:text="عرض المزيد"
+                android:text="@string/read_more"
                 android:textSize="14sp"
                 android:textColor="@color/accent_cyan"
                 android:background="?attr/selectableItemBackground"
@@ -293,7 +293,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="الأكثر مبيعًا"
+                    android:text="@string/bestsellers"
                     android:textSize="18sp"
                     android:textColor="@color/text_primary"
                     android:fontFamily="sans-serif-medium"/>
@@ -377,7 +377,7 @@
             android:layout_weight="1"
             android:layout_marginStart="12dp"
             android:background="@drawable/bg_button_accent"
-            android:text="📖  ابدأ القراءة"
+            android:text="@string/start_reading_emoji"
             android:textSize="16sp"
             android:textColor="@color/background_dark"
             android:fontFamily="sans-serif-medium"

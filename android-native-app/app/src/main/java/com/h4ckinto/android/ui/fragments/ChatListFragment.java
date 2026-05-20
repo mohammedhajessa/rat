@@ -56,6 +56,7 @@ public class ChatListFragment extends Fragment {
     private int currentTab = TAB_ALL;
     private android.widget.TextView tabAll, tabFavorites, tabArchived;
     private boolean archiveUnlockedThisSession = false;
+    private LinearLayout skeletonLoading;
 
     // Dedicated listeners (added/removed properly)
     private ChatSocketManager.OnConversationUpdateListener convUpdateListener;
@@ -86,6 +87,7 @@ public class ChatListFragment extends Fragment {
         recyclerView = view.findViewById(R.id.chat_list_recycler);
         emptyStateLayout = view.findViewById(R.id.chat_list_empty_state);
         emptyStateMessage = view.findViewById(R.id.empty_state_message);
+        skeletonLoading = view.findViewById(R.id.skeleton_loading);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         chats = new ArrayList<>();
@@ -335,7 +337,10 @@ public class ChatListFragment extends Fragment {
         if (cached != null && cached.length() > 0) {
             parseAndDisplayConversations(cached);
         } else {
-            // No cache: show empty/login hint immediately while network loads
+            if (skeletonLoading != null && allChats.isEmpty()) {
+                skeletonLoading.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+            }
             mainHandler.post(this::updateEmptyState);
         }
 
@@ -418,6 +423,8 @@ public class ChatListFragment extends Fragment {
     }
 
     private void parseAndDisplayConversations(JSONArray result) {
+        if (skeletonLoading != null) skeletonLoading.setVisibility(View.GONE);
+        if (recyclerView != null) recyclerView.setVisibility(View.VISIBLE);
         if (result == null) result = new JSONArray();
         try {
             java.util.Map<Integer, ChatListAdapter.ChatItem> incoming = new java.util.LinkedHashMap<>();
@@ -495,9 +502,12 @@ public class ChatListFragment extends Fragment {
                 break;
         }
 
+        List<ChatListAdapter.ChatItem> oldList = new ArrayList<>(chats);
         chats.clear();
         chats.addAll(filtered);
-        adapter.notifyDataSetChanged();
+        androidx.recyclerview.widget.DiffUtil.DiffResult diff =
+                androidx.recyclerview.widget.DiffUtil.calculateDiff(new ChatDiffCallback(oldList, chats));
+        diff.dispatchUpdatesTo(adapter);
     }
 
     private static class ChatDiffCallback extends androidx.recyclerview.widget.DiffUtil.Callback {

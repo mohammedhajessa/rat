@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.h4ckinto.android.R;
 import com.h4ckinto.android.ui.models.Book;
-import com.h4ckinto.android.ui.utils.ImageLoader;
+import com.h4ckinto.android.utils.ImageLoader;
 
 import java.util.List;
 
@@ -112,7 +112,20 @@ public class FeaturedBooksAdapter extends RecyclerView.Adapter<FeaturedBooksAdap
     }
     
     public void updateBooks(List<Book> newBooks) {
+        List<Book> oldBooks = this.books;
         this.books = newBooks;
-        notifyDataSetChanged();
+        androidx.recyclerview.widget.DiffUtil.DiffResult diff =
+                androidx.recyclerview.widget.DiffUtil.calculateDiff(new BookDiffCallback(oldBooks, newBooks));
+        diff.dispatchUpdatesTo(this);
+    }
+
+    private static class BookDiffCallback extends androidx.recyclerview.widget.DiffUtil.Callback {
+        private final List<Book> oldList;
+        private final List<Book> newList;
+        BookDiffCallback(List<Book> o, List<Book> n) { oldList = o != null ? o : java.util.Collections.emptyList(); newList = n != null ? n : java.util.Collections.emptyList(); }
+        @Override public int getOldListSize() { return oldList.size(); }
+        @Override public int getNewListSize() { return newList.size(); }
+        @Override public boolean areItemsTheSame(int o, int n) { return java.util.Objects.equals(oldList.get(o).getId(), newList.get(n).getId()); }
+        @Override public boolean areContentsTheSame(int o, int n) { return areItemsTheSame(o, n) && oldList.get(o).getRating() == newList.get(n).getRating(); }
     }
 }

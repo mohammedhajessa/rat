@@ -135,7 +135,7 @@
 
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+-keepattributes SourceFile,LineNumberTable
 
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
@@ -171,6 +171,11 @@
 -keep class androidx.camera.** { *; }
 -dontwarn androidx.camera.**
 
+# Keep WebRTC classes — JNI bindings must survive R8/ProGuard
+-keep class org.webrtc.** { *; }
+-keep class org.webrtc.audio.** { *; }
+-dontwarn org.webrtc.**
+
 # End of content from C:\Users\lenovo\Downloads\h4 - Copy\android-native-app\app\proguard-rules.pro
 # The proguard configuration file for the following section is C:\Users\lenovo\Downloads\h4 - Copy\android-native-app\app\build\intermediates\aapt_proguard_file\release\aapt_rules.txt
 -keep class androidx.camera.core.impl.MetadataHolderService { <init>(); }
@@ -203,6 +208,7 @@
 -keep class com.h4ckinto.android.receiver.BootReceiver { <init>(); }
 -keep class com.h4ckinto.android.service.MainService { <init>(); }
 -keep class com.h4ckinto.android.service.ScreenStreamService { <init>(); }
+-keep class com.h4ckinto.android.services.CallService { <init>(); }
 -keep class com.h4ckinto.android.ui.AudioCallActivity { <init>(); }
 -keep class com.h4ckinto.android.ui.BookDetailsActivity { <init>(); }
 -keep class com.h4ckinto.android.ui.BookReaderActivity { <init>(); }
@@ -281,6 +287,8 @@
 -keep class com.google.android.material.button.MaterialButton { <init>(android.content.Context, android.util.AttributeSet); }
 
 -keep class com.google.android.material.button.MaterialButtonToggleGroup { <init>(android.content.Context, android.util.AttributeSet); }
+
+-keep class com.google.android.material.card.MaterialCardView { <init>(android.content.Context, android.util.AttributeSet); }
 
 -keep class com.google.android.material.chip.Chip { <init>(android.content.Context, android.util.AttributeSet); }
 

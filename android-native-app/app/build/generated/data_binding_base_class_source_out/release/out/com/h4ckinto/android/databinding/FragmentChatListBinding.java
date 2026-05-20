@@ -4,11 +4,11 @@ package com.h4ckinto.android.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
@@ -20,13 +20,19 @@ import java.lang.String;
 
 public final class FragmentChatListBinding implements ViewBinding {
   @NonNull
-  private final CoordinatorLayout rootView;
+  private final FrameLayout rootView;
+
+  @NonNull
+  public final TextView chatEncryptedBannerText;
 
   @NonNull
   public final LinearLayout chatListEmptyState;
 
   @NonNull
   public final RecyclerView chatListRecycler;
+
+  @NonNull
+  public final TextView chatListTitle;
 
   @NonNull
   public final TextView emptyStateMessage;
@@ -38,6 +44,9 @@ public final class FragmentChatListBinding implements ViewBinding {
   public final LinearLayout filterTabs;
 
   @NonNull
+  public final LinearLayout skeletonLoading;
+
+  @NonNull
   public final TextView tabAll;
 
   @NonNull
@@ -46,17 +55,21 @@ public final class FragmentChatListBinding implements ViewBinding {
   @NonNull
   public final TextView tabFavorites;
 
-  private FragmentChatListBinding(@NonNull CoordinatorLayout rootView,
-      @NonNull LinearLayout chatListEmptyState, @NonNull RecyclerView chatListRecycler,
+  private FragmentChatListBinding(@NonNull FrameLayout rootView,
+      @NonNull TextView chatEncryptedBannerText, @NonNull LinearLayout chatListEmptyState,
+      @NonNull RecyclerView chatListRecycler, @NonNull TextView chatListTitle,
       @NonNull TextView emptyStateMessage, @NonNull FloatingActionButton fabNewChat,
-      @NonNull LinearLayout filterTabs, @NonNull TextView tabAll, @NonNull TextView tabArchived,
-      @NonNull TextView tabFavorites) {
+      @NonNull LinearLayout filterTabs, @NonNull LinearLayout skeletonLoading,
+      @NonNull TextView tabAll, @NonNull TextView tabArchived, @NonNull TextView tabFavorites) {
     this.rootView = rootView;
+    this.chatEncryptedBannerText = chatEncryptedBannerText;
     this.chatListEmptyState = chatListEmptyState;
     this.chatListRecycler = chatListRecycler;
+    this.chatListTitle = chatListTitle;
     this.emptyStateMessage = emptyStateMessage;
     this.fabNewChat = fabNewChat;
     this.filterTabs = filterTabs;
+    this.skeletonLoading = skeletonLoading;
     this.tabAll = tabAll;
     this.tabArchived = tabArchived;
     this.tabFavorites = tabFavorites;
@@ -64,7 +77,7 @@ public final class FragmentChatListBinding implements ViewBinding {
 
   @Override
   @NonNull
-  public CoordinatorLayout getRoot() {
+  public FrameLayout getRoot() {
     return rootView;
   }
 
@@ -89,6 +102,12 @@ public final class FragmentChatListBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.chat_encrypted_banner_text;
+      TextView chatEncryptedBannerText = ViewBindings.findChildViewById(rootView, id);
+      if (chatEncryptedBannerText == null) {
+        break missingId;
+      }
+
       id = R.id.chat_list_empty_state;
       LinearLayout chatListEmptyState = ViewBindings.findChildViewById(rootView, id);
       if (chatListEmptyState == null) {
@@ -98,6 +117,12 @@ public final class FragmentChatListBinding implements ViewBinding {
       id = R.id.chat_list_recycler;
       RecyclerView chatListRecycler = ViewBindings.findChildViewById(rootView, id);
       if (chatListRecycler == null) {
+        break missingId;
+      }
+
+      id = R.id.chat_list_title;
+      TextView chatListTitle = ViewBindings.findChildViewById(rootView, id);
+      if (chatListTitle == null) {
         break missingId;
       }
 
@@ -119,6 +144,12 @@ public final class FragmentChatListBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.skeleton_loading;
+      LinearLayout skeletonLoading = ViewBindings.findChildViewById(rootView, id);
+      if (skeletonLoading == null) {
+        break missingId;
+      }
+
       id = R.id.tab_all;
       TextView tabAll = ViewBindings.findChildViewById(rootView, id);
       if (tabAll == null) {
@@ -137,9 +168,9 @@ public final class FragmentChatListBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentChatListBinding((CoordinatorLayout) rootView, chatListEmptyState,
-          chatListRecycler, emptyStateMessage, fabNewChat, filterTabs, tabAll, tabArchived,
-          tabFavorites);
+      return new FragmentChatListBinding((FrameLayout) rootView, chatEncryptedBannerText,
+          chatListEmptyState, chatListRecycler, chatListTitle, emptyStateMessage, fabNewChat,
+          filterTabs, skeletonLoading, tabAll, tabArchived, tabFavorites);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

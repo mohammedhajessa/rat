@@ -89,6 +89,7 @@ public class CallsFragment extends Fragment {
             @Override
             public void onSuccess(JSONArray result) {
                 try {
+                    List<CallLogAdapter.CallLogItem> oldLogs = new ArrayList<>(callLogs);
                     callLogs.clear();
                     for (int i = 0; i < result.length(); i++) {
                         JSONObject obj = result.getJSONObject(i);
@@ -103,7 +104,7 @@ public class CallsFragment extends Fragment {
                                 obj.optString("timestamp", "")
                         ));
                     }
-                    adapter.notifyDataSetChanged();
+                    dispatchCallLogsDiff(oldLogs, callLogs);
 
                     if (callLogs.isEmpty()) {
                         recyclerView.setVisibility(View.GONE);
@@ -126,6 +127,25 @@ public class CallsFragment extends Fragment {
         });
     }
 
+    private void dispatchCallLogsDiff(List<CallLogAdapter.CallLogItem> oldList,
+                                       List<CallLogAdapter.CallLogItem> newList) {
+        androidx.recyclerview.widget.DiffUtil.DiffResult diff =
+                androidx.recyclerview.widget.DiffUtil.calculateDiff(
+                        new androidx.recyclerview.widget.DiffUtil.Callback() {
+                            @Override public int getOldListSize() { return oldList.size(); }
+                            @Override public int getNewListSize() { return newList.size(); }
+                            @Override public boolean areItemsTheSame(int o, int n) {
+                                return oldList.get(o).otherUserId == newList.get(n).otherUserId
+                                        && java.util.Objects.equals(oldList.get(o).timestamp, newList.get(n).timestamp);
+                            }
+                            @Override public boolean areContentsTheSame(int o, int n) {
+                                return areItemsTheSame(o, n)
+                                        && java.util.Objects.equals(oldList.get(o).status, newList.get(n).status);
+                            }
+                        });
+        diff.dispatchUpdatesTo(adapter);
+    }
+
     private void showDeleteCallsDialog() {
         new AlertDialog.Builder(requireContext(), R.style.DarkAlertDialog)
                 .setTitle("\u062D\u0630\u0641 \u0633\u062C\u0644 \u0627\u0644\u0645\u0643\u0627\u0644\u0645\u0627\u062A")
@@ -134,8 +154,9 @@ public class CallsFragment extends Fragment {
                     ChatApiService.getInstance().deleteCallLogs(myUserId, new ChatApiService.ApiCallback<JSONObject>() {
                         @Override
                         public void onSuccess(JSONObject result) {
+                            List<CallLogAdapter.CallLogItem> old = new ArrayList<>(callLogs);
                             callLogs.clear();
-                            adapter.notifyDataSetChanged();
+                            dispatchCallLogsDiff(old, callLogs);
                             recyclerView.setVisibility(View.GONE);
                             emptyState.setVisibility(View.VISIBLE);
                             if (btnDeleteCalls != null) btnDeleteCalls.setVisibility(View.GONE);

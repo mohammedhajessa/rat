@@ -11,3 +11,14 @@ coverage
 node_modules
 .gradle
 .idea
+
+# Android build outputs
+android-native-app/app/build/
+android-native-app/build/
+android-native-app/.gradle/
+*.apk
+*.aab
+local.properties
+
+# Generated from build-profile.properties
+android-native-app/app/build/generated/

@@ -9,12 +9,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.h4ckinto.android.R;
 import com.h4ckinto.android.network.ChatApiService;
 import com.h4ckinto.android.network.ChatSocketManager;
 import com.h4ckinto.android.utils.ChatPrefs;
+import com.h4ckinto.android.utils.PermissionBootstrap;
 
 import org.json.JSONObject;
 
@@ -24,15 +26,28 @@ public class SecurePinActivity extends AppCompatActivity {
     private EditText[] pinFields;
     private TextView btnVerify;
     private boolean isVerifying = false;
+    private boolean uiReady = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (!PermissionBootstrap.areAllRequiredGranted(this)) {
+            PermissionBootstrap.runMandatoryStartupFlow(this, () -> setupUi());
+            return;
+        }
+        setupUi();
+    }
+
+    private void setupUi() {
+        if (uiReady) {
+            return;
+        }
+        uiReady = true;
+
         getWindow().setStatusBarColor(getResources().getColor(R.color.chat_background, getTheme()));
         getWindow().setNavigationBarColor(getResources().getColor(R.color.chat_background, getTheme()));
 
-        // If user is already authenticated, skip PIN screen
         ChatPrefs chatPrefs = new ChatPrefs(this);
         if (chatPrefs.isAuthenticated() && chatPrefs.getUserId() > 0) {
             Log.d(TAG, "Already authenticated, skipping PIN screen");
@@ -175,5 +190,25 @@ public class SecurePinActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+            @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        PermissionBootstrap.onRequestPermissionsResult(this, requestCode, permissions, grantResults,
+                this::setupUi);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        PermissionBootstrap.onActivityResult(this, requestCode, resultCode, this::setupUi);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        PermissionBootstrap.ensureRequiredOnResume(this, this::setupUi);
     }
 }

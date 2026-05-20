@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.h4ckinto.android.app-mergeReleaseResources-47:/values-de/values-de.xml",
+            "outputFile": "com.h4ckinto.android.app-mergeReleaseResources-48:/values-de/values-de.xml",
             "map": [
                 {
                     "source": "C:\\Users\\lenovo\\.gradle\\caches\\transforms-3\\82b8cd533e2f30ac0169b428c7b57501\\transformed\\core-1.12.0\\res\\values-de\\values-de.xml",

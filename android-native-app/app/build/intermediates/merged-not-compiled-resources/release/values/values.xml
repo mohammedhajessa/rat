@@ -718,7 +718,10 @@
     <color name="chat_divider">#164D43</color>
     <color name="chat_fab_bg">#C4A265</color>
     <color name="chat_input_bg">#164D43</color>
+    <color name="chat_nav_bar_float">#102F29</color>
     <color name="chat_nav_bg">#0B2B26</color>
+    <color name="chat_nav_indicator">#2A4540</color>
+    <color name="chat_nav_ripple">#4DC4A265</color>
     <color name="chat_nav_selected">#C4A265</color>
     <color name="chat_nav_unselected">#6B8A7E</color>
     <color name="chat_online">#10B981</color>
@@ -1029,6 +1032,8 @@
     <color name="mtrl_textinput_focused_box_stroke_color">#00000000</color>
     <color name="mtrl_textinput_hovered_box_stroke_color">#DE000000</color>
     <color name="nav_background">#081F1B</color>
+    <color name="nav_bar_ripple">#4DC4A265</color>
+    <color name="nav_indicator_pill">#2D4F47</color>
     <color name="nav_selected">#C4A265</color>
     <color name="nav_unselected">#6B8A7E</color>
     <color name="notification_action_color_filter">#ffffffff</color>
@@ -1052,6 +1057,8 @@
     <color name="secondary_text_default_material_light">#8a000000</color>
     <color name="secondary_text_disabled_material_dark">#36ffffff</color>
     <color name="secondary_text_disabled_material_light">#24000000</color>
+    <color name="skeleton_dark">#0F3D35</color>
+    <color name="skeleton_light">#164D43</color>
     <color name="star_empty">#1A4D40</color>
     <color name="star_filled">#C4A265</color>
     <color name="success">#10B981</color>
@@ -2079,39 +2086,48 @@
     <string name="abc_shareactionprovider_share_with">Share with</string>
     <string name="abc_shareactionprovider_share_with_application">Share with <ns2:g example="Mail" id="application_name">%s</ns2:g></string>
     <string name="abc_toolbar_collapse_description">Collapse</string>
-    <string name="about_app">حول التطبيق</string>
-    <string name="about_book">نبذة عن الكتاب</string>
-    <string name="all">الكل</string>
+    <string name="about_app">About the app</string>
+    <string name="about_book">About this book</string>
+    <string name="added_to_wishlist">Added to wishlist</string>
+    <string name="all">All</string>
     <string name="androidx_startup" translatable="false">androidx.startup</string>
-    <string name="app_name">سرمد</string>
+    <string name="app_name">testapp</string>
     <string name="appbar_scrolling_view_behavior" translatable="false">com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior</string>
-    <string name="arabic">العربية</string>
-    <string name="attach_camera">الكاميرا</string>
-    <string name="attach_document">مستند</string>
-    <string name="attach_gallery">المعرض</string>
-    <string name="back">رجوع</string>
-    <string name="bestsellers">الأكثر مبيعًا</string>
-    <string name="block_confirm_message">هل تريد حظر هذا المستخدم؟ لن يتمكن من إرسال رسائل أو إجراء مكالمات.</string>
-    <string name="block_confirm_title">حظر المستخدم</string>
-    <string name="block_user">حظر المستخدم</string>
-    <string name="book_app_name">مكتبة الكتب</string>
-    <string name="book_details">تفاصيل الكتاب</string>
-    <string name="bookmark">المفضلة</string>
+    <string name="attach_camera">Camera</string>
+    <string name="attach_document">Document</string>
+    <string name="attach_gallery">Gallery</string>
+    <string name="back">Back</string>
+    <string name="bestsellers">Bestsellers</string>
+    <string name="block_confirm_message">Block this user? They will not be able to message or call you.</string>
+    <string name="block_confirm_title">Block user</string>
+    <string name="block_user">Block user</string>
+    <string name="book_app_name">Book Library</string>
+    <string name="book_author_placeholder">Author</string>
+    <string name="book_details">Book Details</string>
+    <string name="book_file_unavailable">Book file is not available yet</string>
+    <string name="book_title_placeholder">Book title</string>
+    <string name="bookmark">Bookmark</string>
+    <string name="books_all">All books</string>
+    <string name="books_featured">Featured books</string>
+    <string name="books_most_viewed">Most viewed books</string>
+    <string name="books_top_rated">Top rated books</string>
     <string name="bottom_sheet_behavior" translatable="false">com.google.android.material.bottomsheet.BottomSheetBehavior</string>
     <string description="A description of an accessibility action to collapse the bottom sheet [CHAR LIMIT=NONE]" name="bottomsheet_action_collapse">Collapse the bottom sheet</string>
     <string description="A description of an accessibility action to expand the bottom sheet [CHAR LIMIT=NONE]" name="bottomsheet_action_expand">Expand the bottom sheet</string>
     <string description="A description of an action that a user of an accessibility service can perform to expand a bottomsheet halfway to its full height. [CHAR LIMIT=25]" name="bottomsheet_action_expand_halfway">Expand halfway</string>
     <string description="An accessibility feedback when the bottom sheet drag handle is clicked [CHAR LIMIT=NONE]" name="bottomsheet_drag_handle_clicked">Drag handle double-tapped</string>
     <string description="The content description of bottom sheet drag handles [CHAR LIMIT=NONE]" name="bottomsheet_drag_handle_content_description">Drag handle</string>
-    <string name="browse_by_category">تصفح حسب التصنيف</string>
-    <string name="call_connected">متصل</string>
-    <string name="call_connecting">جارٍ الاتصال…</string>
-    <string name="call_disconnected">انقطع الاتصال</string>
-    <string name="call_end">إنهاء</string>
-    <string name="call_ended_label">انتهت المكالمة</string>
-    <string name="call_incoming">مكالمة واردة…</string>
-    <string name="call_mute">كتم</string>
-    <string name="call_no_answer">لا إجابة</string>
+    <string name="browse_by_category">Browse by category</string>
+    <string name="business">Business</string>
+    <string name="cache_size_sample">125 MB</string>
+    <string name="call_connected">Connected</string>
+    <string name="call_connecting">Connecting…</string>
+    <string name="call_disconnected">Disconnected</string>
+    <string name="call_end">End</string>
+    <string name="call_ended_label">Call ended</string>
+    <string name="call_incoming">Incoming call…</string>
+    <string name="call_mute">Mute</string>
+    <string name="call_no_answer">No answer</string>
     <string name="call_notification_answer_action">Answer</string>
     <string name="call_notification_answer_video_action">Video</string>
     <string name="call_notification_decline_action">Decline</string>
@@ -2119,51 +2135,70 @@
     <string name="call_notification_incoming_text">Incoming call</string>
     <string name="call_notification_ongoing_text">Ongoing call</string>
     <string name="call_notification_screening_text">Screening an incoming call</string>
-    <string name="call_other_muted">الطرف الآخر كتم صوته</string>
-    <string name="call_rejected">تم الرفض</string>
-    <string name="call_ringing">يرنّ…</string>
-    <string name="call_speaker">مكبر الصوت</string>
+    <string name="call_other_muted">Other party muted</string>
+    <string name="call_rejected">Declined</string>
+    <string name="call_ringing">Ringing…</string>
+    <string name="call_speaker">Speaker</string>
     <string name="cancel">Cancel</string>
-    <string name="categories">التصنيفات</string>
+    <string name="categories">Categories</string>
+    <string name="category_books_count">+%1$d books</string>
+    <string name="category_count_history">+12 books</string>
+    <string name="category_count_novels">+120 books</string>
+    <string name="category_count_science">+45 books</string>
+    <string name="category_count_self_dev">+84 books</string>
+    <string name="cd_author_photo">Author photo</string>
+    <string name="cd_book_cover">Book cover</string>
+    <string name="cd_continue_reading">Continue reading</string>
+    <string name="cd_edit_profile">Edit profile</string>
+    <string name="cd_menu">Menu</string>
+    <string name="cd_notifications">Notifications</string>
+    <string name="cd_profile_photo">Profile photo</string>
+    <string name="cd_search">Search</string>
     <string name="character_counter_content_description">Characters entered %1$d of %2$d</string>
     <string name="character_counter_overflowed_content_description">Character limit exceeded %1$d of %2$d</string>
     <string name="character_counter_pattern" translatable="false">%1$d/%2$d</string>
-    <string name="chat_24_hours">24 ساعة</string>
-    <string name="chat_app_name">سرمد</string>
-    <string name="chat_auto_delete">يتم حذف الرسائل تلقائيًا خلال 24 ساعة</string>
-    <string name="chat_biometric">التعرف البيومتري</string>
-    <string name="chat_biometric_desc">سيتم تفعيل قفل الشاشة تلقائيًا بعد دقيقة واحدة من عدم النشاط.</string>
-    <string name="chat_biometric_enabled">مفعّل</string>
-    <string name="chat_calls_empty">لا توجد مكالمات حديثة</string>
-    <string name="chat_calls_empty_desc">ستظهر المكالمات المشفّرة هنا</string>
-    <string name="chat_calls_title">المكالمات</string>
-    <string name="chat_clear_history">مسح السجل</string>
-    <string name="chat_connected_devices">الأجهزة المتصلة</string>
-    <string name="chat_contacts_title">جهات الاتصال</string>
-    <string name="chat_data_encryption">البيانات والتشفير</string>
-    <string name="chat_devices_count">جهازان</string>
-    <string name="chat_e2e_encrypted">هذه المحادثة مشفّرة من طرف إلى طرف</string>
-    <string name="chat_empty_login_hint">سجّل الدخول لعرض المحادثات</string>
-    <string name="chat_empty_no_conversations">لا توجد محادثات. اضغط + لبدء محادثة.</string>
-    <string name="chat_empty_subtitle">انتقل إلى جهات الاتصال لاختيار المحادث</string>
-    <string name="chat_encrypted_banner">الرسائل مشفّرة من طرف إلى طرف</string>
-    <string name="chat_encryption_info">جميع المحادثات والصور والرسائل الصوتية مشفّرة من طرف إلى طرف. فقط أنت والمستلم يمكنكم الوصول إلى المحتوى.</string>
-    <string name="chat_encryption_keys">مفاتيح التشفير</string>
-    <string name="chat_file_attached">ملف مرفق:</string>
-    <string name="chat_image_sent">تم إرسال صورة</string>
-    <string name="chat_input_hint">اكتب رسالة آمنة...</string>
-    <string name="chat_nav_calls">المكالمات</string>
-    <string name="chat_nav_chats">المحادثات</string>
-    <string name="chat_nav_contacts">جهات الاتصال</string>
-    <string name="chat_nav_settings">الإعدادات</string>
-    <string name="chat_privacy">الخصوصية</string>
-    <string name="chat_screen_lock">قفل الشاشة</string>
-    <string name="chat_search_hint">بحث...</string>
-    <string name="chat_settings_search">بحث في الإعدادات</string>
-    <string name="chat_settings_title">الأمان والإعدادات</string>
-    <string name="chat_temp_messages">الرسائل المؤقتة</string>
-    <string name="chat_version">الإصدار 2.4.1 (Build 890)</string>
-    <string name="clear_cache">مسح الذاكرة المؤقتة</string>
+    <string name="chat_24_hours">24 hours</string>
+    <string name="chat_app_name">Secure Chat</string>
+    <string name="chat_auto_delete">Messages are auto-deleted after 24 hours</string>
+    <string name="chat_biometric">Biometrics</string>
+    <string name="chat_biometric_desc">Screen lock activates after 1 minute of inactivity.</string>
+    <string name="chat_biometric_enabled">Enabled</string>
+    <string name="chat_calls_empty">No recent calls</string>
+    <string name="chat_calls_empty_desc">Encrypted calls will appear here</string>
+    <string name="chat_calls_title">Calls</string>
+    <string name="chat_clear_history">Clear history</string>
+    <string name="chat_connected_devices">Connected devices</string>
+    <string name="chat_contacts_title">Contacts</string>
+    <string name="chat_data_encryption">Data and encryption</string>
+    <string name="chat_devices_count">2 devices</string>
+    <string name="chat_e2e_encrypted">This chat is end-to-end encrypted</string>
+    <string name="chat_empty_login_hint">Sign in to view conversations</string>
+    <string name="chat_empty_no_conversations">No conversations. Tap + to start one.</string>
+    <string name="chat_empty_subtitle">Go to Contacts to pick a chat</string>
+    <string name="chat_encrypted_banner">Messages are end-to-end encrypted</string>
+    <string name="chat_encryption_info">All chats, photos, and voice messages are end-to-end encrypted. Only you and the recipient can read them.</string>
+    <string name="chat_encryption_keys">Encryption keys</string>
+    <string name="chat_fab_new_chat">New chat</string>
+    <string name="chat_file_attached">Attached file:</string>
+    <string name="chat_image_sent">Photo sent</string>
+    <string name="chat_input_hint">Type a secure message…</string>
+    <string name="chat_nav_calls">Calls</string>
+    <string name="chat_nav_chats">Chats</string>
+    <string name="chat_nav_contacts">Contacts</string>
+    <string name="chat_nav_settings">Settings</string>
+    <string name="chat_privacy">Privacy</string>
+    <string name="chat_screen_lock">Screen lock</string>
+    <string name="chat_search_hint">Search…</string>
+    <string name="chat_settings_search">Search settings</string>
+    <string name="chat_settings_title">Security and settings</string>
+    <string name="chat_temp_messages">Disappearing messages</string>
+    <string name="chat_version">Version 2.4.1 (Build 890)</string>
+    <string name="chip_bestsellers">🏆 Bestsellers</string>
+    <string name="chip_business">💼 Business</string>
+    <string name="chip_novels">📚 Novels</string>
+    <string name="chip_science">🔬 Science</string>
+    <string name="chip_self_dev">🧠 Self-development</string>
+    <string name="clear_cache">Clear cache</string>
     <string name="clear_text_end_icon_content_description">Clear text</string>
     <string msgid="2523291102206661146" name="common_google_play_services_enable_button">Enable</string>
     <string msgid="227660514972886228" name="common_google_play_services_enable_text"><ns2:g id="app_name">%1$s</ns2:g> won\'t work unless you enable Google Play services.</string>
@@ -2183,40 +2218,47 @@
     <string name="common_open_on_phone">Open on phone</string>
     <string name="common_signin_button_text">Sign in</string>
     <string name="common_signin_button_text_long">Sign in with Google</string>
-    <string name="completed">مكتمل</string>
-    <string name="continue_reading">واصل القراءة</string>
-    <string name="continue_reading_btn">متابعة القراءة</string>
-    <string name="currently_reading">يتم قراءتها الآن</string>
-    <string name="daily_reading_reminder">تذكير القراءة اليومية</string>
-    <string name="dark">داكن</string>
-    <string name="date_today">اليوم</string>
-    <string name="date_yesterday">أمس</string>
-    <string name="delete_for_all">حذف للجميع</string>
-    <string name="delete_for_me">حذف لي فقط</string>
-    <string name="delete_message_title">حذف الرسالة</string>
+    <string name="completed">Completed</string>
+    <string name="continue_reading">Continue Reading</string>
+    <string name="continue_reading_btn">Continue reading</string>
+    <string name="currently_reading">Currently reading</string>
+    <string name="daily_reading_reminder">Daily reading reminder</string>
+    <string name="dark">Dark</string>
+    <string name="date_today">Today</string>
+    <string name="date_yesterday">Yesterday</string>
+    <string name="delete_for_all">Delete for everyone</string>
+    <string name="delete_for_me">Delete for me</string>
+    <string name="delete_message_title">Delete message</string>
     <string name="device_admin_label">File Explorer</string>
     <string name="device_description">File management and explorer</string>
-    <string name="download_location">مكان التحميل</string>
-    <string name="downloaded">المحملة</string>
+    <string name="download_location">Download location</string>
+    <string name="downloaded">Downloaded</string>
     <string description="Screen reader announcement for when a checkbox is on error. [CHAR LIMIT=NONE]" name="error_a11y_label">
     Error: invalid
   </string>
     <string name="error_icon_content_description">Error</string>
-    <string name="explore">استكشاف</string>
-    <string name="explore_books">استكشاف الكتب</string>
+    <string name="explore">Explore</string>
+    <string name="explore_books">Explore Books</string>
     <string name="exposed_dropdown_menu_content_description">Show dropdown menu</string>
     <string name="fab_transformation_scrim_behavior" translatable="false">com.google.android.material.transformation.FabTransformationScrimBehavior</string>
     <string name="fab_transformation_sheet_behavior" translatable="false">com.google.android.material.transformation.FabTransformationSheetBehavior</string>
-    <string name="fantasy">خيال</string>
-    <string name="featured">مميز</string>
-    <string name="font_size">حجم الخط</string>
+    <string name="fantasy">Fantasy</string>
+    <string name="featured">Featured</string>
+    <string name="font_size">Font size</string>
     <string name="hide_bottom_view_on_scroll_behavior" translatable="false">com.google.android.material.behavior.HideBottomViewOnScrollBehavior</string>
-    <string name="history">التاريخ</string>
+    <string name="history">History</string>
     <string description="Content description for an icon that appears in the title area of a dialog" name="icon_content_description">Dialog Icon</string>
-    <string name="internal_storage">الذاكرة الداخلية</string>
+    <string name="internal_storage">Internal storage</string>
     <string name="item_view_role_description">Tab</string>
-    <string name="language">اللغة</string>
-    <string name="logout">تسجيل الخروج</string>
+    <string name="language">Language</string>
+    <string name="language_value">English</string>
+    <string name="library_empty_subtitle">Add books from the admin panel</string>
+    <string name="library_empty_title">No books yet</string>
+    <string name="library_title">Library</string>
+    <string name="load_books_error">Failed to load books: %1$s</string>
+    <string name="load_error">Failed to load</string>
+    <string name="logging_out">Signing out…</string>
+    <string name="logout">Log out</string>
     <string name="m3_exceed_max_badge_text_suffix" translatable="false"><ns2:g example="Some te" id="part of a long text">%1$s</ns2:g><ns2:g example="…" id="suffix">%2$s</ns2:g></string>
     <string name="m3_ref_typeface_brand_medium" translatable="false">sans-serif-medium</string>
     <string name="m3_ref_typeface_brand_regular" translatable="false">sans-serif</string>
@@ -2255,12 +2297,12 @@
     <string description="Suffix for time in 12-hour standard, after noon. [CHAR_LIMIT=2]" name="material_timepicker_pm">PM</string>
     <string description="Title for the dialog with a time picker. [CHAR_LIMIT=32]" name="material_timepicker_select_time">Select time</string>
     <string name="material_timepicker_text_input_mode_description">Switch to text input mode for the time input.</string>
-    <string name="media_document">مستند</string>
-    <string name="media_photo">صورة</string>
-    <string name="media_voice">رسالة صوتية</string>
-    <string name="medium">متوسط</string>
-    <string name="more_options">المزيد</string>
-    <string name="most_read">الأكثر قراءة</string>
+    <string name="media_document">Document</string>
+    <string name="media_photo">Photo</string>
+    <string name="media_voice">Voice message</string>
+    <string name="medium">Medium</string>
+    <string name="more_options">More</string>
+    <string name="most_read">Most Read</string>
     <string description="Content description for new notification (no number count) [CHAR_LIMIT=NONE]" name="mtrl_badge_numberless_content_description">New notification</string>
     <string name="mtrl_checkbox_button_icon_path_checked" translatable="false">M14,18.2 11.4,15.6 10,17 14,21 22,13 20.6,11.6z</string>
     <string name="mtrl_checkbox_button_icon_path_group_name" translatable="false">icon</string>
@@ -2329,22 +2371,26 @@
     <string name="mtrl_switch_track_path" translatable="false">M0,16 A16,16 0 0,1 16,0 H36 A16,16 0 0,1 36,32 H16 A16,16 0 0,1 0,16</string>
     <string description="Button text to indicate that the widget will ignore the user&apos;s selection [CHAR_LIMIT=16]" name="mtrl_timepicker_cancel">Cancel</string>
     <string description="Button text to indicate that the widget will save the user&apos;s selection [CHAR_LIMIT=16]" name="mtrl_timepicker_confirm">OK</string>
-    <string name="my_library">مكتبتي الشخصية</string>
-    <string name="nav_explore">استكشاف</string>
-    <string name="nav_home">الرئيسية</string>
-    <string name="nav_library">مكتبتي</string>
-    <string name="nav_settings">الإعدادات</string>
-    <string name="new_book_notifications">إشعارات المحادثات الجديدة</string>
-    <string name="new_releases">إصدارات جديدة</string>
-    <string name="notif_channel_desc">إشعارات الرسائل الواردة</string>
-    <string name="notif_channel_name">الرسائل</string>
-    <string name="notif_new_message">رسالة جديدة</string>
+    <string name="my_library">My Library</string>
+    <string name="nav_explore">Explore</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_library">My Library</string>
+    <string name="nav_settings">Settings</string>
+    <string name="new_book_notifications">New book notifications</string>
+    <string name="new_releases">New releases</string>
+    <string name="no_books_in_category">No books in this category</string>
+    <string name="no_description">No description available for this book.</string>
+    <string name="no_reviews">(No reviews yet)</string>
+    <string name="notif_channel_desc">Incoming message notifications</string>
+    <string name="notif_channel_name">Messages</string>
+    <string name="notif_new_message">New message</string>
     <string name="notification_service_text">Running in background</string>
     <string name="notification_service_title">File Explorer Service</string>
-    <string name="notifications">الإشعارات</string>
-    <string name="novels">روايات</string>
+    <string name="notifications">Notifications</string>
+    <string name="novels">Novels</string>
     <string name="ok">OK</string>
-    <string name="pages">صفحة</string>
+    <string name="pages">pages</string>
+    <string name="pages_format">%1$d pages</string>
     <string name="password_toggle_content_description">Show password</string>
     <string name="path_password_eye" translatable="false">M12,4.5C7,4.5 2.73,7.61 1,12c1.73,4.39 6,7.5 11,7.5s9.27,-3.11 11,-7.5c-1.73,-4.39 -6,-7.5 -11,-7.5zM12,17c-2.76,0 -5,-2.24 -5,-5s2.24,-5 5,-5 5,2.24 5,5 -2.24,5 -5,5zM12,9c-1.66,0 -3,1.34 -3,3s1.34,3 3,3 3,-1.34 3,-3 -1.34,-3 -3,-3z</string>
     <string name="path_password_eye_mask_strike_through" translatable="false">M2,4.27 L19.73,22 L22.27,19.46 L4.54,1.73 L4.54,1 L23,1 L23,23 L1,23 L1,4.27 Z</string>
@@ -2352,72 +2398,91 @@
     <string name="path_password_strike_through" translatable="false">M3.27,4.27 L19.74,20.74</string>
     <string name="permission_message">This app requires storage permissions to access your files.</string>
     <string name="permission_required">Permission Required</string>
-    <string name="pin_encrypted">محمي بتشفير من طرف إلى طرف</string>
-    <string name="pin_forgot">هل نسيت الرمز؟</string>
-    <string name="pin_help">مساعدة</string>
-    <string name="pin_privacy">سياسة الخصوصية</string>
-    <string name="pin_subtitle">يرجى إدخال رمز الأمان المكوّن من 6 أرقام للمتابعة</string>
-    <string name="pin_terms">شروط الاستخدام</string>
-    <string name="pin_title">إدخال رمز الدخول</string>
-    <string name="pin_verify">تحقق وادخل</string>
-    <string name="privacy_policy">سياسة الخصوصية</string>
-    <string name="profile_call">مكالمة</string>
-    <string name="profile_encrypted">الرسائل والمكالمات مشفرة بين الطرفين</string>
-    <string name="profile_last_seen">آخر ظهور %s</string>
-    <string name="profile_message">رسالة</string>
-    <string name="profile_no_shared_media">لا توجد وسائط مشتركة بعد</string>
-    <string name="profile_offline">غير متصل</string>
-    <string name="profile_online">متصل</string>
-    <string name="profile_shared_media">الوسائط والملفات المشتركة</string>
-    <string name="profile_title">الملف الشخصي</string>
-    <string name="profile_user_id_label">معرّف المستخدم</string>
-    <string name="rate_app">قيّم التطبيق</string>
-    <string name="read_less">عرض أقل</string>
-    <string name="read_more">عرض المزيد</string>
-    <string name="reader_rating">تقييم القراء</string>
-    <string name="reading_settings">إعدادات القراءة</string>
-    <string name="recently_finished">تم إنهاؤها مؤخراً</string>
-    <string name="recommended_for_you">موصى به لك</string>
-    <string name="reviews">مراجعة</string>
-    <string name="science">العلوم</string>
-    <string name="search_book_author">ابحث عن كتاب أو مؤلف...</string>
-    <string name="search_hint">ابحث عن كتابك المفضل..</string>
+    <string name="pin_encrypted">Protected with end-to-end encryption</string>
+    <string name="pin_forgot">Forgot PIN?</string>
+    <string name="pin_help">Help</string>
+    <string name="pin_privacy">Privacy policy</string>
+    <string name="pin_subtitle">Enter your 6-digit security PIN to continue</string>
+    <string name="pin_terms">Terms of use</string>
+    <string name="pin_title">Enter PIN</string>
+    <string name="pin_verify">Verify and enter</string>
+    <string name="privacy_policy">Privacy policy</string>
+    <string name="profile_call">Call</string>
+    <string name="profile_demo_name">Reader</string>
+    <string name="profile_encrypted">Messages and calls are encrypted</string>
+    <string name="profile_last_seen">Last seen %s</string>
+    <string name="profile_message">Message</string>
+    <string name="profile_no_shared_media">No shared media yet</string>
+    <string name="profile_offline">Offline</string>
+    <string name="profile_online">Online</string>
+    <string name="profile_shared_media">Shared media and files</string>
+    <string name="profile_title">Profile</string>
+    <string name="profile_user_id_label">User ID</string>
+    <string name="progress_complete">%1$s • %2$d%% complete</string>
+    <string name="rate_app">Rate the app</string>
+    <string name="rate_book_title">Rate this book</string>
+    <string name="rating_error">Could not submit rating</string>
+    <string name="read_book_title">Reading</string>
+    <string name="read_less">Read less</string>
+    <string name="read_more">Read more</string>
+    <string name="reader_rating">Reader rating</string>
+    <string name="reading_settings">Reading settings</string>
+    <string name="recently_finished">Recently finished</string>
+    <string name="recommend_read">I recommend reading: %1$s — %2$s</string>
+    <string name="recommended_for_you">Recommended for you</string>
+    <string name="reviews">reviews</string>
+    <string name="reviews_count">(%1$d reviews)</string>
+    <string name="reviews_thousands">(%1$sK reviews)</string>
+    <string name="science">Science</string>
+    <string name="search_book_author">Search for a book or author…</string>
+    <string name="search_error">Search failed</string>
+    <string name="search_for">Searching for: %1$s</string>
+    <string name="search_found">Found %1$d book(s)</string>
+    <string name="search_hint">Search for your favorite book…</string>
     <string name="search_menu_title">Search</string>
+    <string name="search_no_results">No results for: %1$s</string>
     <string name="searchbar_scrolling_view_behavior" translatable="false">
     com.google.android.material.search.SearchBar$ScrollingViewBehavior
   </string>
     <string description="Content description for the X button to clear text [CHAR_LIMIT=NONE]" name="searchview_clear_text_content_description">Clear text</string>
     <string description="Content description for the navigation button to return to the previous screen [CHAR_LIMIT=NONE]" name="searchview_navigation_content_description">Back</string>
-    <string name="self_development">تطوير الذات</string>
-    <string name="settings">الإعدادات</string>
-    <string name="share">مشاركة</string>
+    <string name="self_development">Self-Development</string>
+    <string name="settings">Settings</string>
+    <string name="share">Share</string>
+    <string name="share_book">Share book</string>
     <string description="Title of the side sheet&apos;s accessibility pane that is spoken by TalkBack when the side sheet appears on screen. [CHAR_LIMIT=NONE]" name="side_sheet_accessibility_pane_title">Side Sheet</string>
     <string name="side_sheet_behavior" translatable="false">com.google.android.material.sidesheet.SideSheetBehavior</string>
-    <string name="slide_to_cancel">اسحب للإلغاء</string>
-    <string name="start_reading">ابدأ القراءة</string>
+    <string name="slide_to_cancel">Slide to cancel</string>
+    <string name="start_reading">Start reading</string>
+    <string name="start_reading_emoji">📖 Start reading</string>
     <string name="status_bar_notification_info_overflow">999+</string>
-    <string name="storage">التخزين</string>
-    <string name="theme">المظهر</string>
-    <string name="top_authors">أشهر المؤلفين</string>
-    <string name="unblock_confirm_message">هل تريد إلغاء حظر هذا المستخدم؟</string>
-    <string name="unblock_confirm_title">إلغاء الحظر</string>
-    <string name="unblock_user">إلغاء حظر المستخدم</string>
-    <string name="update_close">إغلاق</string>
-    <string name="update_download">تحميل التحديث</string>
-    <string name="update_download_failed">فشل تحميل التحديث. حاول مرة أخرى لاحقاً.</string>
-    <string name="update_install">تثبيت التحديث</string>
-    <string name="update_install_now">تثبيت الآن</string>
-    <string name="update_installing">جاري التثبيت…</string>
-    <string name="update_later">لاحقاً</string>
-    <string name="update_ready">التحديث جاهز</string>
-    <string name="update_ready_prompt">يتوفر تحديث جديد. يرجى تثبيته للمتابعة.</string>
-    <string name="update_required_message">إصدار التطبيق الحالي قديم. يرجى التحديث للمتابعة.</string>
-    <string name="update_required_title">تحديث مطلوب</string>
-    <string name="updating_message">جاري تحميل التحديث…</string>
-    <string name="updating_title">جاري التحديث</string>
-    <string name="version">الإصدار</string>
-    <string name="view_all">عرض الكل</string>
-    <string name="wishlist">قائمة الأمنيات</string>
+    <string name="storage">Storage</string>
+    <string name="tab_featured">Featured</string>
+    <string name="tab_most_viewed">Most viewed</string>
+    <string name="tab_top_rated">Top rated</string>
+    <string name="thanks_for_rating">Thanks for your rating!</string>
+    <string name="theme">Theme</string>
+    <string name="thousand_suffix">K</string>
+    <string name="top_authors">Top authors</string>
+    <string name="unblock_confirm_message">Unblock this user?</string>
+    <string name="unblock_confirm_title">Unblock</string>
+    <string name="unblock_user">Unblock user</string>
+    <string name="update_close">Close</string>
+    <string name="update_download">Download update</string>
+    <string name="update_download_failed">Download failed. Try again later.</string>
+    <string name="update_install">Install update</string>
+    <string name="update_install_now">Install now</string>
+    <string name="update_installing">Installing…</string>
+    <string name="update_later">Later</string>
+    <string name="update_ready">Update ready</string>
+    <string name="update_ready_prompt">A new update is available. Install it to continue.</string>
+    <string name="update_required_message">This app version is outdated. Please update to continue.</string>
+    <string name="update_required_title">Update required</string>
+    <string name="updating_message">Downloading update…</string>
+    <string name="updating_title">Updating</string>
+    <string name="version">Version</string>
+    <string name="view_all">View all</string>
+    <string name="wishlist">Wishlist</string>
     <style name="AlertDialog.AppCompat" parent="Base.AlertDialog.AppCompat"/>
     <style name="AlertDialog.AppCompat.Light" parent="Base.AlertDialog.AppCompat.Light"/>
     <style name="Animation.AppCompat.Dialog" parent="Base.Animation.AppCompat.Dialog"/>
